@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CODE VEIN II SHEET MAKER</title>
-    <!-- 아이콘 및 스크린샷 라이브러리 -->
     <script src="https://html2canvas.hertzen.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
@@ -36,12 +35,13 @@
             display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; cursor: pointer;
         }
         .icon-btn:hover { border-color: var(--accent-gold); background: #333; }
-        .save-btn { padding: 10px 20px; background: #5e0000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .save-btn { padding: 10px 20px; background: #5e0000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .save-btn:hover { background: #8b0000; }
 
-        /* Layout */
+        /* 2. Main Layout */
         .wrapper { display: flex; height: calc(100% - var(--header-h)); }
 
-        /* 2. Left Box (1/4 Sidebar) */
+        /* Left Box (Sidebar 1/4) */
         .sidebar { width: var(--sidebar-w); display: flex; background: #222; border-right: 1px solid #000; }
         .side-tabs { width: var(--mini-tab-w); background: #151515; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 20px; }
         .tab-icon { color: #444; font-size: 20px; cursor: pointer; transition: 0.3s; }
@@ -52,11 +52,11 @@
         label { display: block; margin-bottom: 10px; color: #ff4444; font-size: 12px; font-weight: bold; }
         input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
 
-        /* 3. Right Box (Workspace #4a4645) */
+        /* Right Box (Workspace #4a4645) */
         .workspace { flex: 1; background: #4a4645; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: grab; }
         .workspace:active { cursor: grabbing; }
 
-        /* 4K Board Preview */
+        /* 3. 4K Preview Board (3840x2160) */
         #preview-board {
             width: 3840px; height: 2160px; min-width: 3840px; min-height: 2160px;
             background: #ffffff; border-radius: 2px; border: 0.7px solid var(--accent-gold);
@@ -66,7 +66,7 @@
             transform-origin: center center; user-select: none;
         }
         #uploaded-img { width: 100%; height: 100%; object-fit: cover; display: none; pointer-events: none; }
-        .placeholder { color: #ccc; font-size: 100px; font-weight: bold; text-align: center; pointer-events: none; }
+        .placeholder { color: #ccc; font-size: 120px; font-weight: bold; text-align: center; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -80,8 +80,12 @@
     <div class="header-right">
         <span class="author-id">Made by @D3LTA_CV</span>
         <div class="btn-group">
-            <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn"><i class="fa-brands fa-x-twitter"></i></a>
-            <div class="icon-btn" onclick="alert('Wheel: Zoom / Drag BG: Move')"><i class="fa-solid fa-question"></i></div>
+            <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <div class="icon-btn" onclick="alert('Help:\n- Wheel: Zoom In/Out\n- Drag Workspace: Move Board')">
+                <i class="fa-solid fa-question"></i>
+            </div>
         </div>
         <button class="save-btn" onclick="saveImage()">PNG로 저장</button>
     </div>
@@ -90,13 +94,13 @@
 <div class="wrapper">
     <div class="sidebar">
         <div class="side-tabs">
-            <i class="fa-solid fa-file-pen tab-icon active"></i>
-            <i class="fa-solid fa-palette tab-icon"></i>
-            <i class="fa-solid fa-font tab-icon"></i>
+            <i class="fa-solid fa-file-pen tab-icon active" title="INFO"></i>
+            <i class="fa-solid fa-palette tab-icon" title="COLOR"></i>
+            <i class="fa-solid fa-font tab-icon" title="FONT"></i>
         </div>
         <div class="editor-area">
             <div class="field">
-                <label>배경 이미지 업로드 (4K 권장)</label>
+                <label>배경 이미지 업로드 (4K)</label>
                 <input type="file" id="imgInp" accept="image/*">
             </div>
             <div class="field"><label>닉네임</label><input type="text" placeholder="입력하세요"></div>
@@ -118,6 +122,7 @@
     const board = document.getElementById('preview-board');
     const workspace = document.getElementById('workspace');
 
+    // 1. Image Preview
     imgInp.onchange = (e) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
@@ -128,9 +133,11 @@
         reader.readAsDataURL(e.target.files);
     };
 
+    // 2. Zoom & Pan State (Start small for 4K display)
     let scale = 0.2, pos = { x: 0, y: 0 }, startPos = { x: 0, y: 0 }, isDragging = false;
     const updateTransform = () => { board.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${scale})`; };
 
+    // 3. Wheel Zoom
     workspace.onwheel = (e) => {
         e.preventDefault();
         const delta = e.deltaY > 0 ? -0.02 : 0.02;
@@ -138,10 +145,12 @@
         updateTransform();
     };
 
+    // 4. Drag to Pan
     workspace.onmousedown = (e) => { if(e.button === 0) { isDragging = true; startPos = { x: e.clientX - pos.x, y: e.clientY - pos.y }; } };
     window.onmousemove = (e) => { if (isDragging) { pos.x = e.clientX - startPos.x; pos.y = e.clientY - startPos.y; updateTransform(); } };
     window.onmouseup = () => { isDragging = false; };
 
+    // 5. Save as PNG (Captures full resolution)
     function saveImage() {
         const oldTransform = board.style.transform;
         board.style.transform = 'none';
