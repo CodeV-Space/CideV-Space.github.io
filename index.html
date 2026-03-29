@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CODE VEIN II SHEET MAKER</title>
-    <!-- html2canvas for 4K Save, FontAwesome for Icons -->
     <script src="https://html2canvas.hertzen.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
         :root {
-            --header-h: 70px;
+            --header-h: 85px;
             --sidebar-w: 25vw;
             --tab-mini-w: 60px;
             --accent-gold: #bf9739;
@@ -17,18 +16,15 @@
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Noto Sans KR', sans-serif; background: #1a1a1a; color: #eee; overflow: hidden; }
 
-        /* 1. Header */
+        /* Header */
         header {
             height: var(--header-h); background: #111; border-bottom: 1px solid #333;
             display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 20px;
         }
-
-        /* Center Title */
         .title-group { grid-column: 2; text-align: center; }
-        .title-en { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0; }
-        .title-ko { font-size: 12px; color: #888; margin-top: 4px; }
+        .title-en { font-size: 20px; font-weight: bold; text-transform: uppercase; margin: 0; }
+        .title-ko { font-size: 14px; color: #888; margin-top: 8px; }
 
-        /* Right Header Controls */
         .header-right { grid-column: 3; display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
         .author-id { color: #aaa; font-size: 14px; }
         .btn-group { display: flex; gap: 10px; }
@@ -37,31 +33,26 @@
             display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; cursor: pointer;
         }
         .icon-btn:hover { border-color: var(--accent-gold); background: #333; }
-        .save-btn {
-            padding: 10px 20px; background: #5e0000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
-        }
+        .save-btn { padding: 10px 20px; background: #5e0000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
-        /* Layout Wrapper */
+        /* Wrapper */
         .wrapper { display: flex; height: calc(100% - var(--header-h)); }
 
-        /* 2. Left Box (1/4 Width) */
+        /* Sidebar (1/4 Width) */
         .sidebar { width: var(--sidebar-w); display: flex; background: #222; border-right: 1px solid #000; }
-        .side-tabs {
-            width: var(--tab-mini-w); background: #151515; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 20px;
-        }
+        .side-tabs { width: var(--tab-mini-w); background: #151515; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 20px; }
         .tab-icon { color: #444; font-size: 20px; cursor: pointer; }
         .tab-icon.active { color: var(--accent-gold); }
-
         .editor-area { flex: 1; padding: 25px; overflow-y: auto; }
         .field { margin-bottom: 25px; }
         label { display: block; margin-bottom: 10px; color: #ff4444; font-size: 12px; font-weight: bold; }
         input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
 
-        /* 3. Right Box (Workspace #4a4645) */
+        /* Workspace (#4a4645) */
         .workspace { flex: 1; background: #4a4645; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: grab; }
         .workspace:active { cursor: grabbing; }
 
-        /* 3840x2160 Board with Shadow & Gold Border */
+        /* 4K Board with Custom Styles */
         #preview-board {
             width: 3840px; height: 2160px; min-width: 3840px; min-height: 2160px;
             background: #ffffff; border-radius: 2px; border: 0.7px solid var(--accent-gold);
@@ -76,13 +67,13 @@
 <body>
 
 <header>
-    <div></div> <!-- Spacer for Grid -->
+    <div></div>
     <div class="title-group">
         <div class="title-en">CODE VEIN II SHEET MAKER</div>
         <div class="title-ko">코드 베인 II 시트 메이커</div>
     </div>
     <div class="header-right">
-        <span class="author-id">@D3LTA_CV</span>
+        <span class="author-id">Made by @D3LTA_CV</span>
         <div class="btn-group">
             <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn"><i class="fa-brands fa-x-twitter"></i></a>
             <div class="icon-btn" onclick="alert('Help: Wheel to Zoom / Drag Background to Move.')"><i class="fa-solid fa-question"></i></div>
@@ -103,11 +94,10 @@
                 <label>이미지 업로드 (4K 권장)</label>
                 <input type="file" id="imgInp" accept="image/*">
             </div>
-            <div class="field"><label>닉네임</label><input type="text" placeholder="닉네임을 입력하세요"></div>
-            <div class="field"><label>자기소개</label><textarea rows="6" placeholder="내용을 입력하세요"></textarea></div>
+            <div class="field"><label>닉네임</label><input type="text" placeholder="입력하세요"></div>
+            <div class="field"><label>소개글</label><textarea rows="6" placeholder="내용을 입력하세요"></textarea></div>
         </div>
     </div>
-
     <div class="workspace" id="workspace">
         <div id="preview-board">
             <img id="uploaded-img" src="">
@@ -122,7 +112,6 @@
     const board = document.getElementById('preview-board');
     const workspace = document.getElementById('workspace');
 
-    // 1. Image Preview
     imgInp.onchange = (e) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
@@ -133,12 +122,7 @@
         reader.readAsDataURL(e.target.files);
     };
 
-    // 2. Zoom & Pan Logic
-    let scale = 0.2; // Start small for 4K
-    let pos = { x: 0, y: 0 };
-    let startPos = { x: 0, y: 0 };
-    let isDragging = false;
-
+    let scale = 0.2, pos = { x: 0, y: 0 }, startPos = { x: 0, y: 0 }, isDragging = false;
     const updateTransform = () => { board.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${scale})`; };
 
     workspace.onwheel = (e) => {
@@ -148,34 +132,19 @@
         updateTransform();
     };
 
-    workspace.onmousedown = (e) => {
-        if(e.button !== 0) return;
-        isDragging = true;
-        startPos = { x: e.clientX - pos.x, y: e.clientY - pos.y };
-    };
-
-    window.onmousemove = (e) => {
-        if (!isDragging) return;
-        pos.x = e.clientX - startPos.x;
-        pos.y = e.clientY - startPos.y;
-        updateTransform();
-    };
-
+    workspace.onmousedown = (e) => { if(e.button === 0) { isDragging = true; startPos = { x: e.clientX - pos.x, y: e.clientY - pos.y }; } };
+    window.onmousemove = (e) => { if (isDragging) { pos.x = e.clientX - startPos.x; pos.y = e.clientY - startPos.y; updateTransform(); } };
     window.onmouseup = () => { isDragging = false; };
 
-    // 3. Save as PNG (4K High Resolution)
     function saveImage() {
         const oldTransform = board.style.transform;
         board.style.transform = 'none';
-        html2canvas(board, { width: 3840, height: 2160, scale: 1 }).then(canvas => {
+        html2canvas(board, { width: 3840, height: 2160 }).then(canvas => {
             const a = document.createElement('a');
-            a.download = 'CV2_Sheet_4K.png';
-            a.href = canvas.toDataURL('image/png');
-            a.click();
+            a.download = 'CV2_Sheet_4K.png'; a.href = canvas.toDataURL(); a.click();
             board.style.transform = oldTransform;
         });
     }
-
     updateTransform();
 </script>
 </body>
