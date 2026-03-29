@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Vein Ⅱ Sheet Maker</title>
     
-    <!-- FontAwesome (아이콘) & html2canvas (이미지 저장) -->
+    <!-- 라이브러리: FontAwesome (아이콘), html2canvas (이미지 저장) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- Design System --- */
+        /* --- 디자인 변수 (Color & Size) --- */
         :root {
             --header-h: 60px;
             --bg-workspace: #4a4645;
@@ -22,15 +22,15 @@
             --btn-size: 30px;
         }
 
-        /* --- Reset & Base --- */
+        /* --- 기본 설정 --- */
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
             background-color: var(--bg-header);
             color: var(--text-white);
-            overflow: hidden;
-            user-select: none;
+            overflow: hidden; /* 스크롤 방지 */
+            user-select: none; /* 드래그 방지 */
         }
 
         /* --- 1. Header --- */
@@ -47,7 +47,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        /* Center Title (Absolute) */
+        /* 중앙 타이틀 (절대 위치) */
         .header-center {
             position: absolute;
             left: 50%;
@@ -71,12 +71,12 @@
         .title-ko {
             font-size: 14px;
             color: var(--text-sub);
-            margin-top: 4px;
+            margin-top: 4px; /* 요청: 4px 간격 */
             font-weight: normal;
             line-height: 1;
         }
 
-        /* Right Controls */
+        /* 우측 컨트롤 그룹 */
         .header-right {
             margin-left: auto;
             display: flex;
@@ -116,7 +116,7 @@
             background: #333;
         }
 
-        /* Save Button with Icon */
+        /* 저장 버튼 (아이콘 포함) */
         .save-btn {
             height: 30px;
             padding: 0 16px;
@@ -129,7 +129,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+            gap: 6px; /* 아이콘 간격 */
             transition: background 0.2s;
         }
         .save-btn:hover { background-color: #d4a845; }
@@ -142,7 +142,7 @@
             width: 100vw;
         }
 
-        /* Left Sidebar */
+        /* Left Sidebar (1/4) */
         .sidebar {
             width: 25%;
             min-width: 320px;
@@ -196,6 +196,7 @@
             color: #888; font-size: 12px; cursor: pointer; box-sizing: border-box;
         }
 
+
         /* --- 3. Right Workspace --- */
         .workspace {
             flex: 1;
@@ -215,17 +216,17 @@
             will-change: transform;
         }
 
-        /* --- 4K Preview Board --- */
-        .preview-board {
+        /* --- 4K Preview Box --- */
+        .preview-box {
             width: 3840px;
             height: 2160px;
             background-color: #ffffff;
             position: relative;
             display: flex; align-items: center; justify-content: center;
             
-            /* [요청사항] 30px Smooth Corners */
+            /* [요청사항] Corners 30px Smooth */
             border-radius: 30px;
-            overflow: hidden;
+            overflow: hidden; /* 내부 이미지가 둥근 모서리를 넘지 않도록 */
             
             /* [요청사항] 0.7px Gold Border */
             border: 0.7px solid var(--accent-gold);
@@ -251,17 +252,18 @@
             bottom: 30px;
             right: 30px;
             height: 60px; /* 요청 높이 */
-            background-color: rgba(30, 30, 30, 0.85);
+            background-color: rgba(30, 30, 30, 0.85); /* 반투명 배경 */
             backdrop-filter: blur(5px);
             border: 1px solid #444;
-            border-radius: 12px; /* 둥근 모서리 */
+            border-radius: 30px; /* 박스 자체도 둥글게 */
             display: flex;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 30px;
             gap: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            pointer-events: none; /* 클릭 통과 */
+            pointer-events: none; /* 클릭 무시 */
             color: #eee;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .helper-item {
@@ -273,7 +275,9 @@
         }
         
         .helper-item i { color: var(--accent-gold); font-size: 14px; }
-        .divider { width: 1px; height: 20px; background: #555; }
+        .divider { width: 1px; height: 16px; background: #555; }
+        
+        .helper-strong { font-weight: bold; color: #fff; }
     </style>
 </head>
 <body>
@@ -294,7 +298,7 @@
                 <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
                     <i class="fa-brands fa-x-twitter"></i>
                 </a>
-                <div class="icon-btn" title="Help">
+                <div class="icon-btn" title="Help" onclick="alert('우측 하단의 안내를 참고하세요.')">
                     <i class="fa-solid fa-question"></i>
                 </div>
             </div>
@@ -306,10 +310,10 @@
         </div>
     </header>
 
-    <!-- MAIN LAYOUT -->
+    <!-- MAIN CONTENT -->
     <div class="main-wrapper">
         
-        <!-- Sidebar -->
+        <!-- Left Sidebar -->
         <aside class="sidebar">
             <div class="tab-rail">
                 <div class="tab-icon active"><i class="fa-solid fa-pen-to-square"></i></div>
@@ -318,14 +322,17 @@
             </div>
             <div class="editor-content">
                 <div class="section-title">기본 설정</div>
+                
                 <div class="input-group">
-                    <label class="input-label">배경 이미지 (3840x2160)</label>
+                    <label class="input-label">배경 이미지 (4K 권장)</label>
                     <input type="file" id="imgInput" accept="image/*">
                 </div>
+
                 <div class="input-group">
                     <label class="input-label">캐릭터 이름</label>
-                    <input type="text" placeholder="이름 입력">
+                    <input type="text" placeholder="이름을 입력하세요">
                 </div>
+
                 <div class="input-group">
                     <label class="input-label">메모 / 설정</label>
                     <textarea rows="5" placeholder="내용을 입력하세요..."></textarea>
@@ -333,36 +340,36 @@
             </div>
         </aside>
 
-        <!-- Workspace -->
+        <!-- Right Workspace -->
         <section class="workspace" id="workspace">
             <div id="viewport">
-                <div class="preview-board" id="board">
+                <div class="preview-box" id="board">
                     <span class="placeholder-text">PREVIEW AREA</span>
                     <img id="preview-img" src="" alt="">
                 </div>
             </div>
 
-            <!-- New Helper Box -->
+            <!-- 한글 설명 안내 박스 -->
             <div class="helper-box">
                 <div class="helper-item">
                     <i class="fa-solid fa-computer-mouse"></i>
-                    <span>Controls</span>
+                    <span class="helper-strong">조작법</span>
                 </div>
                 <div class="divider"></div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-arrow-pointer"></i> <span>Drag to Pan</span>
+                    <i class="fa-solid fa-hand-pointer"></i> <span>드래그 : 이동</span>
                 </div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-magnifying-glass"></i> <span>Scroll Zoom</span>
+                    <i class="fa-solid fa-magnifying-glass"></i> <span>휠 : 확대/축소</span>
                 </div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>Mid-Click Reset</span>
+                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>휠 클릭 : 화면 초기화</span>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- SCRIPT -->
     <script>
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
@@ -371,19 +378,19 @@
         const previewImg = document.getElementById('preview-img');
         const placeholder = document.querySelector('.placeholder-text');
 
-        // State
-        const INITIAL_SCALE = 0.15; // 4K Fit
+        // --- 상태 관리 ---
+        const INITIAL_SCALE = 0.15; // 4K 화면이 한눈에 보이도록 축소
         let scale = INITIAL_SCALE;
         let isDragging = false;
         let startX, startY, pointX = 0, pointY = 0;
 
-        // 1. Apply Transform
+        // --- 1. 화면 업데이트 ---
         function updateTransform() {
             viewport.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
         updateTransform();
 
-        // 2. Image Upload
+        // --- 2. 이미지 업로드 ---
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -397,7 +404,7 @@
             }
         });
 
-        // 3. Zoom (Wheel)
+        // --- 3. 줌 (Wheel) ---
         workspace.addEventListener('wheel', (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.05 : 0.05;
@@ -405,9 +412,9 @@
             updateTransform();
         }, { passive: false });
 
-        // 4. Interaction (Pan & Reset)
+        // --- 4. 마우스 조작 (Pan & Reset) ---
         workspace.addEventListener('mousedown', (e) => {
-            // Middle Click (Reset)
+            // 휠 클릭 (가운데 버튼) -> 리셋
             if (e.button === 1) {
                 e.preventDefault();
                 scale = INITIAL_SCALE;
@@ -416,7 +423,7 @@
                 updateTransform();
                 return;
             }
-            // Left Click (Pan)
+            // 좌클릭 -> 드래그 시작
             if (e.button === 0) {
                 isDragging = true;
                 startX = e.clientX - pointX;
@@ -438,10 +445,10 @@
             workspace.style.cursor = 'grab';
         });
 
-        // 5. Save to PNG
+        // --- 5. PNG 저장 ---
         function saveImage() {
             const originalTransform = viewport.style.transform;
-            viewport.style.transform = 'none'; // Reset for Capture
+            viewport.style.transform = 'none'; // 캡처를 위해 변환 초기화
             
             html2canvas(board, {
                 scale: 1,
@@ -454,7 +461,8 @@
                 link.download = 'CodeVein_Sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                viewport.style.transform = originalTransform; // Restore View
+                
+                viewport.style.transform = originalTransform; // 화면 복구
             }).catch(err => {
                 console.error(err);
                 viewport.style.transform = originalTransform;
@@ -464,3 +472,4 @@
     </script>
 </body>
 </html>
+
