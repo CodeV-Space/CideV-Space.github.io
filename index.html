@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Vein Ⅱ Sheet Maker</title>
     
-    <!-- 라이브러리: FontAwesome (아이콘), html2canvas (이미지 저장) -->
+    <!-- FontAwesome (Icons) & html2canvas (Screen Capture) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- 디자인 변수 (Color & Size) --- */
+        /* --- CSS Variables --- */
         :root {
-            --header-h: 60px;
+            --header-height: 60px;
             --bg-workspace: #4a4645;
             --bg-sidebar: #2d2a29;
             --bg-header: #1a1a1a;
@@ -20,22 +20,23 @@
             --text-white: #ffffff;
             --text-sub: #aaaaaa;
             --btn-size: 30px;
+            --sidebar-width: 320px;
         }
 
-        /* --- 기본 설정 --- */
+        /* --- Reset --- */
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
             background-color: var(--bg-header);
             color: var(--text-white);
-            overflow: hidden; /* 스크롤 방지 */
-            user-select: none; /* 드래그 방지 */
+            overflow: hidden;
+            user-select: none;
         }
 
         /* --- 1. Header --- */
         header {
-            height: var(--header-h);
+            height: var(--header-height);
             background-color: var(--bg-header);
             border-bottom: 1px solid #000;
             display: flex;
@@ -47,7 +48,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        /* 중앙 타이틀 (절대 위치) */
         .header-center {
             position: absolute;
             left: 50%;
@@ -71,12 +71,11 @@
         .title-ko {
             font-size: 14px;
             color: var(--text-sub);
-            margin-top: 4px; /* 요청: 4px 간격 */
+            margin-top: 4px;
             font-weight: normal;
             line-height: 1;
         }
 
-        /* 우측 컨트롤 그룹 */
         .header-right {
             margin-left: auto;
             display: flex;
@@ -84,52 +83,25 @@
             gap: 16px;
         }
 
-        .author-id {
-            font-size: 14px;
-            color: #888;
-            font-weight: 500;
-        }
+        .author-id { font-size: 14px; color: #888; font-weight: 500; }
 
-        .btn-group {
-            display: flex;
-            gap: 10px;
-        }
+        .btn-group { display: flex; gap: 10px; }
 
         .icon-btn {
-            width: var(--btn-size);
-            height: var(--btn-size);
-            background: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ccc;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+            width: var(--btn-size); height: var(--btn-size);
+            background: #2a2a2a; border: 1px solid #444; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            color: #ccc; text-decoration: none; cursor: pointer;
+            font-size: 14px; transition: all 0.2s;
         }
-        .icon-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
-            background: #333;
-        }
+        .icon-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); background: #333; }
 
-        /* 저장 버튼 (아이콘 포함) */
         .save-btn {
-            height: 30px;
-            padding: 0 16px;
-            background-color: var(--accent-gold);
-            color: #111;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px; /* 아이콘 간격 */
+            height: 30px; padding: 0 16px;
+            background-color: var(--accent-gold); color: #111;
+            border: none; border-radius: 4px;
+            font-weight: bold; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
             transition: background 0.2s;
         }
         .save-btn:hover { background-color: #d4a845; }
@@ -138,17 +110,47 @@
         /* --- 2. Main Layout --- */
         .main-wrapper {
             display: flex;
-            height: calc(100vh - var(--header-h));
+            height: calc(100vh - var(--header-height));
             width: 100vw;
+            position: relative;
         }
 
-        /* Left Sidebar (1/4) */
+        /* --- Left Sidebar --- */
         .sidebar {
             width: 25%;
-            min-width: 320px;
+            min-width: var(--sidebar-width);
             background: var(--bg-sidebar);
             border-right: 1px solid #000;
             display: flex;
+            position: relative;
+            transition: margin-left 0.3s ease; /* Smooth Toggle Animation */
+            z-index: 10;
+        }
+
+        /* Sidebar Closed State */
+        .sidebar.closed {
+            margin-left: calc(var(--sidebar-width) * -1); /* Hide completely */
+        }
+
+        /* Toggle Button (Attached to Sidebar) */
+        .sidebar-toggle {
+            position: absolute;
+            right: -24px; /* Outside the sidebar */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 50px;
+            background: #222;
+            border: 1px solid #000;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            z-index: 20;
+            box-shadow: 4px 0 5px rgba(0,0,0,0.2);
         }
 
         .tab-rail {
@@ -167,32 +169,24 @@
             color: #666; cursor: pointer; border-radius: 4px;
             font-size: 16px; transition: 0.2s;
         }
-        .tab-icon.active, .tab-icon:hover {
-            color: var(--accent-gold);
-            background: rgba(255,255,255,0.05);
-        }
+        .tab-icon.active, .tab-icon:hover { color: var(--accent-gold); background: rgba(255,255,255,0.05); }
 
         .editor-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+            flex: 1; padding: 20px; overflow-y: auto;
+            min-width: 0; /* Flex child shrinking fix */
         }
         .section-title {
             font-size: 16px; font-weight: bold; color: var(--accent-gold);
             border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px;
         }
-
         .input-group { margin-bottom: 20px; }
         .input-label { display: block; margin-bottom: 8px; font-size: 12px; color: #aaa; }
-        
         input[type="text"], textarea {
-            width: 100%; padding: 10px;
-            background: #1a1a1a; border: 1px solid #444;
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444;
             color: #fff; border-radius: 4px; box-sizing: border-box;
         }
         input[type="file"] {
-            width: 100%; padding: 10px;
-            background: #1a1a1a; border: 1px dashed #555;
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px dashed #555;
             color: #888; font-size: 12px; cursor: pointer; box-sizing: border-box;
         }
 
@@ -204,9 +198,8 @@
             position: relative;
             overflow: hidden;
             cursor: grab;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1;
         }
         .workspace:active { cursor: grabbing; }
 
@@ -216,7 +209,7 @@
             will-change: transform;
         }
 
-        /* --- 4K Preview Box --- */
+        /* --- 4K Preview Board --- */
         .preview-box {
             width: 3840px;
             height: 2160px;
@@ -224,67 +217,45 @@
             position: relative;
             display: flex; align-items: center; justify-content: center;
             
-            /* [요청사항] Corners 30px Smooth */
+            /* Styling Specs */
             border-radius: 30px;
-            overflow: hidden; /* 내부 이미지가 둥근 모서리를 넘지 않도록 */
-            
-            /* [요청사항] 0.7px Gold Border */
+            overflow: hidden;
             border: 0.7px solid var(--accent-gold);
-            
-            /* [요청사항] 25% Dark Shadow, 15px Soften */
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
         }
 
-        #preview-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            display: none;
-        }
+        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .placeholder-text { font-size: 80px; font-weight: bold; color: #ddd; pointer-events: none; }
 
-        .placeholder-text {
-            font-size: 80px; font-weight: bold; color: #ddd;
-            text-transform: uppercase; pointer-events: none;
-        }
-
-        /* --- 4. Bottom Right Helper Box (New) --- */
+        /* --- 4. Helper Box (Opacity 70%) --- */
         .helper-box {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
-            height: 60px; /* 요청 높이 */
-            background-color: rgba(30, 30, 30, 0.85); /* 반투명 배경 */
+            bottom: 30px; right: 30px;
+            height: 60px;
+            
+            /* Opacity 70% Background */
+            background-color: rgba(30, 30, 30, 0.7);
             backdrop-filter: blur(5px);
-            border: 1px solid #444;
-            border-radius: 30px; /* 박스 자체도 둥글게 */
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-            gap: 20px;
+            
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px; /* Rounded Box */
+            display: flex; align-items: center;
+            padding: 0 30px; gap: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            pointer-events: none; /* 클릭 무시 */
+            pointer-events: none;
             color: #eee;
-            font-family: 'Noto Sans KR', sans-serif;
         }
 
-        .helper-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #ccc;
-        }
-        
+        .helper-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ddd; }
         .helper-item i { color: var(--accent-gold); font-size: 14px; }
-        .divider { width: 1px; height: 16px; background: #555; }
-        
-        .helper-strong { font-weight: bold; color: #fff; }
+        .divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+        .helper-strong { font-weight: bold; color: #fff; margin-right: 5px;}
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
-        <div style="width: 200px;"></div> <!-- Spacer -->
+        <div style="width: 200px;"></div>
 
         <div class="header-center">
             <h1 class="title-en">Code Vein Ⅱ Sheet Maker</h1>
@@ -293,28 +264,28 @@
 
         <div class="header-right">
             <span class="author-id">Made by @D3LTA_CV</span>
-            
             <div class="btn-group">
                 <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
                     <i class="fa-brands fa-x-twitter"></i>
                 </a>
-                <div class="icon-btn" title="Help" onclick="alert('우측 하단의 안내를 참고하세요.')">
+                <div class="icon-btn" title="Help" onclick="alert('하단 안내 박스를 확인해주세요.')">
                     <i class="fa-solid fa-question"></i>
                 </div>
             </div>
-
-            <!-- Save Button with Icon -->
             <button class="save-btn" onclick="saveImage()">
                 <i class="fa-solid fa-download"></i> PNG로 저장
             </button>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <div class="main-wrapper">
         
-        <!-- Left Sidebar -->
-        <aside class="sidebar">
+        <!-- Sidebar with Toggle -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-toggle" id="toggleBtn" title="Toggle Sidebar">
+                <i class="fa-solid fa-caret-left" id="toggleIcon"></i>
+            </div>
+
             <div class="tab-rail">
                 <div class="tab-icon active"><i class="fa-solid fa-pen-to-square"></i></div>
                 <div class="tab-icon"><i class="fa-solid fa-palette"></i></div>
@@ -322,17 +293,14 @@
             </div>
             <div class="editor-content">
                 <div class="section-title">기본 설정</div>
-                
                 <div class="input-group">
                     <label class="input-label">배경 이미지 (4K 권장)</label>
                     <input type="file" id="imgInput" accept="image/*">
                 </div>
-
                 <div class="input-group">
                     <label class="input-label">캐릭터 이름</label>
                     <input type="text" placeholder="이름을 입력하세요">
                 </div>
-
                 <div class="input-group">
                     <label class="input-label">메모 / 설정</label>
                     <textarea rows="5" placeholder="내용을 입력하세요..."></textarea>
@@ -340,7 +308,7 @@
             </div>
         </aside>
 
-        <!-- Right Workspace -->
+        <!-- Workspace -->
         <section class="workspace" id="workspace">
             <div id="viewport">
                 <div class="preview-box" id="board">
@@ -349,7 +317,7 @@
                 </div>
             </div>
 
-            <!-- 한글 설명 안내 박스 -->
+            <!-- UI Helper Box (Opacity 70%) -->
             <div class="helper-box">
                 <div class="helper-item">
                     <i class="fa-solid fa-computer-mouse"></i>
@@ -357,7 +325,7 @@
                 </div>
                 <div class="divider"></div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-hand-pointer"></i> <span>드래그 : 이동</span>
+                    <i class="fa-solid fa-hand-pointer"></i> <span>드래그 : 화면 이동</span>
                 </div>
                 <div class="helper-item">
                     <i class="fa-solid fa-magnifying-glass"></i> <span>휠 : 확대/축소</span>
@@ -369,7 +337,6 @@
         </section>
     </div>
 
-    <!-- SCRIPT -->
     <script>
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
@@ -377,20 +344,33 @@
         const imgInput = document.getElementById('imgInput');
         const previewImg = document.getElementById('preview-img');
         const placeholder = document.querySelector('.placeholder-text');
+        
+        // Sidebar Toggle Logic
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const toggleIcon = document.getElementById('toggleIcon');
 
-        // --- 상태 관리 ---
-        const INITIAL_SCALE = 0.15; // 4K 화면이 한눈에 보이도록 축소
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('closed');
+            // Icon rotation logic
+            if (sidebar.classList.contains('closed')) {
+                toggleIcon.classList.replace('fa-caret-left', 'fa-caret-right');
+            } else {
+                toggleIcon.classList.replace('fa-caret-right', 'fa-caret-left');
+            }
+        });
+
+        // Viewport Logic
+        const INITIAL_SCALE = 0.15; 
         let scale = INITIAL_SCALE;
         let isDragging = false;
         let startX, startY, pointX = 0, pointY = 0;
 
-        // --- 1. 화면 업데이트 ---
         function updateTransform() {
             viewport.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
         updateTransform();
 
-        // --- 2. 이미지 업로드 ---
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -404,7 +384,7 @@
             }
         });
 
-        // --- 3. 줌 (Wheel) ---
+        // Zoom
         workspace.addEventListener('wheel', (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.05 : 0.05;
@@ -412,19 +392,16 @@
             updateTransform();
         }, { passive: false });
 
-        // --- 4. 마우스 조작 (Pan & Reset) ---
+        // Pan & Reset
         workspace.addEventListener('mousedown', (e) => {
-            // 휠 클릭 (가운데 버튼) -> 리셋
-            if (e.button === 1) {
+            if (e.button === 1) { // Middle Click
                 e.preventDefault();
                 scale = INITIAL_SCALE;
-                pointX = 0;
-                pointY = 0;
+                pointX = 0; pointY = 0;
                 updateTransform();
                 return;
             }
-            // 좌클릭 -> 드래그 시작
-            if (e.button === 0) {
+            if (e.button === 0) { // Left Click
                 isDragging = true;
                 startX = e.clientX - pointX;
                 startY = e.clientY - pointY;
@@ -445,31 +422,22 @@
             workspace.style.cursor = 'grab';
         });
 
-        // --- 5. PNG 저장 ---
+        // Save
         function saveImage() {
             const originalTransform = viewport.style.transform;
-            viewport.style.transform = 'none'; // 캡처를 위해 변환 초기화
+            viewport.style.transform = 'none'; 
             
             html2canvas(board, {
-                scale: 1,
-                width: 3840,
-                height: 2160,
-                useCORS: true,
-                backgroundColor: null
+                scale: 1, width: 3840, height: 2160,
+                useCORS: true, backgroundColor: null
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'CodeVein_Sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                
-                viewport.style.transform = originalTransform; // 화면 복구
-            }).catch(err => {
-                console.error(err);
                 viewport.style.transform = originalTransform;
-                alert('저장 중 오류가 발생했습니다.');
             });
         }
     </script>
 </body>
 </html>
-
