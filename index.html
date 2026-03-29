@@ -36,7 +36,7 @@
         .wrapper { display: flex; height: calc(100% - var(--header-h)); }
 
         /* 2. Sidebar (1/4 Width) */
-        .sidebar { width: var(--sidebar-w); display: flex; background: #222; border-right: 1px solid #000; }
+        .sidebar { width: var(--sidebar-w); display: flex; background: #222; border-right: 1px solid #000; z-index: 50; }
         .side-tabs {
             width: var(--tab-w); background: #151515; display: flex;
             flex-direction: column; align-items: center; padding-top: 20px; gap: 20px;
@@ -49,12 +49,13 @@
         label { display: block; margin-bottom: 8px; color: #ff4444; font-size: 11px; font-weight: bold; }
         input, textarea { width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
 
-        /* 3. Workspace (#4a4645) */
+        /* 3. Workspace Area (#4a4645) */
         .workspace {
             flex: 1; background: #4a4645; display: flex;
             align-items: center; justify-content: center; position: relative; 
-            overflow: hidden; /* Scroll handles via JS Zoom */
+            overflow: hidden; cursor: grab;
         }
+        .workspace:active { cursor: grabbing; }
 
         /* Preview Board: 1200x900, 2px Round, 0.7px Gold Border, 15px Soft Shadow */
         #preview-board {
@@ -65,30 +66,29 @@
             display: flex; align-items: center; justify-content: center;
             position: relative; overflow: hidden;
             transform-origin: center center;
-            transition: transform 0.1s ease-out;
-            cursor: grab;
+            user-select: none;
         }
-        #uploaded-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        #uploaded-img { width: 100%; height: 100%; object-fit: cover; display: none; pointer-events: none; }
         .placeholder { color: #ccc; font-size: 32px; font-weight: bold; text-align: center; pointer-events: none; }
 
         /* Save Button */
         .save-btn {
             position: absolute; bottom: 30px; right: 30px;
             padding: 15px 30px; background: #5e0000; color: white;
-            border: none; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 10;
+            border: none; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 100;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title">Sheet Generator Prototype</div>
+        <div class="header-title">Sheet Generator v1.1</div>
         <div class="header-right">
             <span>@D3LTA_CV</span>
             <a href="https://twitter.com" target="_blank" class="header-btn">
                 <i class="fa-brands fa-twitter"></i>
             </a>
-            <div class="header-btn" onclick="alert('Help: Use mouse wheel to Zoom in/out.')">
+            <div class="header-btn" onclick="alert('Help: Wheel to Zoom / Left Click & Drag to Move.')">
                 <i class="fa-solid fa-question"></i>
             </div>
         </div>
@@ -97,7 +97,7 @@
     <div class="wrapper">
         <div class="sidebar">
             <div class="side-tabs">
-                <i class="fa-solid fa-file-lines tab-icon active"></i>
+                <i class="fa-solid fa-pen-nib tab-icon active"></i>
                 <i class="fa-solid fa-palette tab-icon"></i>
                 <i class="fa-solid fa-font tab-icon"></i>
             </div>
@@ -107,14 +107,17 @@
                     <input type="file" id="imgInp" accept="image/*">
                 </div>
                 <div class="field"><label>NAME / ID</label><input type="text" placeholder="이름을 입력하세요"></div>
-                <div class="field"><label>BIO</label><textarea rows="6" placeholder="내용을 입력하세요"></textarea></div>
+                <div class="field"><label>BIO</label><textarea rows="6" placeholder="자신을 소개하세요"></textarea></div>
             </div>
         </div>
 
         <div class="workspace" id="workspace">
             <div id="preview-board">
                 <img id="uploaded-img" src="">
-                <div class="placeholder" id="placeholder">1200 x 900 PREVIEW<br><small style="font-size: 14px; font-weight: normal;">(Scroll to Zoom)</small></div>
+                <div class="placeholder" id="placeholder">
+                    1200 x 900 PREVIEW<br>
+                    <small style="font-size: 14px; font-weight: normal;">(Wheel: Zoom / Drag: Move)</small>
+                </div>
             </div>
             <button class="save-btn" onclick="saveImage()">Save as PNG</button>
         </div>
@@ -127,7 +130,7 @@
         const board = document.getElementById('preview-board');
         const workspace = document.getElementById('workspace');
 
-        // 1. Image Upload
+        // 1. Image Preview
         imgInp.onchange = (e) => {
             const reader = new FileReader();
             reader.onload = (ev) => {
@@ -135,30 +138,58 @@
                 img.style.display = 'block';
                 placeholder.style.display = 'none';
             };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(e.target.files);
         };
 
-        // 2. Scroll Zoom Logic
+        // 2. Zoom & Pan State
         let scale = 0.45;
+        let pos = { x: 0, y: 0 };
+        let startPos = { x: 0, y: 0 };
+        let isDragging = false;
+
+        const updateTransform = () => {
+            board.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
+        };
+
+        // 3. Wheel Zoom
         workspace.onwheel = (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.05 : 0.05;
-            scale = Math.min(Math.max(0.1, scale + delta), 2);
-            board.style.transform = `scale(${scale})`;
+            scale = Math.min(Math.max(0.1, scale + delta), 3);
+            updateTransform();
         };
 
-        // 3. Save as PNG
+        // 4. Drag to Move
+        workspace.onmousedown = (e) => {
+            if(e.button !== 0) return; // Left click only
+            isDragging = true;
+            startPos = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+        };
+
+        window.onmousemove = (e) => {
+            if (!isDragging) return;
+            pos.x = e.clientX - startPos.x;
+            pos.y = e.clientY - startPos.y;
+            updateTransform();
+        };
+
+        window.onmouseup = () => { isDragging = false; };
+
+        // 5. Save as PNG
         function saveImage() {
-            const currentScale = board.style.transform;
-            board.style.transform = 'none'; // Capture at 1:1
+            const oldTransform = board.style.transform;
+            board.style.transform = 'none'; // Capture at 100% size
             html2canvas(board, { width: 1200, height: 900 }).then(canvas => {
                 const a = document.createElement('a');
                 a.download = 'D3LTA_Sheet.png';
                 a.href = canvas.toDataURL();
                 a.click();
-                board.style.transform = currentScale; // Restore Zoom
+                board.style.transform = oldTransform;
             });
         }
+
+        updateTransform(); // Initial setup
     </script>
 </body>
 </html>
+
