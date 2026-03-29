@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sheet Maker - @D3LTA_CV</title>
-    <!-- Icons and Screenshot Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <script src="https://html2canvas.hertzen.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
         :root {
             --header-h: 35px;
@@ -15,13 +14,13 @@
             --accent-gold: #bf9739;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Apple SD Gothic Neo', sans-serif; background: #1a1a1a; color: #eee; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; background: #1a1a1a; color: #eee; overflow: hidden; }
 
         /* 1. Header Area */
         header {
             height: var(--header-h); background: #111; display: flex;
             align-items: center; justify-content: space-between; padding: 0 15px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #333; z-index: 100;
         }
         .header-title { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .header-right { display: flex; align-items: center; gap: 12px; font-size: 12px; }
@@ -50,45 +49,46 @@
         label { display: block; margin-bottom: 8px; color: #ff4444; font-size: 11px; font-weight: bold; }
         input, textarea { width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
 
-        /* 3. Right Workspace Area (#4a4645) */
+        /* 3. Workspace (#4a4645) */
         .workspace {
             flex: 1; background: #4a4645; display: flex;
-            align-items: center; justify-content: center; position: relative; overflow: auto; padding: 60px;
+            align-items: center; justify-content: center; position: relative; 
+            overflow: hidden; /* Scroll handles via JS Zoom */
         }
 
-        /* 1200x900 Board: 2px Round, 0.7px Gold Border, 15px Soft Shadow (25%) */
+        /* Preview Board: 1200x900, 2px Round, 0.7px Gold Border, 15px Soft Shadow */
         #preview-board {
             width: 1200px; height: 900px; min-width: 1200px; min-height: 900px;
             background: #ffffff; border-radius: 2px;
             border: 0.7px solid var(--accent-gold);
-            /* Feathered/Soften Outer Glow at 25% Opacity */
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
             display: flex; align-items: center; justify-content: center;
             position: relative; overflow: hidden;
-            transform: scale(0.45); transform-origin: center;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+            cursor: grab;
         }
         #uploaded-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .placeholder { color: #ccc; font-size: 32px; font-weight: bold; text-align: center; }
+        .placeholder { color: #ccc; font-size: 32px; font-weight: bold; text-align: center; pointer-events: none; }
 
         /* Save Button */
         .save-btn {
             position: absolute; bottom: 30px; right: 30px;
             padding: 15px 30px; background: #5e0000; color: white;
-            border: none; border-radius: 6px; font-weight: bold; cursor: pointer;
+            border: none; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 10;
         }
-        .save-btn:hover { background: #8b0000; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title">Sheet Generator v1.0</div>
+        <div class="header-title">Sheet Generator Prototype</div>
         <div class="header-right">
             <span>@D3LTA_CV</span>
             <a href="https://twitter.com" target="_blank" class="header-btn">
                 <i class="fa-brands fa-twitter"></i>
             </a>
-            <div class="header-btn" onclick="alert('도움말: 이미지를 업로드하고 내용을 기입한 뒤 저장하세요.')">
+            <div class="header-btn" onclick="alert('Help: Use mouse wheel to Zoom in/out.')">
                 <i class="fa-solid fa-question"></i>
             </div>
         </div>
@@ -97,24 +97,24 @@
     <div class="wrapper">
         <div class="sidebar">
             <div class="side-tabs">
-                <i class="fa-solid fa-pen-nib tab-icon active" title="INFO"></i>
-                <i class="fa-solid fa-palette tab-icon" title="COLOR"></i>
-                <i class="fa-solid fa-font tab-icon" title="FONT"></i>
+                <i class="fa-solid fa-file-lines tab-icon active"></i>
+                <i class="fa-solid fa-palette tab-icon"></i>
+                <i class="fa-solid fa-font tab-icon"></i>
             </div>
             <div class="editor-area">
                 <div class="field">
-                    <label>BACKGROUND IMAGE</label>
+                    <label>UPLOAD IMAGE</label>
                     <input type="file" id="imgInp" accept="image/*">
                 </div>
-                <div class="field"><label>NICKNAME / ID</label><input type="text" placeholder="이름을 입력하세요"></div>
-                <div class="field"><label>INTRODUCTION</label><textarea rows="6" placeholder="자신을 소개하는 내용을 입력하세요"></textarea></div>
+                <div class="field"><label>NAME / ID</label><input type="text" placeholder="이름을 입력하세요"></div>
+                <div class="field"><label>BIO</label><textarea rows="6" placeholder="내용을 입력하세요"></textarea></div>
             </div>
         </div>
 
-        <div class="workspace">
+        <div class="workspace" id="workspace">
             <div id="preview-board">
                 <img id="uploaded-img" src="">
-                <div class="placeholder" id="placeholder">1200 x 900 PREVIEW</div>
+                <div class="placeholder" id="placeholder">1200 x 900 PREVIEW<br><small style="font-size: 14px; font-weight: normal;">(Scroll to Zoom)</small></div>
             </div>
             <button class="save-btn" onclick="saveImage()">Save as PNG</button>
         </div>
@@ -124,7 +124,10 @@
         const imgInp = document.getElementById('imgInp');
         const img = document.getElementById('uploaded-img');
         const placeholder = document.getElementById('placeholder');
+        const board = document.getElementById('preview-board');
+        const workspace = document.getElementById('workspace');
 
+        // 1. Image Upload
         imgInp.onchange = (e) => {
             const reader = new FileReader();
             reader.onload = (ev) => {
@@ -132,18 +135,28 @@
                 img.style.display = 'block';
                 placeholder.style.display = 'none';
             };
-            reader.readAsDataURL(e.target.files);
+            reader.readAsDataURL(e.target.files[0]);
         };
 
+        // 2. Scroll Zoom Logic
+        let scale = 0.45;
+        workspace.onwheel = (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.05 : 0.05;
+            scale = Math.min(Math.max(0.1, scale + delta), 2);
+            board.style.transform = `scale(${scale})`;
+        };
+
+        // 3. Save as PNG
         function saveImage() {
-            const board = document.getElementById('preview-board');
-            board.style.transform = 'none';
+            const currentScale = board.style.transform;
+            board.style.transform = 'none'; // Capture at 1:1
             html2canvas(board, { width: 1200, height: 900 }).then(canvas => {
                 const a = document.createElement('a');
                 a.download = 'D3LTA_Sheet.png';
                 a.href = canvas.toDataURL();
                 a.click();
-                board.style.transform = 'scale(0.45)';
+                board.style.transform = currentScale; // Restore Zoom
             });
         }
     </script>
