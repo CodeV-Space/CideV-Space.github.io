@@ -5,29 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Vein Ⅱ Sheet Maker</title>
     
-    <!-- FontAwesome (Icons) & html2canvas (Screen Capture) -->
+    <!-- FontAwesome (Icons) & html2canvas (Image Save) & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- CSS Variables --- */
+        /* --- Variables --- */
         :root {
-            --header-height: 60px;
+            --header-h: 60px;
+            --tab-w: 60px; /* 탭 레일 너비 */
+            --editor-w: 320px; /* 에디터 패널 너비 */
+            
             --bg-workspace: #4a4645;
             --bg-sidebar: #2d2a29;
+            --bg-rail: #1e1c1b;
             --bg-header: #1a1a1a;
             --accent-gold: #bf9739;
             --text-white: #ffffff;
             --text-sub: #aaaaaa;
             --btn-size: 30px;
-            --sidebar-width: 320px;
         }
 
-        /* --- Reset --- */
+        /* --- Base --- */
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
             background-color: var(--bg-header);
             color: var(--text-white);
             overflow: hidden;
@@ -36,57 +40,37 @@
 
         /* --- 1. Header --- */
         header {
-            height: var(--header-height);
+            height: var(--header-h);
             background-color: var(--bg-header);
             border-bottom: 1px solid #000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px;
-            position: relative;
-            z-index: 100;
+            position: relative; z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .header-center {
-            position: absolute;
-            left: 50%;
-            top: 50%;
+            position: absolute; left: 50%; top: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
         }
 
         .title-en {
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 0;
-            line-height: 1;
-            letter-spacing: 0.5px;
+            font-size: 18px; font-weight: 700; text-transform: uppercase;
+            margin: 0; line-height: 1; letter-spacing: 0.5px;
         }
-
         .title-ko {
-            font-size: 14px;
-            color: var(--text-sub);
-            margin-top: 4px;
-            font-weight: normal;
-            line-height: 1;
+            font-size: 14px; color: var(--text-sub);
+            margin-top: 4px; font-weight: 400; line-height: 1;
         }
 
         .header-right {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            margin-left: auto; display: flex; align-items: center; gap: 16px;
         }
-
         .author-id { font-size: 14px; color: #888; font-weight: 500; }
-
+        
         .btn-group { display: flex; gap: 10px; }
-
         .icon-btn {
             width: var(--btn-size); height: var(--btn-size);
             background: #2a2a2a; border: 1px solid #444; border-radius: 4px;
@@ -101,7 +85,7 @@
             background-color: var(--accent-gold); color: #111;
             border: none; border-radius: 4px;
             font-weight: bold; font-size: 12px; cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
+            display: flex; align-items: center; gap: 8px;
             transition: background 0.2s;
         }
         .save-btn:hover { background-color: #d4a845; }
@@ -110,58 +94,29 @@
         /* --- 2. Main Layout --- */
         .main-wrapper {
             display: flex;
-            height: calc(100vh - var(--header-height));
+            height: calc(100vh - var(--header-h));
             width: 100vw;
             position: relative;
         }
 
-        /* --- Left Sidebar --- */
-        .sidebar {
-            width: 25%;
-            min-width: var(--sidebar-width);
+        /* --- Sidebar (Complex) --- */
+        .sidebar-container {
+            display: flex;
             background: var(--bg-sidebar);
             border-right: 1px solid #000;
-            display: flex;
             position: relative;
-            transition: margin-left 0.3s ease; /* Smooth Toggle Animation */
-            z-index: 10;
-        }
-
-        /* Sidebar Closed State */
-        .sidebar.closed {
-            margin-left: calc(var(--sidebar-width) * -1); /* Hide completely */
-        }
-
-        /* Toggle Button (Attached to Sidebar) */
-        .sidebar-toggle {
-            position: absolute;
-            right: -24px; /* Outside the sidebar */
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 50px;
-            background: #222;
-            border: 1px solid #000;
-            border-left: none;
-            border-radius: 0 8px 8px 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-gold);
             z-index: 20;
-            box-shadow: 4px 0 5px rgba(0,0,0,0.2);
         }
 
+        /* A. Tab Rail (Always Visible) */
         .tab-rail {
-            width: 50px;
-            background: #1e1c1b;
+            width: var(--tab-w);
+            min-width: var(--tab-w);
+            background: var(--bg-rail);
             border-right: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 15px;
-            gap: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 15px; gap: 15px;
+            z-index: 22;
         }
         .tab-icon {
             width: 36px; height: 36px;
@@ -171,12 +126,48 @@
         }
         .tab-icon.active, .tab-icon:hover { color: var(--accent-gold); background: rgba(255,255,255,0.05); }
 
-        .editor-content {
-            flex: 1; padding: 20px; overflow-y: auto;
-            min-width: 0; /* Flex child shrinking fix */
+        /* B. Editor Panel (Collapsible) */
+        .editor-panel {
+            width: var(--editor-w);
+            overflow: hidden;
+            background: var(--bg-sidebar);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+            position: relative;
         }
+        
+        /* Collapsed State Class */
+        .sidebar-container.collapsed .editor-panel {
+            width: 0px;
+        }
+
+        .editor-content {
+            padding: 20px;
+            width: var(--editor-w); /* Prevent content squishing */
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* C. Toggle Button */
+        .toggle-btn {
+            position: absolute;
+            right: -24px; /* Hangs outside the sidebar */
+            top: 50%; transform: translateY(-50%);
+            width: 24px; height: 50px;
+            background: #222;
+            border: 1px solid #000; border-left: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-gold);
+            font-size: 12px;
+            box-shadow: 4px 0 8px rgba(0,0,0,0.2);
+            z-index: 25;
+        }
+
+        /* Form Styles */
         .section-title {
-            font-size: 16px; font-weight: bold; color: var(--accent-gold);
+            font-size: 16px; font-weight: 700; color: var(--accent-gold);
             border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px;
         }
         .input-group { margin-bottom: 20px; }
@@ -191,7 +182,7 @@
         }
 
 
-        /* --- 3. Right Workspace --- */
+        /* --- 3. Workspace --- */
         .workspace {
             flex: 1;
             background-color: var(--bg-workspace);
@@ -199,7 +190,6 @@
             overflow: hidden;
             cursor: grab;
             display: flex; align-items: center; justify-content: center;
-            z-index: 1;
         }
         .workspace:active { cursor: grabbing; }
 
@@ -211,21 +201,21 @@
 
         /* --- 4K Preview Board --- */
         .preview-box {
-            width: 3840px;
-            height: 2160px;
+            width: 3840px; height: 2160px;
             background-color: #ffffff;
             position: relative;
             display: flex; align-items: center; justify-content: center;
             
-            /* Styling Specs */
-            border-radius: 30px;
+            /* Styles */
+            border-radius: 30px; /* Smooth Round */
             overflow: hidden;
             border: 0.7px solid var(--accent-gold);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
         }
 
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .placeholder-text { font-size: 80px; font-weight: bold; color: #ddd; pointer-events: none; }
+        .placeholder-text { font-size: 80px; font-weight: 700; color: #ddd; pointer-events: none; }
+
 
         /* --- 4. Helper Box (Opacity 70%) --- */
         .helper-box {
@@ -233,29 +223,31 @@
             bottom: 30px; right: 30px;
             height: 60px;
             
-            /* Opacity 70% Background */
+            /* 70% Opacity Background */
             background-color: rgba(30, 30, 30, 0.7);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
             
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px; /* Rounded Box */
+            border-radius: 30px;
             display: flex; align-items: center;
             padding: 0 30px; gap: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             pointer-events: none;
             color: #eee;
+            font-size: 13px;
         }
 
-        .helper-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #ddd; }
+        .helper-item { display: flex; align-items: center; gap: 8px; }
         .helper-item i { color: var(--accent-gold); font-size: 14px; }
         .divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
-        .helper-strong { font-weight: bold; color: #fff; margin-right: 5px;}
+        .helper-strong { font-weight: 700; color: #fff; }
+
     </style>
 </head>
 <body>
 
     <header>
-        <div style="width: 200px;"></div>
+        <div style="width: 200px;"></div> <!-- Spacer -->
 
         <div class="header-center">
             <h1 class="title-en">Code Vein Ⅱ Sheet Maker</h1>
@@ -268,7 +260,7 @@
                 <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
                     <i class="fa-brands fa-x-twitter"></i>
                 </a>
-                <div class="icon-btn" title="Help" onclick="alert('하단 안내 박스를 확인해주세요.')">
+                <div class="icon-btn" title="Help" onclick="alert('우측 하단의 조작 안내를 확인하세요.')">
                     <i class="fa-solid fa-question"></i>
                 </div>
             </div>
@@ -280,35 +272,43 @@
 
     <div class="main-wrapper">
         
-        <!-- Sidebar with Toggle -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-toggle" id="toggleBtn" title="Toggle Sidebar">
-                <i class="fa-solid fa-caret-left" id="toggleIcon"></i>
-            </div>
-
+        <!-- Sidebar Container -->
+        <aside class="sidebar-container" id="sidebar">
+            
+            <!-- 1. Fixed Tab Rail -->
             <div class="tab-rail">
                 <div class="tab-icon active"><i class="fa-solid fa-pen-to-square"></i></div>
                 <div class="tab-icon"><i class="fa-solid fa-palette"></i></div>
                 <div class="tab-icon"><i class="fa-solid fa-font"></i></div>
             </div>
-            <div class="editor-content">
-                <div class="section-title">기본 설정</div>
-                <div class="input-group">
-                    <label class="input-label">배경 이미지 (4K 권장)</label>
-                    <input type="file" id="imgInput" accept="image/*">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">캐릭터 이름</label>
-                    <input type="text" placeholder="이름을 입력하세요">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">메모 / 설정</label>
-                    <textarea rows="5" placeholder="내용을 입력하세요..."></textarea>
+
+            <!-- 2. Collapsible Editor -->
+            <div class="editor-panel">
+                <div class="editor-content">
+                    <div class="section-title">기본 설정</div>
+                    <div class="input-group">
+                        <label class="input-label">배경 이미지 (4K 권장)</label>
+                        <input type="file" id="imgInput" accept="image/*">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">캐릭터 이름</label>
+                        <input type="text" placeholder="이름을 입력하세요">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">메모 / 설정</label>
+                        <textarea rows="6" placeholder="내용을 입력하세요..."></textarea>
+                    </div>
                 </div>
             </div>
+
+            <!-- Toggle Button -->
+            <div class="toggle-btn" id="toggleBtn" title="Toggle Panel">
+                <i class="fa-solid fa-chevron-left" id="toggleIcon"></i>
+            </div>
+
         </aside>
 
-        <!-- Workspace -->
+        <!-- Right Workspace -->
         <section class="workspace" id="workspace">
             <div id="viewport">
                 <div class="preview-box" id="board">
@@ -317,7 +317,7 @@
                 </div>
             </div>
 
-            <!-- UI Helper Box (Opacity 70%) -->
+            <!-- Helper Box -->
             <div class="helper-box">
                 <div class="helper-item">
                     <i class="fa-solid fa-computer-mouse"></i>
@@ -325,19 +325,20 @@
                 </div>
                 <div class="divider"></div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-hand-pointer"></i> <span>드래그 : 화면 이동</span>
+                    <i class="fa-solid fa-hand-pointer"></i> <span>드래그 : 이동</span>
                 </div>
                 <div class="helper-item">
                     <i class="fa-solid fa-magnifying-glass"></i> <span>휠 : 확대/축소</span>
                 </div>
                 <div class="helper-item">
-                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>휠 클릭 : 화면 초기화</span>
+                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>휠 클릭 : 중앙 정렬</span>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
+        // --- Elements ---
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
         const board = document.getElementById('board');
@@ -345,22 +346,22 @@
         const previewImg = document.getElementById('preview-img');
         const placeholder = document.querySelector('.placeholder-text');
         
-        // Sidebar Toggle Logic
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleBtn');
         const toggleIcon = document.getElementById('toggleIcon');
 
+        // --- Sidebar Logic ---
         toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-            // Icon rotation logic
-            if (sidebar.classList.contains('closed')) {
-                toggleIcon.classList.replace('fa-caret-left', 'fa-caret-right');
+            sidebar.classList.toggle('collapsed');
+            // Icon change logic
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.className = 'fa-solid fa-chevron-right';
             } else {
-                toggleIcon.classList.replace('fa-caret-right', 'fa-caret-left');
+                toggleIcon.className = 'fa-solid fa-chevron-left';
             }
         });
 
-        // Viewport Logic
+        // --- Viewport State ---
         const INITIAL_SCALE = 0.15; 
         let scale = INITIAL_SCALE;
         let isDragging = false;
@@ -371,6 +372,7 @@
         }
         updateTransform();
 
+        // --- Image Upload ---
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -384,7 +386,7 @@
             }
         });
 
-        // Zoom
+        // --- Zoom (Wheel) ---
         workspace.addEventListener('wheel', (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.05 : 0.05;
@@ -392,16 +394,18 @@
             updateTransform();
         }, { passive: false });
 
-        // Pan & Reset
+        // --- Interaction (Pan & Reset) ---
         workspace.addEventListener('mousedown', (e) => {
-            if (e.button === 1) { // Middle Click
+            // Middle Click -> Reset
+            if (e.button === 1) {
                 e.preventDefault();
                 scale = INITIAL_SCALE;
                 pointX = 0; pointY = 0;
                 updateTransform();
                 return;
             }
-            if (e.button === 0) { // Left Click
+            // Left Click -> Pan
+            if (e.button === 0) {
                 isDragging = true;
                 startX = e.clientX - pointX;
                 startY = e.clientY - pointY;
@@ -422,22 +426,30 @@
             workspace.style.cursor = 'grab';
         });
 
-        // Save
+        // --- Save to PNG ---
         function saveImage() {
             const originalTransform = viewport.style.transform;
-            viewport.style.transform = 'none'; 
+            viewport.style.transform = 'none'; // Reset for clean capture
             
             html2canvas(board, {
-                scale: 1, width: 3840, height: 2160,
-                useCORS: true, backgroundColor: null
+                scale: 1, // Original 4K resolution
+                width: 3840,
+                height: 2160,
+                useCORS: true,
+                backgroundColor: null
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'CodeVein_Sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+                viewport.style.transform = originalTransform; // Restore view
+            }).catch(err => {
+                console.error(err);
                 viewport.style.transform = originalTransform;
+                alert('저장 중 오류가 발생했습니다.');
             });
         }
     </script>
 </body>
 </html>
+
