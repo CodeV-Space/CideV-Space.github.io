@@ -241,9 +241,9 @@
         <div class="nav-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></div>
     </div>
 
-    <div class="address-input">
-    <i class="fa-solid fa-lock" id="addrLock" style="font-size: 11px; color: #666; vertical-align: middle; margin-right: 10px; transition: 0.3s; margin-top: -1.5px;"></i>
-    <span style="font-size: 14px; display: inline-block; vertical-align: middle; letter-spacing: 0.5px;">https://codevein.sheet/2/main</span>
+    <div class="address-input" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-lock" id="addrLock" style="font-size: 12px; color: var(--current-accent); transition: color 0.3s ease; margin-top: 1px;"></i>
+        <span style="font-size: 14px; letter-spacing: 0.5px; color: #ddd;">https://codevein.sheet/2/main</span>
     </div>
 
     <div class="right-controls">
@@ -387,16 +387,30 @@
 
         document.getElementById('helperBox').addEventListener('click', function() { this.classList.toggle('minimized'); });
 
-        // --- 3. Easter Egg (7 Clicks) ---
-        let eggCount = 0;
-        document.getElementById('eggTab').addEventListener('click', function() {
-            eggCount++;
-            if (eggCount >= 7) {
-                document.documentElement.style.setProperty('--current-accent', '#ea0000');
-                this.style.color = '#ea0000';
-                console.log("Blood Mode Activated");
-            }
-        });
+        // --- 4. Easter Egg (7 Clicks) ---
+let eggCount = 0;
+// HTML에서 'eggTab' 아이디를 가진 요소를 가져왔는지 확인하세요 (const eggTab = document.getElementById('eggTab');)
+eggTab.addEventListener('click', function() {
+    eggCount++;
+    if (eggCount >= 7) {
+        // 1. 글로벌 CSS 변수 변경 (골드 -> 빨강)
+        // 사이드바 타이틀, 저장 버튼, 편의성 아이콘 등이 이 변수를 사용합니다.
+        document.documentElement.style.setProperty('--current-accent', '#ea0000');
+        
+        // 2. 주소창 자물쇠 아이콘 색상 직접 변경
+        // HTML에 추가한 id="addrLock"을 이용합니다.
+        const addrLock = document.getElementById('addrLock');
+        if(addrLock) {
+            addrLock.style.color = '#ea0000';
+        }
+
+        // 3. TBA 탭 자체 색상 및 텍스트 변경 (피드백)
+        this.style.color = '#ea0000';
+        this.innerText = "BLOOD";
+        
+        console.log("Easter Egg Activated: Blood Mode");
+    }
+});
 
         // --- 4. Form Actions ---
         // 다수 선택 로직 (Tweet Type)
