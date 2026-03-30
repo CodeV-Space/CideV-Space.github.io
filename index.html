@@ -14,7 +14,34 @@
             --accent-gold: #D3AF37;
             --accent-border: #bf9739;
             --accent-blood: #ea0000;
-            --current-accent: var(--accent-gold);
+    /* 변수 자체가 바뀔 때 1초 동안 부드럽게 변하도록 설정 */
+    transition: --current-accent 1s ease; 
+}
+
+/* 2. 악센트 컬러를 사용하는 주요 요소들에 transition 적용 */
+/* 이 요소들이 이스터에그 발동 시 색상이 서서히 변하게 됩니다. */
+.section-title, 
+.save-btn, 
+.tab-icon-btn, 
+.toggle-btn, 
+.check-item, 
+.img-option.selected {
+    transition: color 1s ease, background-color 1s ease, border-color 1s ease;
+}
+
+/* 3. 주소창 자물쇠와 TBA 탭 전용 설정 */
+#addrLock, #eggTab {
+    transition: color 1s ease; /* 색상 변화를 1초 동안 부드럽게 */
+}
+
+/* 4. 미활성화 탭 호버 효과 (기존 코드 유지 및 scale 추가) */
+.tab:not(.active):hover {
+    background-color: #333;
+    color: #ccc;
+    transform: scale(1.05);
+    transform-origin: bottom;
+    transition: 0.2s; /* 호버는 빠르게 반응하도록 별도 설정 */
+}
 
             --bg-frame: #121212;
             --bg-header: #2a2a2a;
@@ -387,28 +414,49 @@
 
         document.getElementById('helperBox').addEventListener('click', function() { this.classList.toggle('minimized'); });
 
-        // --- 4. Easter Egg (7 Clicks) ---
+        // --- 4. Easter Egg (7 Clicks & Sequence Animation) ---
 let eggCount = 0;
-// HTML에서 'eggTab' 아이디를 가진 요소를 가져왔는지 확인하세요 (const eggTab = document.getElementById('eggTab');)
-eggTab.addEventListener('click', function() {
-    eggCount++;
-    if (eggCount >= 7) {
-        // 1. 글로벌 CSS 변수 변경 (골드 -> 빨강)
-        // 사이드바 타이틀, 저장 버튼, 편의성 아이콘 등이 이 변수를 사용합니다.
-        document.documentElement.style.setProperty('--current-accent', '#ea0000');
-        
-        // 2. 주소창 자물쇠 아이콘 색상 직접 변경
-        // HTML에 추가한 id="addrLock"을 이용합니다.
-        const addrLock = document.getElementById('addrLock');
-        if(addrLock) {
-            addrLock.style.color = '#ea0000';
-        }
+let isAnimating = false; // 애니메이션 중 중복 클릭 방지
 
-        // 3. TBA 탭 자체 색상 및 텍스트 변경 (피드백)
+const eggTab = document.getElementById('eggTab');
+const addrLock = document.getElementById('addrLock');
+
+eggTab.addEventListener('click', function() {
+    if (isAnimating) return; // 시퀀스 진행 중에는 클릭 무시
+    
+    eggCount++;
+    
+    if (eggCount >= 7) {
+        isAnimating = true;
+        eggCount = 0; // 카운트 초기화
+
+        // [STEP 1] BLOOD (빨간색 활성화)
+        document.documentElement.style.setProperty('--current-accent', '#ea0000');
+        if(addrLock) addrLock.style.color = '#ea0000';
         this.style.color = '#ea0000';
         this.innerText = "BLOOD";
-        
-        console.log("Easter Egg Activated: Blood Mode");
+
+        // [STEP 2] 1초 뒤 TO
+        setTimeout(() => {
+            this.innerText = "TO";
+        }, 1000);
+
+        // [STEP 3] 다시 1초 뒤 (총 2초 뒤) GOLD로 변경 및 색상 복구 시작
+        setTimeout(() => {
+            this.innerText = "GOLD";
+            
+            // 색상을 다시 골드(#D3AF37)로 천천히 복구 (CSS transition 영향)
+            document.documentElement.style.setProperty('--current-accent', '#D3AF37');
+            if(addrLock) addrLock.style.color = '#D3AF37';
+            this.style.color = '#D3AF37';
+        }, 2000);
+
+        // [STEP 4] 마지막 1초 뒤 (총 3초 뒤) TBA로 복구 및 종료
+        setTimeout(() => {
+            this.innerText = "TBA";
+            this.style.color = ''; // 기존 스타일로 복구
+            isAnimating = false;
+        }, 3000);
     }
 });
 
