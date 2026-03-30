@@ -14,34 +14,7 @@
             --accent-gold: #D3AF37;
             --accent-border: #bf9739;
             --accent-blood: #ea0000;
-    /* 변수 자체가 바뀔 때 1초 동안 부드럽게 변하도록 설정 */
-    transition: --current-accent 1s ease; 
-}
-
-/* 2. 악센트 컬러를 사용하는 주요 요소들에 transition 적용 */
-/* 이 요소들이 이스터에그 발동 시 색상이 서서히 변하게 됩니다. */
-.section-title, 
-.save-btn, 
-.tab-icon-btn, 
-.toggle-btn, 
-.check-item, 
-.img-option.selected {
-    transition: color 1s ease, background-color 1s ease, border-color 1s ease;
-}
-
-/* 3. 주소창 자물쇠와 TBA 탭 전용 설정 */
-#addrLock, #eggTab {
-    transition: color 1s ease; /* 색상 변화를 1초 동안 부드럽게 */
-}
-
-/* 4. 미활성화 탭 호버 효과 (기존 코드 유지 및 scale 추가) */
-.tab:not(.active):hover {
-    background-color: #333;
-    color: #ccc;
-    transform: scale(1.05);
-    transform-origin: bottom;
-    transition: 0.2s; /* 호버는 빠르게 반응하도록 별도 설정 */
-}
+            --current-accent: var(--accent-gold);
 
             --bg-frame: #121212;
             --bg-header: #2a2a2a;
@@ -56,6 +29,9 @@
             --tab-h: 42px;
             --address-h: 50px;
             --editor-w: 350px;
+
+            /* 색상 변화를 부드럽게 만들기 위한 트랜지션 설정 */
+            transition: --current-accent 1s ease;
         }
 
         body, html {
@@ -97,9 +73,9 @@
             border-radius: 10px 10px 0 0;
             display: flex; align-items: center; justify-content: center; gap: 8px;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
-            cursor: pointer; transition: all 0.2s ease;
+            cursor: pointer; transition: all 1s ease; /* 이스터에그 시퀀스를 위한 설정 */
         }
-        .tab:not(.active):hover { background-color: #333; color: #ccc; transform: scale(1.05); transform-origin: bottom; }
+        .tab:not(.active):hover { background-color: #333; color: #ccc; transform: scale(1.05); transform-origin: bottom; transition: 0.2s; }
         .tab.active {
             height: 36px; background-color: var(--bg-header);
             color: var(--text-white); z-index: 10;
@@ -135,9 +111,9 @@
         .author-id { font-size: 14px; color: #888; font-weight: 500; }
         .icon-btn {
             width: 32px; height: 32px; background: #333; border: 1px solid #555; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; color: #ccc; text-decoration: none; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; color: #ccc; text-decoration: none; transition: 1s ease;
         }
-        .icon-btn:hover { border-color: var(--current-accent); color: var(--current-accent); }
+        .icon-btn:hover { border-color: var(--current-accent); color: var(--current-accent); transition: 0.2s; }
 
         /* --- Layout --- */
         .main-wrapper { display: flex; height: calc(100vh - var(--tab-h) - var(--address-h)); width: 100vw; position: relative; }
@@ -150,7 +126,7 @@
         }
         .tab-icon-btn {
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            color: #666; cursor: pointer; border-radius: 8px; font-size: 18px; transition: 0.2s;
+            color: #666; cursor: pointer; border-radius: 8px; font-size: 18px; transition: 1s ease;
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
@@ -162,26 +138,27 @@
             position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
             width: 20px; height: 50px; background: #222; border: 1px solid #000; border-radius: 0 8px 8px 0;
             cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--current-accent); z-index: 25;
+            transition: color 1s ease;
         }
 
         /* --- Form Elements --- */
-        .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; }
+        .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; transition: color 1s ease; }
         .input-group { margin-bottom: 15px; }
         .input-label { display: block; margin-bottom: 5px; font-size: 11px; color: #aaa; }
         input[type="text"], select { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
         
         .grid-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .check-item { font-size: 11px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; }
+        .check-item { font-size: 11px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 1s ease; }
         .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
 
         .image-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
         .img-option { cursor: pointer; text-align: center; font-size: 10px; opacity: 0.6; transition: 0.2s; }
-        .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; }
-        .img-option img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 4px; border: 1px solid transparent; }
+        .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; transition: color 1s ease; }
+        .img-option img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 4px; border: 1px solid transparent; transition: 1s ease; }
         .img-option.selected img { border-color: var(--current-accent); }
 
         .sidebar-footer { padding: 15px; border-top: 1px solid #333; }
-        .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 1s ease; }
 
         /* --- Workspace --- */
         .workspace { flex: 1; background-color: var(--bg-workspace); position: relative; overflow: hidden; cursor: grab; display: flex; align-items: center; justify-content: center; }
@@ -194,48 +171,50 @@
         }
 
         /* --- Helper Box (수정본) --- */
-.helper-box {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    height: 60px; /* 높이 고정 */
-    background-color: rgba(30, 30, 30, 0.7);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 30px; /* 기본 둥근 사각형 */
-    color: #eee;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    padding: 0 25px;
-    gap: 15px;
-    cursor: pointer;
-    z-index: 50;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    overflow: hidden;
-}
+        .helper-box {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            height: 60px;
+            background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            color: #eee;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            gap: 15px;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
 
-/* 최소화(닫혔을 때) 시 정원형 유지 */
-.helper-box.minimized {
-    width: 60px;   /* 높이와 동일하게 설정하여 정원형 유지 */
-    padding: 0;    /* 내부 여백 제거 */
-    justify-content: center; /* 아이콘 중앙 배치 */
-    border-radius: 50%; /* 완벽한 원형 */
-}
+        .helper-box.minimized {
+            width: 60px;
+            padding: 0;
+            justify-content: center;
+            border-radius: 50%;
+        }
 
-.helper-icon-min {
-    display: none;
-    font-size: 20px;
-    color: var(--current-accent);
-}
+        .helper-icon-min {
+            display: none;
+            font-size: 20px;
+            color: var(--current-accent);
+            transition: color 1s ease;
+        }
 
-.helper-box.minimized .helper-content {
-    display: none;
-}
+        .helper-box.minimized .helper-content {
+            display: none;
+        }
 
-.helper-box.minimized .helper-icon-min {
-    display: block;
-}
+        .helper-box.minimized .helper-icon-min {
+            display: block;
+        }
+
+        .helper-content i { transition: color 1s ease; }
 
         /* --- Text Rendering --- */
         .render-layer { position: absolute; color: #000; pointer-events: none; }
@@ -262,27 +241,27 @@
     </div>
 
     <div class="address-bar-row">
-    <div class="nav-controls">
-        <div class="nav-btn"><i class="fa-solid fa-arrow-left"></i></div>
-        <div class="nav-btn"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="nav-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></div>
-    </div>
+        <div class="nav-controls">
+            <div class="nav-btn"><i class="fa-solid fa-arrow-left"></i></div>
+            <div class="nav-btn"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="nav-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></div>
+        </div>
 
-    <div class="address-input" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <i class="fa-solid fa-lock" id="addrLock" style="font-size: 12px; color: var(--current-accent); transition: color 0.3s ease; margin-top: 1px;"></i>
-        <span style="font-size: 14px; letter-spacing: 0.5px; color: #ddd;">https://codevein.sheet/2/main</span>
-    </div>
+        <div class="address-input" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-lock" id="addrLock" style="font-size: 12px; color: var(--current-accent); transition: color 1s ease; margin-top: 1px;"></i>
+            <span style="font-size: 14px; letter-spacing: 0.5px; color: #ddd;">https://codevein.sheet/2/main</span>
+        </div>
 
-    <div class="right-controls">
-        <span class="author-id">Made by @D3LTA_CV</span>
-        <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
-            <i class="fa-brands fa-x-twitter"></i>
-        </a>
-        <div class="icon-btn" title="Help" onclick="alert('화면 우측 하단을 확인하세요.')">
-            <i class="fa-solid fa-question"></i>
+        <div class="right-controls">
+            <span class="author-id">Made by @D3LTA_CV</span>
+            <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <div class="icon-btn" title="Help" onclick="alert('화면 우측 하단을 확인하세요.')">
+                <i class="fa-solid fa-question"></i>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="main-wrapper">
         <aside class="sidebar-container" id="sidebar">
@@ -343,33 +322,30 @@
             <div id="viewport">
                 <div class="preview-box" id="board">
                     <div id="render-nickname" class="render-layer"></div>
-                    </div>
+                </div>
             </div>
 
             <div class="helper-box" id="helperBox" title="클릭하여 최소화/확대">
-    <i class="fa-solid fa-circle-info helper-icon-min"></i>
-    
-    <div class="helper-content" style="display: flex; align-items: center; gap: 20px; white-space: nowrap;">
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-hand-back-fist" style="color: var(--current-accent); font-size: 14px;"></i>
-            <span>드래그: <span style="font-weight: 700; color: #fff;">이동</span></span>
-        </div>
-
-        <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
-
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
-            <span>휠: <span style="font-weight: 700; color: #fff;">확대/축소</span></span>
-        </div>
-
-        <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
-
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-computer-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
-            <span>휠 클릭: <span style="font-weight: 700; color: #fff;">중앙 정렬</span></span>
-        </div>
+                <i class="fa-solid fa-circle-info helper-icon-min"></i>
+                <div class="helper-content" style="display: flex; align-items: center; gap: 20px; white-space: nowrap;">
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-hand-back-fist" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>드래그: <span style="font-weight: 700; color: #fff;">이동</span></span>
+                    </div>
+                    <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>휠: <span style="font-weight: 700; color: #fff;">확대/축소</span></span>
+                    </div>
+                    <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-computer-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>휠 클릭: <span style="font-weight: 700; color: #fff;">중앙 정렬</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
 
     <script>
         // --- 1. Viewport Logic (Pan & Zoom) ---
@@ -405,7 +381,7 @@
 
         window.addEventListener('mouseup', () => { isDragging = false; workspace.style.cursor = 'grab'; });
 
-        // --- 2. UI Interations ---
+        // --- 2. UI Interactions ---
         document.getElementById('toggleBtn').addEventListener('click', function() {
             const container = document.getElementById('sidebar');
             container.classList.toggle('collapsed');
@@ -414,59 +390,54 @@
 
         document.getElementById('helperBox').addEventListener('click', function() { this.classList.toggle('minimized'); });
 
-        // --- 4. Easter Egg (7 Clicks & Sequence Animation) ---
-let eggCount = 0;
-let isAnimating = false; // 애니메이션 중 중복 클릭 방지
+        // --- 3. Easter Egg (7 Clicks Sequence) ---
+        let eggCount = 0;
+        let isAnimating = false;
+        const eggTab = document.getElementById('eggTab');
+        const addrLock = document.getElementById('addrLock');
 
-const eggTab = document.getElementById('eggTab');
-const addrLock = document.getElementById('addrLock');
-
-eggTab.addEventListener('click', function() {
-    if (isAnimating) return; // 시퀀스 진행 중에는 클릭 무시
-    
-    eggCount++;
-    
-    if (eggCount >= 7) {
-        isAnimating = true;
-        eggCount = 0; // 카운트 초기화
-
-        // [STEP 1] BLOOD (빨간색 활성화)
-        document.documentElement.style.setProperty('--current-accent', '#ea0000');
-        if(addrLock) addrLock.style.color = '#ea0000';
-        this.style.color = '#ea0000';
-        this.innerText = "BLOOD";
-
-        // [STEP 2] 1초 뒤 TO
-        setTimeout(() => {
-            this.innerText = "TO";
-        }, 1000);
-
-        // [STEP 3] 다시 1초 뒤 (총 2초 뒤) GOLD로 변경 및 색상 복구 시작
-        setTimeout(() => {
-            this.innerText = "GOLD";
+        eggTab.addEventListener('click', function() {
+            if (isAnimating) return;
+            eggCount++;
             
-            // 색상을 다시 골드(#D3AF37)로 천천히 복구 (CSS transition 영향)
-            document.documentElement.style.setProperty('--current-accent', '#D3AF37');
-            if(addrLock) addrLock.style.color = '#D3AF37';
-            this.style.color = '#D3AF37';
-        }, 2000);
+            if (eggCount >= 7) {
+                isAnimating = true;
+                eggCount = 0;
 
-        // [STEP 4] 마지막 1초 뒤 (총 3초 뒤) TBA로 복구 및 종료
-        setTimeout(() => {
-            this.innerText = "TBA";
-            this.style.color = ''; // 기존 스타일로 복구
-            isAnimating = false;
-        }, 3000);
-    }
-});
+                // [1단계] BLOOD 단계 (빨강 활성화)
+                document.documentElement.style.setProperty('--current-accent', '#ea0000');
+                if(addrLock) addrLock.style.color = '#ea0000';
+                this.style.color = '#ea0000';
+                this.innerText = "BLOOD";
+
+                // [2단계] 1초 뒤 TO
+                setTimeout(() => {
+                    this.innerText = "TO";
+                }, 1000);
+
+                // [3단계] 2초 뒤 GOLD (텍스트 변경 및 색상 복구 시작)
+                setTimeout(() => {
+                    this.innerText = "GOLD";
+                    // 다시 골드로 변경하면 CSS transition에 의해 1초간 부드럽게 변함
+                    document.documentElement.style.setProperty('--current-accent', '#D3AF37');
+                    if(addrLock) addrLock.style.color = '#D3AF37';
+                    this.style.color = '#D3AF37';
+                }, 2000);
+
+                // [4단계] 3초 뒤 TBA 복구
+                setTimeout(() => {
+                    this.innerText = "TBA";
+                    this.style.color = ''; 
+                    isAnimating = false;
+                }, 3000);
+            }
+        });
 
         // --- 4. Form Actions ---
-        // 다수 선택 로직 (Tweet Type)
         document.querySelectorAll('#tweetType .check-item').forEach(item => {
             item.addEventListener('click', () => item.classList.toggle('selected'));
         });
 
-        // 단일 선택 로직 (Buddy Style)
         document.querySelectorAll('#buddyStyle .img-option').forEach(opt => {
             opt.addEventListener('click', () => {
                 document.querySelectorAll('#buddyStyle .img-option').forEach(o => o.classList.remove('selected'));
@@ -474,7 +445,6 @@ eggTab.addEventListener('click', function() {
             });
         });
 
-        // 실시간 닉네임 반영 예시
         document.getElementById('inNick').addEventListener('input', (e) => {
             document.getElementById('render-nickname').innerText = e.target.value;
         });
