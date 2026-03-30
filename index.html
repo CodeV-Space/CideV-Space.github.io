@@ -310,29 +310,16 @@
                     </div>
             </div>
 
-            <div class="helper-box" id="helperBox" title="클릭하여 최소화/확대">
-    <i class="fa-solid fa-circle-info helper-icon-min"></i>
-    <div class="helper-content">
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-hand-back-fist" style="color: var(--current-accent);"></i>
-            <span>드래그: <span style="font-weight: 700;">이동</span></span>
-        </div>
-        
-        <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 5px;"></div>
-
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-mouse" style="color: var(--current-accent);"></i>
-            <span>휠: <span style="font-weight: 700;">확대/축소</span></span>
-        </div>
-
-        <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2); margin: 0 5px;"></div>
-
-        <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-computer-mouse" style="color: var(--current-accent);"></i>
-            <span>휠 클릭: <span style="font-weight: 700;">초기화</span></span>
-        </div>
+            <div class="helper-box" id="helperBox">
+                <i class="fa-solid fa-info-circle helper-icon-min"></i>
+                <div class="helper-content">
+                    <i class="fa-solid fa-computer-mouse" style="color:var(--current-accent)"></i>
+                    <b style="margin: 0 10px 0 5px">조작 가이드</b>
+                    <span>드래그: 이동 | 휠: 확대/축소 | 휠 클릭: 초기화</span>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
 
     <script>
         // --- 1. Viewport Logic (Pan & Zoom) ---
