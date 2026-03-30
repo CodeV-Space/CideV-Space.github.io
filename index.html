@@ -30,7 +30,7 @@
             --address-h: 50px;
             --editor-w: 350px;
 
-            /* 색상 변화를 부드럽게 만들기 위한 트랜지션 설정 */
+            /* 색상 변화 부드럽게 */
             transition: --current-accent 1s ease;
         }
 
@@ -73,7 +73,7 @@
             border-radius: 10px 10px 0 0;
             display: flex; align-items: center; justify-content: center; gap: 8px;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
-            cursor: pointer; transition: all 1s ease; /* 이스터에그 시퀀스를 위한 설정 */
+            cursor: pointer; transition: all 1s ease;
         }
         .tab:not(.active):hover { background-color: #333; color: #ccc; transform: scale(1.05); transform-origin: bottom; transition: 0.2s; }
         .tab.active {
@@ -162,7 +162,7 @@
 
         /* --- Workspace --- */
         .workspace { flex: 1; background-color: var(--bg-workspace); position: relative; overflow: hidden; cursor: grab; display: flex; align-items: center; justify-content: center; }
-        #viewport { transform-origin: center center; will-change: transform; }
+        #viewport { transform-origin: center center; will-change: transform; display: flex; flex-direction: column; align-items: center; }
         .preview-box {
             width: 3840px; height: 2160px; background-color: #ffffff;
             position: relative; border-radius: 30px; overflow: hidden;
@@ -170,50 +170,33 @@
             box-shadow: 0 0 15px 5px rgba(0,0,0,0.25);
         }
 
-        /* --- Helper Box (수정본) --- */
+        /* 저작권 문구 스타일 */
+        .copyright-notice {
+            width: 100%;
+            max-width: 3840px;
+            margin-top: 60px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .copyright-notice p { margin: 0; font-size: 32px; line-height: 1.6; }
+
+        /* --- Helper Box --- */
         .helper-box {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            height: 60px;
-            background-color: rgba(30, 30, 30, 0.7);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px;
-            color: #eee;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            padding: 0 25px;
-            gap: 15px;
-            cursor: pointer;
-            z-index: 50;
+            position: absolute; bottom: 30px; right: 30px;
+            height: 60px; background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px; color: #eee; font-size: 13px;
+            display: flex; align-items: center; padding: 0 25px; gap: 15px;
+            cursor: pointer; z-index: 50;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
         }
-
-        .helper-box.minimized {
-            width: 60px;
-            padding: 0;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .helper-icon-min {
-            display: none;
-            font-size: 20px;
-            color: var(--current-accent);
-            transition: color 1s ease;
-        }
-
-        .helper-box.minimized .helper-content {
-            display: none;
-        }
-
-        .helper-box.minimized .helper-icon-min {
-            display: block;
-        }
-
+        .helper-box.minimized { width: 60px; padding: 0; justify-content: center; border-radius: 50%; }
+        .helper-icon-min { display: none; font-size: 20px; color: var(--current-accent); transition: color 1s ease; }
+        .helper-box.minimized .helper-content { display: none; }
+        .helper-box.minimized .helper-icon-min { display: block; }
         .helper-content i { transition: color 1s ease; }
 
         /* --- Text Rendering --- */
@@ -230,20 +213,17 @@
     </div>
 
     <div class="browser-top">
-    <div class="tab" title="코드베인 1 트친소도 제작 생각 있습니다.">
-        <img src="Icons/Titles/CV1.png" class="tab-icon" alt=""> CODE VEIN
+        <div class="tab" title="코드베인 1 트친소도 제작 생각 있습니다.">
+            <img src="Icons/Titles/CV1.png" class="tab-icon" alt=""> CODE VEIN
+        </div>
+        <div class="tab active">
+            <img src="Icons/Titles/CV2.png" class="tab-icon" alt=""> CODE VEIN Ⅱ
+        </div>
+        <div class="tab" id="eggTab">TBA</div>
+        <div class="tab-plus" title="추후 공략 사이트 추가 예정이 있습니다.">
+            <i class="fa-solid fa-plus"></i>
+        </div>
     </div>
-    
-    <div class="tab active">
-        <img src="Icons/Titles/CV2.png" class="tab-icon" alt=""> CODE VEIN Ⅱ
-    </div>
-    
-    <div class="tab" id="eggTab">TBA</div>
-    
-    <div class="tab-plus" title="추후 공략 사이트 추가 예정이 있습니다.">
-        <i class="fa-solid fa-plus"></i>
-    </div>
-</div>
 
     <div class="address-bar-row">
         <div class="nav-controls">
@@ -284,7 +264,7 @@
                         <input type="text" id="inNick" placeholder="닉네임을 입력하세요">
                     </div>
 
-                    <div class="section-title">트윗 성향 (다수 선택)</div>
+                    <div class="section-title">트윗 성향</div>
                     <div class="grid-options" id="tweetType">
                         <div class="check-item">RT</div><div class="check-item">마음</div><div class="check-item">인용</div>
                         <div class="check-item">탐라대화</div><div class="check-item">일상</div><div class="check-item">욕트</div>
@@ -328,6 +308,11 @@
                 <div class="preview-box" id="board">
                     <div id="render-nickname" class="render-layer"></div>
                 </div>
+
+                <div class="copyright-notice">
+                    <p>CODE VEIN™ II & ©Bandai Namco Entertainment Inc. All Rights Reserved.</p>
+                    <p>해당 사이트는 팬메이드 사이트로 비상업적 용도만을 위해 만들어 졌으며 모든 저작권은 ©Bandai Namco Entertainment Inc.에 있습니다.</p>
+                </div>
             </div>
 
             <div class="helper-box" id="helperBox" title="클릭하여 최소화/확대">
@@ -370,7 +355,7 @@
         }, { passive: false });
 
         workspace.addEventListener('mousedown', e => {
-            if (e.button === 1) { // Middle Click
+            if (e.button === 1) {
                 scale = INITIAL_SCALE; pointX = 0; pointY = 0; updateTransform();
             } else if (e.button === 0) {
                 isDragging = true; startX = e.clientX - pointX; startY = e.clientY - pointY;
@@ -395,7 +380,7 @@
 
         document.getElementById('helperBox').addEventListener('click', function() { this.classList.toggle('minimized'); });
 
-        // --- 3. Easter Egg (7 Clicks Sequence) ---
+        // --- 3. Easter Egg (BLOOD -> TO -> GOLD -> TBA 시퀀스) ---
         let eggCount = 0;
         let isAnimating = false;
         const eggTab = document.getElementById('eggTab');
@@ -409,27 +394,24 @@
                 isAnimating = true;
                 eggCount = 0;
 
-                // [1단계] BLOOD 단계 (빨강 활성화)
+                // [1] BLOOD (빨강 시작)
                 document.documentElement.style.setProperty('--current-accent', '#ea0000');
                 if(addrLock) addrLock.style.color = '#ea0000';
                 this.style.color = '#ea0000';
                 this.innerText = "BLOOD";
 
-                // [2단계] 1초 뒤 TO
-                setTimeout(() => {
-                    this.innerText = "TO";
-                }, 1000);
+                // [2] 1초 뒤 TO
+                setTimeout(() => { this.innerText = "TO"; }, 1000);
 
-                // [3단계] 2초 뒤 GOLD (텍스트 변경 및 색상 복구 시작)
+                // [3] 2초 뒤 GOLD (복구 시작)
                 setTimeout(() => {
                     this.innerText = "GOLD";
-                    // 다시 골드로 변경하면 CSS transition에 의해 1초간 부드럽게 변함
                     document.documentElement.style.setProperty('--current-accent', '#D3AF37');
                     if(addrLock) addrLock.style.color = '#D3AF37';
                     this.style.color = '#D3AF37';
                 }, 2000);
 
-                // [4단계] 3초 뒤 TBA 복구
+                // [4] 3초 뒤 TBA 복구 완료
                 setTimeout(() => {
                     this.innerText = "TBA";
                     this.style.color = ''; 
