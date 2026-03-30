@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Vein Ⅱ Sheet Maker</title>
     
-    <!-- FontAwesome (Icons) & html2canvas (Image Save) & Google Fonts -->
+    <!-- FontAwesome & Google Fonts & html2canvas -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         /* --- Variables --- */
         :root {
-            --header-h: 60px;
-            --tab-w: 60px; /* 탭 레일 너비 */
-            --editor-w: 320px; /* 에디터 패널 너비 */
+            --tab-bar-h: 40px;  /* 탭 바 높이 */
+            --header-h: 60px;   /* 툴바(헤더) 높이 */
+            --tab-rail-w: 60px; /* 좌측 탭 레일 너비 */
+            --editor-w: 320px;  /* 에디터 패널 너비 */
             
+            --bg-body: #000000;       /* 최상단 배경 */
             --bg-workspace: #4a4645;
             --bg-sidebar: #2d2a29;
             --bg-rail: #1e1c1b;
-            --bg-header: #1a1a1a;
+            --bg-header: #1a1a1a;     /* 활성 탭 및 헤더 배경 */
+            
             --accent-gold: #bf9739;
             --text-white: #ffffff;
             --text-sub: #aaaaaa;
@@ -31,14 +34,58 @@
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
-            background-color: var(--bg-header);
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-body);
             color: var(--text-white);
             overflow: hidden;
             user-select: none;
         }
 
-        /* --- 1. Header --- */
+        /* --- 1. Tab Bar (Browser Style) --- */
+        .tab-system {
+            height: var(--tab-bar-h);
+            background-color: #0d0d0d; /* 탭 바 배경 (아주 어두움) */
+            display: flex;
+            align-items: flex-end; /* 탭을 바닥에 붙임 */
+            padding-left: 20px;
+            gap: 4px; /* 탭 사이 간격 */
+            border-bottom: 1px solid #000;
+        }
+
+        .nav-tab {
+            height: 32px; /* 비활성 탭 높이 */
+            padding: 0 25px;
+            background-color: #222;
+            color: #666;
+            border-radius: 10px 10px 0 0; /* 위쪽만 둥글게 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-tab:hover {
+            background-color: #333;
+            color: #999;
+        }
+
+        /* Active Tab Style */
+        .nav-tab.active {
+            height: 36px; /* 활성 탭은 조금 더 큼 */
+            background-color: var(--bg-header); /* 헤더와 색상 통일 */
+            color: var(--text-white);
+            border-top: 2px solid var(--accent-gold); /* 골드 포인트 */
+            z-index: 101; /* 헤더 위로 올라오도록 */
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- 2. Toolbar Header (Previously Header) --- */
         header {
             height: var(--header-h);
             background-color: var(--bg-header);
@@ -91,15 +138,16 @@
         .save-btn:hover { background-color: #d4a845; }
 
 
-        /* --- 2. Main Layout --- */
+        /* --- 3. Main Layout --- */
         .main-wrapper {
             display: flex;
-            height: calc(100vh - var(--header-h));
+            /* 전체 높이 - 탭 높이 - 헤더 높이 */
+            height: calc(100vh - var(--tab-bar-h) - var(--header-h));
             width: 100vw;
             position: relative;
         }
 
-        /* --- Sidebar (Complex) --- */
+        /* --- Sidebar --- */
         .sidebar-container {
             display: flex;
             background: var(--bg-sidebar);
@@ -108,10 +156,9 @@
             z-index: 20;
         }
 
-        /* A. Tab Rail (Always Visible) */
         .tab-rail {
-            width: var(--tab-w);
-            min-width: var(--tab-w);
+            width: var(--tab-rail-w);
+            min-width: var(--tab-rail-w);
             background: var(--bg-rail);
             border-right: 1px solid #333;
             display: flex; flex-direction: column; align-items: center;
@@ -126,46 +173,33 @@
         }
         .tab-icon.active, .tab-icon:hover { color: var(--accent-gold); background: rgba(255,255,255,0.05); }
 
-        /* B. Editor Panel (Collapsible) */
         .editor-panel {
             width: var(--editor-w);
             overflow: hidden;
             background: var(--bg-sidebar);
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column;
-            position: relative;
         }
         
-        /* Collapsed State Class */
-        .sidebar-container.collapsed .editor-panel {
-            width: 0px;
-        }
+        .sidebar-container.collapsed .editor-panel { width: 0px; }
 
         .editor-content {
-            padding: 20px;
-            width: var(--editor-w); /* Prevent content squishing */
-            box-sizing: border-box;
-            overflow-y: auto;
+            padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto;
         }
 
-        /* C. Toggle Button */
         .toggle-btn {
             position: absolute;
-            right: -24px; /* Hangs outside the sidebar */
-            top: 50%; transform: translateY(-50%);
+            right: -24px; top: 50%; transform: translateY(-50%);
             width: 24px; height: 50px;
             background: #222;
             border: 1px solid #000; border-left: none;
             border-radius: 0 8px 8px 0;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            color: var(--accent-gold);
-            font-size: 12px;
-            box-shadow: 4px 0 8px rgba(0,0,0,0.2);
-            z-index: 25;
+            color: var(--accent-gold); font-size: 12px;
+            box-shadow: 4px 0 8px rgba(0,0,0,0.2); z-index: 25;
         }
 
-        /* Form Styles */
         .section-title {
             font-size: 16px; font-weight: 700; color: var(--accent-gold);
             border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px;
@@ -181,34 +215,27 @@
             color: #888; font-size: 12px; cursor: pointer; box-sizing: border-box;
         }
 
-
-        /* --- 3. Workspace --- */
+        /* --- 4. Workspace --- */
         .workspace {
             flex: 1;
             background-color: var(--bg-workspace);
-            position: relative;
-            overflow: hidden;
-            cursor: grab;
+            position: relative; overflow: hidden; cursor: grab;
             display: flex; align-items: center; justify-content: center;
         }
         .workspace:active { cursor: grabbing; }
 
         #viewport {
             transform-origin: center center;
-            transition: transform 0.1s ease-out;
-            will-change: transform;
+            transition: transform 0.1s ease-out; will-change: transform;
         }
 
-        /* --- 4K Preview Board --- */
+        /* 4K Board */
         .preview-box {
             width: 3840px; height: 2160px;
             background-color: #ffffff;
             position: relative;
             display: flex; align-items: center; justify-content: center;
-            
-            /* Styles */
-            border-radius: 30px; /* Smooth Round */
-            overflow: hidden;
+            border-radius: 30px; overflow: hidden;
             border: 0.7px solid var(--accent-gold);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
         }
@@ -216,27 +243,17 @@
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
         .placeholder-text { font-size: 80px; font-weight: 700; color: #ddd; pointer-events: none; }
 
-
-        /* --- 4. Helper Box (Opacity 70%) --- */
+        /* Helper Box */
         .helper-box {
-            position: absolute;
-            bottom: 30px; right: 30px;
-            height: 60px;
-            
-            /* 70% Opacity Background */
+            position: absolute; bottom: 30px; right: 30px; height: 60px;
             background-color: rgba(30, 30, 30, 0.7);
             backdrop-filter: blur(4px);
-            
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 30px;
-            display: flex; align-items: center;
-            padding: 0 30px; gap: 20px;
+            display: flex; align-items: center; padding: 0 30px; gap: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            pointer-events: none;
-            color: #eee;
-            font-size: 13px;
+            pointer-events: none; color: #eee; font-size: 13px;
         }
-
         .helper-item { display: flex; align-items: center; gap: 8px; }
         .helper-item i { color: var(--accent-gold); font-size: 14px; }
         .divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
@@ -246,8 +263,16 @@
 </head>
 <body>
 
+    <!-- 1. TAB BAR (New Top Layer) -->
+    <nav class="tab-system">
+        <div class="nav-tab">Code Vein</div>
+        <div class="nav-tab active">Code Vein Ⅱ</div>
+        <div class="nav-tab">TBA</div>
+    </nav>
+
+    <!-- 2. HEADER (Toolbar for Active Tab) -->
     <header>
-        <div style="width: 200px;"></div> <!-- Spacer -->
+        <div style="width: 200px;"></div>
 
         <div class="header-center">
             <h1 class="title-en">Code Vein Ⅱ Sheet Maker</h1>
@@ -270,19 +295,19 @@
         </div>
     </header>
 
+    <!-- 3. MAIN CONTENT -->
     <div class="main-wrapper">
         
-        <!-- Sidebar Container -->
+        <!-- Sidebar -->
         <aside class="sidebar-container" id="sidebar">
-            
-            <!-- 1. Fixed Tab Rail -->
+            <!-- Fixed Rail -->
             <div class="tab-rail">
                 <div class="tab-icon active"><i class="fa-solid fa-pen-to-square"></i></div>
                 <div class="tab-icon"><i class="fa-solid fa-palette"></i></div>
                 <div class="tab-icon"><i class="fa-solid fa-font"></i></div>
             </div>
 
-            <!-- 2. Collapsible Editor -->
+            <!-- Collapsible Panel -->
             <div class="editor-panel">
                 <div class="editor-content">
                     <div class="section-title">기본 설정</div>
@@ -305,10 +330,9 @@
             <div class="toggle-btn" id="toggleBtn" title="Toggle Panel">
                 <i class="fa-solid fa-chevron-left" id="toggleIcon"></i>
             </div>
-
         </aside>
 
-        <!-- Right Workspace -->
+        <!-- Workspace -->
         <section class="workspace" id="workspace">
             <div id="viewport">
                 <div class="preview-box" id="board">
@@ -338,7 +362,7 @@
     </div>
 
     <script>
-        // --- Elements ---
+        // DOM Elements
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
         const board = document.getElementById('board');
@@ -350,10 +374,9 @@
         const toggleBtn = document.getElementById('toggleBtn');
         const toggleIcon = document.getElementById('toggleIcon');
 
-        // --- Sidebar Logic ---
+        // 1. Sidebar Toggle Logic
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
-            // Icon change logic
             if (sidebar.classList.contains('collapsed')) {
                 toggleIcon.className = 'fa-solid fa-chevron-right';
             } else {
@@ -361,7 +384,7 @@
             }
         });
 
-        // --- Viewport State ---
+        // 2. Viewport & Image Logic
         const INITIAL_SCALE = 0.15; 
         let scale = INITIAL_SCALE;
         let isDragging = false;
@@ -372,7 +395,6 @@
         }
         updateTransform();
 
-        // --- Image Upload ---
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -386,7 +408,7 @@
             }
         });
 
-        // --- Zoom (Wheel) ---
+        // 3. Interaction Logic
         workspace.addEventListener('wheel', (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.05 : 0.05;
@@ -394,18 +416,15 @@
             updateTransform();
         }, { passive: false });
 
-        // --- Interaction (Pan & Reset) ---
         workspace.addEventListener('mousedown', (e) => {
-            // Middle Click -> Reset
-            if (e.button === 1) {
+            if (e.button === 1) { // Middle Click Reset
                 e.preventDefault();
                 scale = INITIAL_SCALE;
                 pointX = 0; pointY = 0;
                 updateTransform();
                 return;
             }
-            // Left Click -> Pan
-            if (e.button === 0) {
+            if (e.button === 0) { // Left Click Pan
                 isDragging = true;
                 startX = e.clientX - pointX;
                 startY = e.clientY - pointY;
@@ -426,30 +445,22 @@
             workspace.style.cursor = 'grab';
         });
 
-        // --- Save to PNG ---
+        // 4. Save Logic
         function saveImage() {
             const originalTransform = viewport.style.transform;
-            viewport.style.transform = 'none'; // Reset for clean capture
+            viewport.style.transform = 'none'; 
             
             html2canvas(board, {
-                scale: 1, // Original 4K resolution
-                width: 3840,
-                height: 2160,
-                useCORS: true,
-                backgroundColor: null
+                scale: 1, width: 3840, height: 2160,
+                useCORS: true, backgroundColor: null
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'CodeVein_Sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                viewport.style.transform = originalTransform; // Restore view
-            }).catch(err => {
-                console.error(err);
                 viewport.style.transform = originalTransform;
-                alert('저장 중 오류가 발생했습니다.');
             });
         }
     </script>
 </body>
 </html>
-
