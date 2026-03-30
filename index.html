@@ -134,11 +134,34 @@
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
         .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
+        /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
-            position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
-            width: 20px; height: 50px; background: #222; border: 1px solid #000; border-radius: 0 8px 8px 0;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--current-accent); z-index: 25;
-            transition: color 1s ease;
+            position: absolute;
+            right: -20px; 
+            /* 위치를 상단에서 100px 지점으로 고정 (상단 탭/주소창 라인과 맞춤) */
+            top: 100px; 
+            width: 20px;
+            height: 50px;
+            background: #222;
+            border: 1px solid #000;
+            border-left: none; /* 사이드바와 이어지도록 왼쪽 테두리 제거 */
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--current-accent);
+            z-index: 25;
+            transition: color 1s ease, background 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background: #333;
+        }
+        
+        /* 화살표 아이콘 크기 살짝 조정 */
+        .toggle-btn i {
+            font-size: 12px;
         }
 
         /* --- Form Elements --- */
