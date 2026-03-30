@@ -476,19 +476,30 @@ helperBox.addEventListener('click', function() {
             document.getElementById('render-nickname').innerText = e.target.value;
         });
 
-        // --- 5. Save Function ---
+        // --- 5. Save Function (파일명 수정) ---
         function saveImage() {
             const board = document.getElementById('board');
+            // 저장 시점의 트랜스폼 상태 저장
             const originalTransform = viewport.style.transform;
+            // 캡처를 위해 트랜스폼 초기화 (1:1 비율 캡처용)
             viewport.style.transform = 'none';
             
             html2canvas(board, {
-                scale: 1, width: 3840, height: 2160, useCORS: true
+                scale: 1, 
+                width: 3840, 
+                height: 2160, 
+                useCORS: true,
+                backgroundColor: "#ffffff" // 배경색 명시
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'CodeVein_Sheet.png';
-                link.href = canvas.toDataURL();
+                
+                // 파일명을 요청하신 대로 변경했습니다.
+                link.download = 'CodeVein_twt_Sheet.png'; 
+                
+                link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                // 캡처 후 원래 화면 배율로 복구
                 viewport.style.transform = originalTransform;
             });
         }
