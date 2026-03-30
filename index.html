@@ -3,413 +3,493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CODE VEIN II - Sheet Maker</title>
+    <title>Code Vein Ⅱ Sheet Maker</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
-            --accent-color: #D3AF37;
-            --bg-dark: #4a4645;
-            --preview-bg: #ffffff;
-            --border-gold: #bf9739;
-            --header-bg: #1e1e1e;
-            --active-tab: #2d2d2d;
+            /* Theme Colors */
+            --accent-gold: #D3AF37;
+            --accent-red: #ea0000;
+            --current-accent: var(--accent-gold);
+            
+            /* UI Colors */
+            --bg-frame: #121212;
+            --bg-header: #2a2a2a;
+            --bg-workspace: #4a4645;
+            --bg-sidebar: #2d2a29;
+            --bg-rail: #1e1c1b;
+            --text-white: #ffffff;
+            --text-sub: #aaaaaa;
+
+            /* Dimensions */
+            --tab-h: 45px;
+            --address-h: 55px;
+            --sidebar-w: 400px;
+            --rail-w: 50px;
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg-dark);
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-frame);
+            color: var(--text-white);
             overflow: hidden;
-            color: white;
-        }
-
-        /* --- Header Section --- */
-        header {
-            background-color: var(--header-bg);
-            display: flex;
-            flex-direction: column;
             user-select: none;
         }
 
-        .window-controls {
+        /* --- Header: Tabs & Window Controls --- */
+        .browser-header {
+            background-color: var(--bg-frame);
             display: flex;
-            justify-content: flex-end;
-            padding: 5px 10px;
-            gap: 15px;
+            flex-direction: column;
         }
 
-        .win-btn {
-            cursor: pointer;
-            font-size: 12px;
-            color: #888;
-        }
-
-        .win-btn.close:hover { color: #ea0000; }
-
-        .tabs-container {
+        .top-bar {
+            height: var(--tab-h);
             display: flex;
             align-items: flex-end;
             padding-left: 10px;
+            position: relative;
+        }
+
+        .tabs {
+            display: flex;
             gap: 5px;
+            align-items: flex-end;
         }
 
         .tab {
-            padding: 8px 20px;
-            background: #333;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .tab:not(.active):hover {
-            transform: scale(1.05);
-        }
-
-        .tab.active {
-            background: var(--active-tab);
-            border-top: 2px solid var(--accent-color);
-        }
-
-        .tab img {
-            width: 18px; height: 18px;
-            border-radius: 4px;
-        }
-
-        .plus-btn {
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #888;
-        }
-
-        /* Address Bar */
-        .address-bar-row {
-            background: var(--active-tab);
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-top: 1px solid #444;
-        }
-
-        .nav-btns { display: flex; gap: 10px; }
-        .nav-btns span { cursor: pointer; opacity: 0.7; }
-        .nav-btns span:hover { opacity: 1; }
-
-        .address-field {
-            flex-grow: 1;
+            height: 38px;
+            padding: 0 20px;
             background: #1a1a1a;
-            border-radius: 20px;
-            padding: 4px;
-            text-align: center;
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        .user-info {
+            border-radius: 10px 10px 0 0;
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 12px;
+            font-weight: 700;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
 
-        .icon-square {
-            width: 28px; height: 28px;
-            background: #333;
-            border-radius: 6px;
+        .tab:not(.active):hover {
+            transform: translateY(-3px) scale(1.05);
+            color: #ccc;
+        }
+
+        .tab.active {
+            background: var(--bg-header);
+            color: var(--text-white);
+            height: 42px;
+            z-index: 2;
+        }
+
+        .tab img {
+            width: 20px; height: 20px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .tab-plus {
+            padding: 10px;
+            color: #666;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .window-controls {
+            position: absolute; right: 0; top: 0;
+            display: flex;
+        }
+
+        .win-btn {
+            width: 45px; height: 35px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; cursor: pointer;
+        }
+
+        .win-btn:hover { background: #333; }
+        .win-btn.close:hover { background: #ea0000; color: white; }
+
+        /* --- Address Bar --- */
+        .address-bar-row {
+            height: var(--address-h);
+            background: var(--bg-header);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 5;
+        }
+
+        .nav-btns { display: flex; gap: 10px; color: #888; }
+        .nav-btn { cursor: pointer; transition: 0.2s; }
+        .nav-btn:hover { color: var(--text-white); }
+
+        .address-input {
+            flex-grow: 1;
+            background: #1a1a1a;
+            height: 32px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
+            font-size: 14px;
+            color: #ccc;
         }
 
-        /* --- Main Content --- */
-        main {
+        .right-meta {
             display: flex;
-            height: calc(100vh - 110px);
+            align-items: center;
+            gap: 12px;
         }
 
-        /* Left Box */
-        #left-box {
-            width: 25%;
-            background: #252525;
+        .author { font-size: 13px; color: #888; }
+
+        .sq-btn {
+            width: 32px; height: 32px;
+            background: #333;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #ccc; text-decoration: none;
+        }
+
+        .sq-btn:hover { border: 1px solid var(--current-accent); color: var(--current-accent); }
+
+        /* --- Main Layout --- */
+        .main-container {
             display: flex;
-            transition: width 0.3s;
-            border-right: 1px solid #111;
+            height: calc(100vh - 100px);
         }
 
-        #left-box.collapsed { width: 40px; }
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            background: var(--bg-sidebar);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: var(--sidebar-w);
+            position: relative;
+        }
 
-        .sub-tabs {
-            width: 40px;
-            background: #1a1a1a;
+        .sidebar.collapsed { width: var(--rail-w); }
+
+        .sidebar-rail {
+            width: var(--rail-w);
+            background: var(--bg-rail);
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
             gap: 20px;
+            z-index: 10;
         }
 
-        .form-content {
+        .rail-item { font-size: 20px; color: #555; cursor: pointer; transition: 0.2s; }
+        .rail-item.active, .rail-item:hover { color: var(--current-accent); }
+
+        .editor-content {
             flex-grow: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
+            min-width: 350px;
         }
 
-        #left-box.collapsed .form-content { display: none; }
+        .sidebar.collapsed .editor-content { display: none; }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--accent-color); }
-        input[type="text"], select {
-            width: 100%; padding: 8px; background: #333; border: 1px solid #444; color: white;
+        .toggle-handle {
+            position: absolute; right: -12px; top: 50%;
+            width: 24px; height: 48px; background: #222;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 20; color: var(--current-accent); border: 1px solid #000;
         }
 
-        .grid-select {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px; text-align: center; font-size: 10px;
-        }
-
-        /* Right Box */
-        #right-box {
+        /* --- Workspace & Preview --- */
+        .workspace {
             flex-grow: 1;
+            background: var(--bg-workspace);
             position: relative;
-            background-color: var(--bg-dark);
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: grab;
         }
 
-        #right-box:active { cursor: grabbing; }
+        .workspace:active { cursor: grabbing; }
 
-        #preview-viewport {
-            transform-origin: center;
+        #viewport {
+            transform-origin: center center;
             transition: transform 0.1s ease-out;
         }
 
-        #preview-box {
+        .preview-box {
             width: 3840px; height: 2160px;
-            background-color: var(--preview-bg);
+            background: #ffffff;
             border-radius: 30px;
-            border: 0.7px solid var(--border-gold);
+            border: 0.7px solid #bf9739;
             box-shadow: 0 0 15px rgba(0,0,0,0.25);
             position: relative;
-            color: black; /* 시트 내부 텍스트 기본색 */
-        }
-
-        /* Help Box */
-        #help-box {
-            position: absolute;
-            bottom: 20px; right: 20px;
-            height: 60px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 30px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: width 0.3s, opacity 0.3s;
-            font-size: 13px;
-            cursor: pointer;
-            white-space: nowrap;
             overflow: hidden;
         }
 
-        #help-box.minimized { width: 30px; padding: 0 15px; }
+        /* Helper Box */
+        .helper-box {
+            position: absolute; bottom: 25px; right: 25px;
+            height: 60px; background: rgba(0,0,0,0.7);
+            border-radius: 30px; display: flex; align-items: center;
+            padding: 0 25px; gap: 15px; color: #eee; font-size: 13px;
+            transition: 0.3s; cursor: pointer;
+        }
 
-        .btn-save {
-            background: var(--accent-color);
-            color: black;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            margin-top: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        .helper-box.minimized { width: 60px; padding: 0; justify-content: center; }
+
+        /* Form Components */
+        .group { margin-bottom: 25px; }
+        label { display: block; font-size: 12px; color: var(--current-accent); margin-bottom: 8px; font-weight: bold; }
+        input[type="text"], select {
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 4px;
+        }
+
+        .grid-wrap {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 8px; margin-top: 10px;
+        }
+
+        .img-option {
+            text-align: center; cursor: pointer; border: 1px solid transparent; padding: 5px; border-radius: 4px;
+        }
+        .img-option:hover, .img-option.selected { border-color: var(--current-accent); background: rgba(211, 175, 55, 0.1); }
+        .img-option img { width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 5px; }
+        .img-option span { font-size: 10px; color: #ccc; }
+
+        .save-btn {
+            width: 100%; height: 45px; background: var(--current-accent);
+            border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="window-controls">
-        <span class="win-btn">—</span>
-        <span class="win-btn">▢</span>
-        <span class="win-btn close">✕</span>
-    </div>
-    <div class="tabs-container">
-        <div class="tab">
-            <img src="Icons/Titles/CV1.png" alt="CV1"> CODE VEIN
+    <header class="browser-header">
+        <div class="top-bar">
+            <div class="tabs">
+                <div class="tab">
+                    <img src="Icons/Titles/CV1.png" alt="CV1"> CODE VEIN
+                </div>
+                <div class="tab active">
+                    <img src="Icons/Titles/CV2.png" alt="CV2"> CODE VEIN Ⅱ
+                </div>
+                <div class="tab" id="easterEggTab">TBA</div>
+            </div>
+            <div class="tab-plus"><i class="fa-solid fa-plus"></i></div>
+            
+            <div class="window-controls">
+                <div class="win-btn"><i class="fa-solid fa-minus"></i></div>
+                <div class="win-btn"><i class="fa-regular fa-square"></i></div>
+                <div class="win-btn close"><i class="fa-solid fa-xmark"></i></div>
+            </div>
         </div>
-        <div class="tab active">
-            <img src="Icons/Titles/CV2.png" alt="CV2"> CODE VEIN Ⅱ
-        </div>
-        <div id="tba-tab" class="tab" onclick="easterEgg()">
-            TBA
-        </div>
-        <div class="plus-btn">+</div>
-    </div>
-    <div class="address-bar-row">
-        <div class="nav-btns">
-            <span>◀</span> <span>▶</span> <span onclick="location.reload()">⟳</span>
-        </div>
-        <div class="address-field">https://codevein.sheet/2/main</div>
-        <div class="user-info">
-            <span>Made by @D3LTA_CV</span>
-            <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-square">🐦</a>
-            <div class="icon-square">?</div>
-        </div>
-    </div>
-</header>
 
-<main>
-    <aside id="left-box">
-        <div class="sub-tabs">
-            <div style="cursor:pointer;" onclick="toggleLeftBox()">☰</div>
-            <span>🎨</span>
-            <span>👤</span>
+        <div class="address-bar-row">
+            <div class="nav-btns">
+                <i class="fa-solid fa-arrow-left nav-btn"></i>
+                <i class="fa-solid fa-arrow-right nav-btn"></i>
+                <i class="fa-solid fa-rotate-right nav-btn" onclick="location.reload()"></i>
+            </div>
+            <div class="address-input">
+                https://codevein.sheet/2/main
+            </div>
+            <div class="right-meta">
+                <span class="author">Made by @D3LTA_CV</span>
+                <a href="https://x.com/D3LTA_CV" target="_blank" class="sq-btn"><i class="fa-brands fa-x-twitter"></i></a>
+                <div class="sq-btn" onclick="alert('화면 우측 하단의 설명을 확인하세요!')">?</div>
+            </div>
         </div>
-        <div class="form-content">
-            <div class="input-group">
-                <label>NICKNAME</label>
-                <input type="text" id="in-nickname" oninput="updatePreview()" placeholder="닉네임을 입력하세요">
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-rail">
+                <i class="fa-solid fa-user-gear rail-item active"></i>
+                <i class="fa-solid fa-palette rail-item"></i>
+                <i class="fa-solid fa-font rail-item"></i>
+            </div>
+            
+            <div class="editor-content">
+                <div class="group">
+                    <label>NICKNAME</label>
+                    <input type="text" id="in-nick" placeholder="닉네임을 입력하세요" oninput="sync()">
+                </div>
+
+                <div class="group">
+                    <label>TWEET TENDENCY (다수 선택 가능)</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px;">
+                        <label style="color:#aaa;"><input type="checkbox"> RT</label>
+                        <label style="color:#aaa;"><input type="checkbox"> 마음</label>
+                        <label style="color:#aaa;"><input type="checkbox"> 인용</label>
+                        <label style="color:#aaa;"><input type="checkbox"> 스크린샷</label>
+                        <label style="color:#aaa;"><input type="checkbox"> 그림</label>
+                        <label style="color:#aaa;"><input type="checkbox"> 일상</label>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label>BUDDY STYLE (하나 선택)</label>
+                    <div class="grid-wrap">
+                        <div class="img-option" onclick="selectSingle(this, 'buddy-style')">
+                            <img src="Icons/Buddy Style/빙의.png" alt="빙의"><span>빙의</span>
+                        </div>
+                        <div class="img-option" onclick="selectSingle(this, 'buddy-style')">
+                            <img src="Icons/Buddy Style/소환.png" alt="소환"><span>소환</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label>BUDDY (최대 3명)</label>
+                    <div class="grid-wrap">
+                        <div class="img-option" onclick="selectMulti(this, 'buddy', 3)">
+                            <img src="Icons/Buddy Icons/이리스.png" alt="이리스"><span>이리스</span>
+                        </div>
+                        <div class="img-option" onclick="selectMulti(this, 'buddy', 3)">
+                            <img src="Icons/Buddy Icons/야드비가.png" alt="야드비가"><span>야드비가</span>
+                        </div>
+                        <div class="img-option" onclick="selectMulti(this, 'buddy', 3)">
+                            <img src="Icons/Buddy Icons/조제.png" alt="조제"><span>조제</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label>PROGRESSION (택 1)</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="in-ending" placeholder="엔딩 횟수" style="width:50%;">
+                        <input type="text" id="in-ng" placeholder="New Game+" style="width:50%;">
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="save()">
+                    <i class="fa-solid fa-download"></i> PNG로 저장
+                </button>
             </div>
 
-            <div class="input-group">
-                <label>TWEET TENDENCY (다수 선택)</label>
-                <div class="grid-select">
-                    <label><input type="checkbox" onchange="updatePreview()"> RT</label>
-                    <label><input type="checkbox" onchange="updatePreview()"> 마음</label>
-                    <label><input type="checkbox" onchange="updatePreview()"> 스크린샷</label>
+            <div class="toggle-handle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-chevron-left" id="toggleIcon"></i>
+            </div>
+        </aside>
+
+        <section class="workspace" id="workspace">
+            <div id="viewport">
+                <div class="preview-box" id="capture-area">
+                    <div id="out-nick" style="position:absolute; top:120px; left:120px; font-size:120px; font-weight:bold; color:#000;"></div>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label>BUDDY STYLE (택 1)</label>
-                <select id="sel-buddy-style" onchange="updatePreview()">
-                    <option value="빙의">빙의</option>
-                    <option value="소환">소환</option>
-                </select>
+            <div class="helper-box" id="helper" onclick="toggleHelper()">
+                <i class="fa-solid fa-mouse"></i>
+                <div id="helper-text">
+                    <b>좌클릭 드래그</b> 이동 | <b>스크롤</b> 확대·축소 | <b>휠 클릭</b> 중앙 정렬
+                </div>
             </div>
+        </section>
+    </div>
 
-            <div class="input-group">
-                <label>PROGRESSION</label>
-                <input type="radio" name="prog" checked> 엔딩 횟수
-                <input type="radio" name="prog"> New Game+
-                <input type="text" style="margin-top:5px;" placeholder="숫자 입력">
-            </div>
+    <script>
+        /* --- Easter Egg Logic --- */
+        let clicks = 0;
+        const eggTab = document.getElementById('easterEggTab');
+        eggTab.addEventListener('click', () => {
+            clicks++;
+            if (clicks === 7) {
+                document.documentElement.style.setProperty('--current-accent', '#ea0000');
+                eggTab.style.color = '#ea0000';
+                console.log("Easter Egg Activated: Blood Mode");
+            }
+        });
 
-            <button class="btn-save">
-                <span>📥</span> PNG로 저장
-            </button>
-        </div>
-    </aside>
-
-    <section id="right-box" onwheel="handleZoom(event)">
-        <div id="preview-viewport">
-            <div id="preview-box">
-                <div id="view-nickname" style="position:absolute; top:100px; left:100px; font-size:100px; font-weight:bold;"></div>
-            </div>
-        </div>
-
-        <div id="help-box" onclick="toggleHelp()">
-            <span>🖱️</span>
-            <div id="help-text">
-                좌클릭 드래그: 이동 / 스크롤: 확대·축소 / 휠 클릭: 중앙 정렬
-            </div>
-        </div>
-    </section>
-</main>
-
-<script>
-    /* --- 이스터 에그 --- */
-    let clickCount = 0;
-    function easterEgg() {
-        clickCount++;
-        if (clickCount === 7) {
-            const tab = document.getElementById('tba-tab');
-            tab.style.color = '#ea0000';
-            tab.style.fontWeight = 'bold';
-            alert('Easter Egg Activated!');
+        /* --- Sidebar Logic --- */
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const icon = document.getElementById('toggleIcon');
+            sb.classList.toggle('collapsed');
+            icon.className = sb.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
         }
-    }
 
-    /* --- UI 제어 --- */
-    function toggleLeftBox() {
-        document.getElementById('left-box').classList.toggle('collapsed');
-    }
-
-    function toggleHelp() {
-        const box = document.getElementById('help-box');
-        box.classList.toggle('minimized');
-        document.getElementById('help-text').style.display = box.classList.contains('minimized') ? 'none' : 'block';
-    }
-
-    /* --- 프리뷰 동기화 --- */
-    function updatePreview() {
-        const nick = document.getElementById('in-nickname').value;
-        document.getElementById('view-nickname').innerText = nick;
-        // 나머지 필드들도 동일한 방식으로 preview-box 내부 요소에 연결
-    }
-
-    /* --- 줌 & 팬 (Zoom & Pan) 로직 --- */
-    let scale = 0.2; // 기본 축소 상태 (3840px이 크므로)
-    let posX = 0, posY = 0;
-    const viewport = document.getElementById('preview-viewport');
-    const rightBox = document.getElementById('right-box');
-
-    function updateTransform() {
-        viewport.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-    }
-
-    // 초기 중앙 정렬
-    updateTransform();
-
-    function handleZoom(e) {
-        e.preventDefault();
-        scale += e.deltaY * -0.0005;
-        scale = Math.min(Math.max(0.05, scale), 2);
-        updateTransform();
-    }
-
-    let isDragging = false;
-    let startX, startY;
-
-    rightBox.addEventListener('mousedown', (e) => {
-        if (e.button === 1) { // 휠 클릭: 리셋
-            scale = 0.2; posX = 0; posY = 0;
-            updateTransform();
-            return;
+        /* --- Helper Box Logic --- */
+        function toggleHelper() {
+            const h = document.getElementById('helper');
+            const t = document.getElementById('helper-text');
+            h.classList.toggle('minimized');
+            t.style.display = h.classList.contains('minimized') ? 'none' : 'block';
         }
-        isDragging = true;
-        startX = e.clientX - posX;
-        startY = e.clientY - posY;
-    });
 
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        posX = e.clientX - startX;
-        posY = e.clientY - startY;
-        updateTransform();
-    });
+        /* --- Selection Logic --- */
+        function selectSingle(el, group) {
+            el.parentElement.querySelectorAll('.img-option').forEach(item => item.classList.remove('selected'));
+            el.classList.add('selected');
+            sync();
+        }
 
-    window.addEventListener('mouseup', () => isDragging = false);
+        function selectMulti(el, group, max) {
+            const selected = el.parentElement.querySelectorAll('.selected');
+            if (!el.classList.contains('selected') && selected.length >= max) return;
+            el.classList.toggle('selected');
+            sync();
+        }
 
-</script>
+        /* --- Real-time Sync --- */
+        function sync() {
+            const nick = document.getElementById('in-nick').value;
+            document.getElementById('out-nick').innerText = nick;
+        }
 
+        /* --- Zoom & Pan Logic --- */
+        const ws = document.getElementById('workspace');
+        const vp = document.getElementById('viewport');
+        let scale = 0.15, posX = 0, posY = 0;
+
+        function updateXform() { vp.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`; }
+        updateXform();
+
+        ws.addEventListener('wheel', e => {
+            e.preventDefault();
+            scale += e.deltaY * -0.0005;
+            scale = Math.min(Math.max(0.05, scale), 2);
+            updateXform();
+        });
+
+        let dragging = false, startX, startY;
+        ws.addEventListener('mousedown', e => {
+            if (e.button === 1) { scale = 0.15; posX = 0; posY = 0; updateXform(); return; }
+            dragging = true;
+            startX = e.clientX - posX;
+            startY = e.clientY - posY;
+        });
+
+        window.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            posX = e.clientX - startX;
+            posY = e.clientY - startY;
+            updateXform();
+        });
+        window.addEventListener('mouseup', () => dragging = false);
+
+        /* --- Save Function --- */
+        function save() {
+            const area = document.getElementById('capture-area');
+            html2canvas(area, { scale: 1 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'CodeVein2_Sheet.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
 </body>
 </html>
-
-
