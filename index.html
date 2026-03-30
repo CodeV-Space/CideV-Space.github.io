@@ -166,17 +166,49 @@
             box-shadow: 0 0 15px 5px rgba(0,0,0,0.25);
         }
 
-        /* --- Helper Box --- */
-        .helper-box {
-            position: absolute; bottom: 30px; right: 30px; height: 60px;
-            background-color: rgba(30, 30, 30, 0.7); backdrop-filter: blur(5px);
-            border-radius: 30px; color: #eee; font-size: 13px; display: flex; align-items: center; padding: 0 25px; gap: 15px;
-            cursor: pointer; z-index: 50; transition: 0.3s;
-        }
-        .helper-box.minimized { width: 50px; padding: 0; justify-content: center; border-radius: 50%; }
-        .helper-box.minimized .helper-content { display: none; }
-        .helper-icon-min { display: none; font-size: 20px; color: var(--current-accent); }
-        .helper-box.minimized .helper-icon-min { display: block; }
+        /* --- Helper Box (수정본) --- */
+.helper-box {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    height: 60px; /* 높이 고정 */
+    background-color: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px; /* 기본 둥근 사각형 */
+    color: #eee;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    gap: 15px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+}
+
+/* 최소화(닫혔을 때) 시 정원형 유지 */
+.helper-box.minimized {
+    width: 60px;   /* 높이와 동일하게 설정하여 정원형 유지 */
+    padding: 0;    /* 내부 여백 제거 */
+    justify-content: center; /* 아이콘 중앙 배치 */
+    border-radius: 50%; /* 완벽한 원형 */
+}
+
+.helper-icon-min {
+    display: none;
+    font-size: 20px;
+    color: var(--current-accent);
+}
+
+.helper-box.minimized .helper-content {
+    display: none;
+}
+
+.helper-box.minimized .helper-icon-min {
+    display: block;
+}
 
         /* --- Text Rendering --- */
         .render-layer { position: absolute; color: #000; pointer-events: none; }
