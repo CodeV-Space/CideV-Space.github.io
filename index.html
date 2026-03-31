@@ -236,35 +236,48 @@
             font-weight: 700;
         }
         
+        /* 닉네임 섹션 전용 레이아웃 */
+        .nickname-container {
+            display: flex;
+            flex-direction: column; /* 위아래로 쌓이게 강제 */
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        /* 태그들이 가로로 나열되는 박스 */
         .tag-selector {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            flex-direction: row;   /* 태그끼리는 가로로 */
+            gap: 8px;
+            width: 100%;
         }
+        
         .tag-item {
-            /* --- 기존 중앙 정렬 및 디자인 유지 --- */
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 11px;
-            padding: 0 15px;      /* 둥글어지는 만큼 좌우 여백을 조금 더 늘리는 게 예쁩니다 */
-            height: 26px;         /* 높이 지정 */
+            padding: 0 14px;
+            height: 26px;
             background: #1a1a1a;
             border: 1px solid #444;
+            border-radius: 99px;   /* 완전 둥글게 */
             cursor: pointer;
             color: #888;
             transition: 0.2s;
             white-space: nowrap;
-        
-            /* --- 왼쪽과 오른쪽을 완전 둥글게 (캡슐 모양) --- */
-            border-radius: 99px;  /* 매우 큰 값을 주어 양 끝을 반원형으로 만듭니다 */
         }
         
-        /* 활성화 상태 (선택 시 금색 강조) */
         .tag-item.active {
             border-color: var(--current-accent);
             color: var(--current-accent);
             background: rgba(211, 175, 55, 0.15);
+        }
+        
+        /* 사이드바 탈출 방지 및 버튼 복구 */
+        .sidebar-container {
+            overflow: visible !important; /* 토글 버튼 실종 방지 */
         }
         
         .sub-input {
@@ -405,9 +418,10 @@
                     <div id="panel-basic" class="editor-tab-content">
                         
                         <div class="section-title">닉네임</div>
-                        <div class="input-group">
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="flex: 1;">
+                            <div class="nickname-container">
+                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" 
+                                       style="width: 100%; box-sizing: border-box; display: block;">
+                                
                                 <div class="tag-selector">
                                     <div class="tag-item" onclick="toggleTag(this, 'nickChange')">#자주바뀜</div>
                                     <div class="tag-item" onclick="toggleTag(this, 'prefNick')">#선호닉있음</div>
