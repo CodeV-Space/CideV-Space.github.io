@@ -405,13 +405,12 @@
                     <div id="panel-basic" class="editor-tab-content">
                         
                         <div class="section-title">닉네임</div>
-                        <div class="input-group" style="position: relative;">
-                            <label class="input-label">기본 닉네임</label>
-                            <div style="position: relative; display: flex; align-items: center;">
-                                <input type="text" id="inNick" placeholder="닉네임" style="width: 100%; padding-right: 160px;">
-                                <div class="tag-selector" style="position: absolute; right: 10px; display: flex; gap: 5px;">
-                                    <div class="tag-item" style="height: 20px; font-size: 9px; padding: 0 8px;">#자주바뀜</div>
-                                    <div class="tag-item" style="height: 20px; font-size: 9px; padding: 0 8px;">#선호닉있음</div>
+                        <div class="input-group">
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="flex: 1;">
+                                <div class="tag-selector">
+                                    <div class="tag-item" onclick="toggleTag(this, 'nickChange')">#자주바뀜</div>
+                                    <div class="tag-item" onclick="toggleTag(this, 'prefNick')">#선호닉있음</div>
                                 </div>
                             </div>
                         </div>
