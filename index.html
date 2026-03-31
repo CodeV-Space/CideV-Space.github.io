@@ -313,26 +313,48 @@
 
         /* --- Workspace --- */
         /* 프리뷰 박스가 검게 변하거나 레이아웃이 깨지는 현상 방지 */
-        .workspace { 
-            flex: 1; 
-            background-color: var(--bg-workspace); 
-            position: relative; 
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            z-index: 1; /* 사이드바보다 뒤에 위치하도록 명시 */
+        .workspace {
+            flex: 1;
+            background-color: var(--bg-workspace);
+            position: relative;
+            overflow: hidden; /* 박스가 넘쳐도 사이드바를 침범하지 않음 */
+            display: block;   /* flex 해제하여 내부 position: absolute가 작동하게 함 */
+            cursor: grab;
         }
 
-        /* 저작권 문구 스타일 */
+        /* 프리뷰 박스를 감싸는 컨테이너 */
+        #viewport {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            will-change: transform;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 초기 위치를 중앙으로 잡기 위해 transform 추가 (JS에서 업데이트됨) */
+            transform: translate(-50%, -50%) scale(0.18); 
+        }
+
+        /* 실제 4K 시트 박스 */
+        .preview-box {
+            width: 3840px;
+            height: 2160px;
+            background-color: #ffffff;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid var(--accent-border);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+        }
+
+        /* 저작권 문구가 박스 아래에 잘 붙도록 수정 */
         .copyright-notice {
-            width: 100%;
-            max-width: 3840px;
+            width: 3840px; /* 박스 너비와 동일하게 고정 */
             margin-top: 60px;
             text-align: center;
             color: rgba(255, 255, 255, 0.4);
-            pointer-events: none;
-            font-family: 'Noto Sans KR', sans-serif;
         }
         .copyright-notice p { margin: 0; font-size: 32px; line-height: 1.6; }
 
