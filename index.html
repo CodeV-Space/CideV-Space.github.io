@@ -194,6 +194,16 @@
             padding-top: 15px; 
             gap: 10px; /* 기존 15px에서 10px로 줄여 여유 공간 확보 */
             overflow-y: auto; /* 아이콘이 너무 많아질 경우 대비 */
+            padding-bottom: 20px; /* 맨 아래 아이콘이 바닥에 붙지 않게 여유분 추가 */
+        }
+
+        /* 사이드바 레일 내 구분선 스타일 */
+        .rail-divider {
+            width: 30px;         /* 레일 너비보다 좁게 설정 */
+            height: 1px;
+            background-color: #444; /* 은은한 회색 */
+            margin: 10px 0;      /* 위아래 적당한 간격 */
+            flex-shrink: 0;
         }
         
         /* 스크롤바 숨기기 (깔끔한 외관용) */
@@ -479,6 +489,20 @@
                 
                 <div class="tab-icon-btn" title="PNG/텍스트 추가">
                     <i class="fa-solid fa-plus"></i>
+                </div>
+
+                <div class="rail-divider"></div>
+
+                <div class="tab-icon-btn" title="레이아웃/디자인 변경">
+                    <i class="fa-solid fa-right-left"></i>
+                </div>
+                
+                <div class="tab-icon-btn" title="폰트 설정">
+                    <i class="fa-solid fa-font"></i>
+                </div>
+                
+                <div class="tab-icon-btn" title="테마 색상 변경">
+                    <i class="fa-solid fa-palette"></i>
                 </div>
             </div>
             
