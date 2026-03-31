@@ -395,7 +395,7 @@
                 <div class="editor-content">
                     <div id="panel-basic" class="editor-tab-content">
                         
-                        <div class="section-title">NICKNAME / ID</div>
+                        <div class="section-title">닉네임</div>
                         <div class="input-group">
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="flex: 1;">
@@ -406,30 +406,31 @@
                             </div>
                         </div>
                         <div id="prefNickArea" class="sub-input" style="display: none;">
-                            <label class="input-label">추가/선호 닉네임</label>
-                            <input type="text" id="inSubNick" placeholder="다른 닉네임을 입력하세요">
+                            <label class="input-label">선호 닉네임</label>
+                            <input type="text" id="inSubNick" placeholder="닉네임을 입력하세요">
                         </div>
                 
                 
-                        <div class="section-title">TWEET STYLE</div>
+                        <div class="section-title">트윗 성향</div>
                         <div class="grid-options multi-select">
                             <div class="check-item">RT</div><div class="check-item">마음</div>
                             <div class="check-item">인용</div><div class="check-item">탐라대화</div>
                             <div class="check-item">일상</div><div class="check-item">욕설</div>
-                            <div class="check-item">R-18</div><div class="check-item">기타</div>
-                        </div>
-                
-                
-                        <div class="section-title">CREATIVE WORK</div>
-                        <div class="grid-options multi-select">
-                            <div class="check-item">썰</div><div class="check-item">글</div>
-                            <div class="check-item">디자인</div><div class="check-item">그림</div>
-                            <div class="check-item">영상</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">R-18</div><div class="check-item">G-18</div>
                             <div class="check-item">기타</div>
                         </div>
                 
                 
-                        <div class="section-title">EXTERNAL LINKS</div>
+                        <div class="section-title">연성</div>
+                        <div class="grid-options multi-select">
+                            <div class="check-item">썰</div><div class="check-item">글</div>
+                            <div class="check-item">디자인</div><div class="check-item">그림</div>
+                            <div class="check-item">영상</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">소비</div><div class="check-item">기타</div>
+                        </div>
+                
+                
+                        <div class="section-title">외부링크 사용 여부</div>
                         <div class="grid-options binary-select" style="margin-bottom: 10px;">
                             <div class="check-item" onclick="toggleExternal(false, this)">X</div>
                             <div class="check-item" onclick="toggleExternal(true, this)">O</div>
@@ -445,7 +446,7 @@
                         </div>
                 
                 
-                        <div class="section-title">OTHER FANDOMS</div>
+                        <div class="section-title">타장르 언</div>
                         <div class="grid-options single-select">
                             <div class="check-item" onclick="toggleOtherFandom(false, this)">없음</div>
                             <div class="check-item" onclick="toggleOtherFandom(true, this)">가끔</div>
@@ -453,7 +454,7 @@
                             <div class="check-item" onclick="toggleOtherFandom(true, this)">많음</div>
                         </div>
                         <div id="otherFandomInputArea" class="sub-input" style="display: none;">
-                            <input type="text" placeholder="언급되는 타장르를 기입하세요">
+                            <input type="text" placeholder="언급하는 타장르 및 기타 사항을 적어주세요.">
                         </div>
                     </div>
                 
