@@ -237,37 +237,54 @@
         }
         
         /* 태그들을 가로로 나열하는 컨테이너 */
+        /* 닉네임 입력창 아래 태그 정렬 */
         .tag-selector {
             display: flex;
-            flex-direction: row; /* 가로 방향 나열 */
-            gap: 8px;            /* 태그 사이 간격 */
-            margin-top: 5px;
+            flex-direction: row; /* 가로 나열 */
+            gap: 8px;
+            margin-top: 8px;     /* 입력창과의 간격 */
+            width: 100%;
         }
         
-        /* 개별 태그 아이템: 중앙 정렬 + 캡슐 스타일 */
         .tag-item {
             display: inline-flex;
-            align-items: center;    /* 상하 중앙 */
-            justify-content: center; /* 좌우 중앙 */
-            
+            align-items: center;
+            justify-content: center;
             font-size: 11px;
             padding: 0 14px;
-            height: 26px;           /* 높이 지정 */
+            height: 26px;
             background: #1a1a1a;
             border: 1px solid #444;
-            border-radius: 99px;    /* 양 끝을 완전 둥글게 */
-            
+            border-radius: 99px; /* 완전 둥글게 */
             cursor: pointer;
             color: #888;
             transition: 0.2s;
             white-space: nowrap;
         }
         
-        /* 활성화 상태 (선택 시 금색 강조) */
         .tag-item.active {
             border-color: var(--current-accent);
             color: var(--current-accent);
             background: rgba(211, 175, 55, 0.15);
+        }
+        
+        /* 화면 고장 방지를 위한 레이아웃 고정 */
+        .input-group {
+            margin-bottom: 15px;
+            display: block; /* 내부 요소가 위아래로 쌓이도록 보장 */
+        }
+        
+        /* 토글 버튼 실종 방지 */
+        .sidebar-container {
+            position: relative;
+            overflow: visible !important; /* 버튼이 잘리지 않게 함 */
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            right: -20px;
+            top: 100px;
+            z-index: 100; /* 최상단 배치 */
         }
         
         .sub-input {
@@ -409,7 +426,8 @@
                         
                         <div class="section-title">닉네임</div>
                             <div class="input-group">
-                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="width: 100%; margin-bottom: 10px;">
+                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" 
+                                       style="width: 100%; box-sizing: border-box; display: block; margin-bottom: 8px;">
                                 
                                 <div class="tag-selector">
                                     <div class="tag-item" onclick="toggleTag(this, 'nickChange')">#자주바뀜</div>
