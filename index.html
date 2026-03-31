@@ -284,9 +284,22 @@
 
         /* --- Form Elements --- */
         .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; transition: color 1s ease; }
-        .input-group { 
-            margin-bottom: 15px; 
-            display: block; /* 내부 요소들이 위아래로 차곡차곡 쌓이도록 함 */
+        .input-group {
+            margin-bottom: 15px;
+            display: block !important; /* 가로 정렬(flex)을 강제로 해제하여 아래로 쌓이게 함 */
+        }
+        #inNick {
+            width: 100% !important;
+            margin-bottom: 8px;
+            display: block;
+            box-sizing: border-box; /* 패딩이 너비를 초과하지 않게 방지 */
+        }
+        
+        .tag-selector {
+            display: flex;
+            flex-direction: row; /* 태그 버튼들끼리는 가로로 나열 */
+            gap: 6px;
+            flex-wrap: wrap;    /* 공간이 좁으면 다음 줄로 넘김 */
         }
         .input-label { display: block; margin-bottom: 5px; font-size: 11px; color: #aaa; }
         input[type="text"], select { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
@@ -316,24 +329,25 @@
         .workspace {
             flex: 1;
             background-color: var(--bg-workspace);
-            position: relative;
-            overflow: hidden; /* 박스가 넘쳐도 사이드바를 침범하지 않음 */
-            display: block;   /* flex 해제하여 내부 position: absolute가 작동하게 함 */
+            position: relative; /* 기준점 */
+            overflow: hidden;
             cursor: grab;
         }
 
         /* 프리뷰 박스를 감싸는 컨테이너 */
         #viewport {
             position: absolute;
+            /* 정중앙 배치 공식 */
             top: 50%;
             left: 50%;
+            transform: translate(-50%, -50%) scale(0.18); 
             transform-origin: center center;
             will-change: transform;
+            
+            /* 내부 요소(박스+저작권)를 세로로 정렬 */
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 초기 위치를 중앙으로 잡기 위해 transform 추가 (JS에서 업데이트됨) */
-            transform: translate(-50%, -50%) scale(0.18); 
         }
 
         /* 실제 4K 시트 박스 */
@@ -343,18 +357,20 @@
             background-color: #ffffff;
             position: relative;
             border-radius: 30px;
-            overflow: hidden;
             border: 1px solid var(--accent-border);
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+            flex-shrink: 0; /* 절대 수축하지 않음 */
+            overflow: hidden;
         }
 
         /* 저작권 문구가 박스 아래에 잘 붙도록 수정 */
         .copyright-notice {
-            width: 3840px; /* 박스 너비와 동일하게 고정 */
-            margin-top: 60px;
+            width: 3840px; 
+            margin-top: 80px; /* 박스와의 간격 */
             text-align: center;
             color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            flex-shrink: 0;
         }
         .copyright-notice p { margin: 0; font-size: 32px; line-height: 1.6; }
 
@@ -567,8 +583,9 @@
         const INITIAL_SCALE = 0.18;
         let scale = INITIAL_SCALE, isDragging = false, startX, startY, pointX = 0, pointY = 0;
 
-        const updateTransform = () => viewport.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-        updateTransform();
+        const updateTransform = () => {
+            viewport.style.transform = `translate(calc(-50% + ${pointX}px), calc(-50% + ${pointY}px)) scale(${scale})`;
+        };
 
         workspace.addEventListener('wheel', e => {
             e.preventDefault();
