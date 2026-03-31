@@ -228,6 +228,44 @@
             font-size: 12px;
         }
 
+        .section-title {
+            font-size: 18px; /* 16px보다 조금 더 키웠습니다 */
+            color: var(--current-accent);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .tag-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .tag-item {
+            font-size: 10px;
+            padding: 3px 8px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #888;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .tag-item.active {
+            border-color: var(--current-accent);
+            color: var(--current-accent);
+            background: rgba(211, 175, 55, 0.1);
+        }
+        
+        .sub-input {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--current-accent);
+            margin: 10px 0 20px 0;
+        }
+
         /* --- Form Elements --- */
         .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; transition: color 1s ease; }
         .input-group { margin-bottom: 15px; }
@@ -355,41 +393,79 @@
             
             <div class="editor-panel">
                 <div class="editor-content">
-                    <div class="section-title">기본 정보</div>
-                    <div class="input-group">
-                        <label class="input-label">닉네임</label>
-                        <input type="text" id="inNick" placeholder="닉네임을 입력하세요">
-                    </div>
-
-                    <div class="section-title">트윗 성향</div>
-                    <div class="grid-options" id="tweetType">
-                        <div class="check-item">RT</div><div class="check-item">마음</div><div class="check-item">인용</div>
-                        <div class="check-item">탐라대화</div><div class="check-item">일상</div><div class="check-item">욕트</div>
-                        <div class="check-item">썰</div><div class="check-item">글</div><div class="check-item">디자인</div>
-                        <div class="check-item">그림</div><div class="check-item">영상</div><div class="check-item">스크린샷</div>
-                    </div>
-
-                    <div class="section-title">플레이 성향 / 버디</div>
-                    <div class="input-group">
-                        <label class="input-label">버디 스타일 (택 1)</label>
-                        <div class="image-select-grid" id="buddyStyle">
-                            <div class="img-option" data-val="빙의"><img src="Icons/Buddy Style/빙의.png">빙의</div>
-                            <div class="img-option" data-val="소환"><img src="Icons/Buddy Style/소환.png">소환</div>
+                    <div id="panel-basic" class="editor-tab-content">
+                        
+                        <div class="section-title">NICKNAME / ID</div>
+                        <div class="input-group">
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="flex: 1;">
+                                <div class="tag-selector">
+                                    <div class="tag-item" onclick="toggleTag(this, 'nickChange')">#자주바뀜</div>
+                                    <div class="tag-item" onclick="toggleTag(this, 'prefNick')">#선호닉있음</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prefNickArea" class="sub-input" style="display: none;">
+                            <label class="input-label">추가/선호 닉네임</label>
+                            <input type="text" id="inSubNick" placeholder="다른 닉네임을 입력하세요">
+                        </div>
+                
+                        <hr class="hr-gold-gradient">
+                
+                        <div class="section-title">TWEET STYLE</div>
+                        <div class="grid-options multi-select">
+                            <div class="check-item">RT</div><div class="check-item">마음</div>
+                            <div class="check-item">인용</div><div class="check-item">탐라대화</div>
+                            <div class="check-item">일상</div><div class="check-item">욕설</div>
+                            <div class="check-item">R-18</div><div class="check-item">기타</div>
+                        </div>
+                
+                        <hr class="hr-gold-gradient">
+                
+                        <div class="section-title">CREATIVE WORK</div>
+                        <div class="grid-options multi-select">
+                            <div class="check-item">썰</div><div class="check-item">글</div>
+                            <div class="check-item">디자인</div><div class="check-item">그림</div>
+                            <div class="check-item">영상</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">기타</div>
+                        </div>
+                
+                        <hr class="hr-gold-gradient">
+                
+                        <div class="section-title">EXTERNAL LINKS</div>
+                        <div class="grid-options binary-select" style="margin-bottom: 10px;">
+                            <div class="check-item" onclick="toggleExternal(false, this)">X</div>
+                            <div class="check-item" onclick="toggleExternal(true, this)">O</div>
+                        </div>
+                        <div id="externalDetailArea" class="sub-input" style="display: none;">
+                            <label class="input-label">포함 내용 (다중 선택)</label>
+                            <div class="grid-options multi-select" style="margin-bottom: 12px;">
+                                <div class="check-item">R-18</div><div class="check-item">G-18</div>
+                                <div class="check-item">스토리</div><div class="check-item">스포일러</div>
+                                <div class="check-item">스크린샷</div><div class="check-item">연성</div>
+                            </div>
+                            <input type="text" placeholder="기타 내용을 기입하세요">
+                        </div>
+                
+                        <hr class="hr-gold-gradient">
+                
+                        <div class="section-title">OTHER FANDOMS</div>
+                        <div class="grid-options single-select">
+                            <div class="check-item" onclick="toggleOtherFandom(false, this)">없음</div>
+                            <div class="check-item" onclick="toggleOtherFandom(true, this)">가끔</div>
+                            <div class="check-item" onclick="toggleOtherFandom(true, this)">보통</div>
+                            <div class="check-item" onclick="toggleOtherFandom(true, this)">많음</div>
+                        </div>
+                        <div id="otherFandomInputArea" class="sub-input" style="display: none;">
+                            <input type="text" placeholder="언급되는 타장르를 기입하세요">
                         </div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="input-label">New Game+ / 엔딩 횟수</label>
-                        <input type="text" id="inCount" placeholder="횟수 입력">
-                    </div>
-
-                    <div class="input-group">
-                        <label class="input-label">자캐 설정</label>
-                        <select id="inOC">
-                            <option value="있음">있음</option>
-                            <option value="없음">없음</option>
-                        </select>
-                    </div>
+                
+                    <div id="panel-image" class="editor-tab-content" style="display: none;">
+                        </div>
+                
+                    <div id="panel-plus" class="editor-tab-content" style="display: none;">
+                        </div>
                 </div>
                 <div class="sidebar-footer">
                     <button class="save-btn" onclick="saveImage()">
@@ -587,6 +663,43 @@ helperBox.addEventListener('click', function() {
                 viewport.style.transform = originalTransform;
             });
         }
+
+        // 1. 태그 토글 및 선호닉 칸 활성화
+        function toggleTag(el, type) {
+            el.classList.toggle('active');
+            if (type === 'prefNick') {
+                const area = document.getElementById('prefNickArea');
+                area.style.display = el.classList.contains('active') ? 'block' : 'none';
+            }
+        }
+        
+        // 2. 다중 선택 (트윗/연성 성향 전체 적용)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('check-item') && e.target.parentElement.classList.contains('multi-select')) {
+                e.target.classList.toggle('selected');
+            }
+        });
+        
+        // 3. 외부 링크 O/X 선택
+        function toggleExternal(show, el) {
+            const area = document.getElementById('externalDetailArea');
+            area.style.display = show ? 'block' : 'none';
+            
+            const btns = el.parentElement.querySelectorAll('.check-item');
+            btns.forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        
+        // 4. 타장르 언급 수준 선택
+        function toggleOtherFandom(show, el) {
+            const area = document.getElementById('otherFandomInputArea');
+            area.style.display = show ? 'block' : 'none';
+        
+            const btns = el.parentElement.querySelectorAll('.check-item');
+            btns.forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        
     </script>
 </body>
 </html>
