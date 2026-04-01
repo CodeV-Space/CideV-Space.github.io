@@ -383,9 +383,32 @@
             min-height: 30px;
         }
 
-        .sidebar-footer { padding: 15px; border-top: 1px solid #333; }
-        .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 1s ease; }
+        .save-btn {
+            position: sticky; /* 또는 absolute */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--current-accent);
+            color: #121212;
+            border: none;
+            padding: 15px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            z-index: 10; /* 다른 요소보다 위에 오도록 */
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3); /* 하단 고정 시 구분감 */
+        }
 
+        .save-btn:hover {
+            filter: brightness(1.1);
+            letter-spacing: 1px;
+        }
+        
         /* --- Workspace --- */
         /* 프리뷰 박스가 검게 변하거나 레이아웃이 깨지는 현상 방지 */
         .workspace {
@@ -727,8 +750,20 @@
                         <div class="section-title">테마 및 컬러</div>
                     </div>
                 </div>
-                <div class="sidebar-footer">
-                    <button class="save-btn" onclick="saveImage()">
+                <div class="editor-sidebar">
+                    <div class="editor-tabs">
+                        <div class="tab-item active" onclick="showTab('info')"><i class="fa-solid fa-user"></i> 기본 정보</div>
+                        <div class="tab-item" onclick="showTab('game')"><i class="fa-solid fa-gamepad"></i> 게임 성향</div>
+                        <div class="tab-item" onclick="showTab('style')"><i class="fa-solid fa-palette"></i> 디자인</div>
+                    </div>
+                
+                    <div class="editor-content" style="flex: 1; overflow-y: auto; padding: 20px;">
+                        <div id="panel-info" class="editor-tab-content"> ... </div>
+                        <div id="panel-game" class="editor-tab-content"> ... </div>
+                        <div id="panel-style" class="editor-tab-content"> ... </div>
+                    </div>
+                
+                    <button class="download-btn" id="captureBtn">
                         <i class="fa-solid fa-download"></i> PNG로 저장
                     </button>
                 </div>
