@@ -368,7 +368,12 @@
         .img-option span {
             display: block;
             width: 100%;
-            text-align: center; /* 텍스트 중앙 정렬 */
+            text-align: center;
+            white-space: nowrap;    /* 텍스트 줄바꿈 절대 금지 */
+            font-size: 11px;        /* 폰트 크기를 살짝 조절 (필요시 10px로 변경) */
+            letter-spacing: -0.5px; /* 자간을 좁혀서 가로 너비 확보 */
+            overflow: visible;      /* 텍스트가 칸 밖으로 살짝 나가더라도 보이게 설정 */
+            margin-top: 5px;
         }
         /* 플레이 성향 체크 아이템 텍스트 중앙 정렬 */
         #playStyleOpts .check-item {
@@ -659,7 +664,7 @@
                                 <img src="Icons/Jails/오우거.png"><span>오우거</span>
                             </div>
                             <div class="img-option" onclick="selectImage(this, 'single')">
-                                <img src="Icons/Jails/하운드.png"><span>하운드</span>
+                                <img src="Icons/Jails/하운즈.png"><span>하운즈</span>
                             </div>
                             <div class="img-option" onclick="selectImage(this, 'single')">
                                 <img src="Icons/Jails/스팅어.png"><span>스팅어</span>
@@ -675,17 +680,32 @@
                             </div>
                         </div>
                     
-                        <div class="section-title">무기 (2개)</div>
-                        <div class="image-select-grid multi-select-limit" data-group="weapons" data-limit="2">
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/한손검.png"><span>한손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png"><span>양손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/총검.png"><span>총검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/도끼창.png"><span>도끼창</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/해머.png"><span>해머</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/쌍검.png"><span>쌍검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/룬블레이드.png"><span>룬블레이드</span></div>
+                        <div class="section-title">무기 (최대 2개)</div>
+                        <div class="image-select-grid multi-select-limit" data-group="weapons" data-limit="2" 
+                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                            
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/한손검.png"><span>한손검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/양손검.png"><span>양손검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/총검.png"><span>총검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/도끼창.png"><span>도끼창</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/해머.png"><span>해머</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/쌍검.png"><span>쌍검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/룬 블레이드.png"><span>룬 블레이드</span>
+                            </div>
                         </div>
-                    </div>
                 
                     <div id="panel-plus" class="editor-tab-content" style="display: none;">
                         <div class="section-title">덕질 성향</div>
