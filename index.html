@@ -226,7 +226,7 @@
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
-        .editor-panel { width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
         .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
@@ -383,8 +383,26 @@
             min-height: 30px;
         }
 
-        .sidebar-footer { padding: 15px; border-top: 1px solid #333; }
-        .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 1s ease; }
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid #333;
+            background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
+            z-index: 10;
+        }
+        .save-btn {
+            width: 100%;
+            height: 45px;
+            background-color: var(--current-accent);
+            color: #111;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
         /* --- Workspace --- */
         /* 프리뷰 박스가 검게 변하거나 레이아웃이 깨지는 현상 방지 */
@@ -727,6 +745,7 @@
                         <div class="section-title">테마 및 컬러</div>
                     </div>
                 </div>
+                    
                 <div class="sidebar-footer">
                     <button class="save-btn" onclick="saveImage()">
                         <i class="fa-solid fa-download"></i> PNG로 저장
