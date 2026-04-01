@@ -360,68 +360,6 @@
         .sidebar-footer { padding: 15px; border-top: 1px solid #333; }
         .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 1s ease; }
 
-        /* 성향 선택용 그리드 시스템 */
-        .option-grid {
-            display: grid;
-            gap: 10px;
-            margin-top: 5px;
-        }
-        .grid-2 { grid-template-columns: repeat(2, 1fr); }
-        .grid-3 { grid-template-columns: repeat(3, 1fr); }
-        .grid-4 { grid-template-columns: repeat(4, 1fr); }
-        
-        .option-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            padding: 8px 5px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .option-item:hover {
-            border-color: #666;
-            background: #222;
-        }
-        
-        .option-item.selected {
-            border-color: var(--current-accent);
-            background: rgba(211, 175, 55, 0.15);
-        }
-        
-        .option-item img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-        
-        .option-item span {
-            font-size: 10px;
-            color: #ccc;
-            text-align: center;
-            word-break: keep-all;
-        }
-        
-        /* 체크박스 스타일 */
-        .tendency-check-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .check-item {
-            font-size: 11px;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        
         /* --- Workspace --- */
         /* 프리뷰 박스가 검게 변하거나 레이아웃이 깨지는 현상 방지 */
         .workspace {
@@ -655,74 +593,8 @@
                         </div>
                 
                     <div id="panel-game" class="editor-tab-content" style="display: none;">
-                        <div class="group">
-                        <label>PLAY STYLE</label>
-                        <div class="tendency-check-grid">
-                            <label class="check-item"><input type="checkbox" name="play-style" value="스토리"> 스토리</label>
-                            <label class="check-item"><input type="checkbox" name="play-style" value="스크린샷"> 스크린샷</label>
-                            <label class="check-item"><input type="checkbox" name="play-style" value="업적"> 업적</label>
-                            <label class="check-item"><input type="checkbox" name="play-style" value="NG+"> New Game+</label>
-                            <label class="check-item"><input type="checkbox" name="play-style" value="빌딩"> 빌드 빌딩</label>
-                            <label class="check-item"><input type="checkbox" name="play-style" value="잠수"> 잠수</label>
-                        </div>
-                    </div>
-                    
-                    <div class="group">
-                        <label>BUDDY STYLE</label>
-                        <div class="option-grid grid-2">
-                            <div class="option-item" onclick="selectSingle(this, 'buddy-style')">
-                                <img src="Icons/Buddy Style/빙의.png" alt="빙의">
-                                <span>빙의</span>
-                            </div>
-                            <div class="option-item" onclick="selectSingle(this, 'buddy-style')">
-                                <img src="Icons/Buddy Style/소환.png" alt="소환">
-                                <span>소환</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="group">
-                        <label>BUDDY (MAX 3 - 선호 1, 보조 2)</label>
-                        <div class="option-grid grid-4">
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/크레이그.png"><span>크레이그</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/홀리.png"><span>홀리</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/이리스.png"><span>이리스</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/야드비가.png"><span>야드비가</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/조제.png"><span>조제</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/라비니아.png"><span>라비니아</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/리세.png"><span>리세</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/루.png"><span>루</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/리코리스.png"><span>리코리스</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/라일.png"><span>라일</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/노아.png"><span>노아</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/발렌틴.png"><span>발렌틴</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'buddy', 3)"><img src="Icons/Buddy Icons/제논.png"><span>제논</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="group">
-                        <label>JAIL</label>
-                        <div class="option-grid grid-3">
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/오우거.png"><span>오우거</span></div>
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/하운드.png"><span>하운드</span></div>
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/스팅어.png"><span>스팅어</span></div>
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/아이비.png"><span>아이비</span></div>
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/배트.png"><span>배트</span></div>
-                            <div class="option-item" onclick="selectSingle(this, 'jail')"><img src="Icons/Jails/리퍼.png"><span>리퍼</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="group">
-                        <label>WEAPONS (MAX 2)</label>
-                        <div class="option-grid grid-4">
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/한손검.png"><span>한손검</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/양손검.png"><span>양손검</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/총검.png"><span>총검</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/도끼창.png"><span>도끼창</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/망치.png"><span>망치</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/쌍검.png"><span>쌍검</span></div>
-                            <div class="option-item" onclick="selectLimit(this, 'weapon', 2)"><img src="Icons/Weapons/룬블레이드.png"><span>룬블레이드</span></div>
-                        </div>
+                        <div class="section-title">게임 성향 설정</div>
+                        <p style="font-size:12px; color:#888;">게임 플레이 스타일 관련 옵션이 들어갈 자리입니다.</p>
                     </div>
                 
                     <div id="panel-trophy" class="editor-tab-content" style="display: none;">
@@ -1033,40 +905,6 @@ helperBox.addEventListener('click', function() {
             // icon.style.transform = "scale(1.2)";
             // setTimeout(() => icon.style.transform = "scale(1)", 200);
         });
-
-        // 단일 선택 (버디 스타일, 제일 등)
-        function selectSingle(el, groupName) {
-            // 같은 그룹의 다른 아이템 선택 해제
-            el.parentElement.querySelectorAll('.option-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            el.classList.add('selected');
-            syncToPreview(); // 프리뷰 업데이트 함수 호출
-        }
-        
-        // 개수 제한 선택 (버디 최대 3명, 무기 최대 2개)
-        function selectLimit(el, groupName, limit) {
-            const selectedItems = el.parentElement.querySelectorAll('.selected');
-            
-            if (el.classList.contains('selected')) {
-                // 이미 선택된 경우 해제
-                el.classList.remove('selected');
-            } else {
-                // 제한 개수보다 적게 선택된 경우만 추가
-                if (selectedItems.length < limit) {
-                    el.classList.add('selected');
-                } else {
-                    alert(`최대 ${limit}개까지 선택 가능합니다.`);
-                }
-            }
-            syncToPreview(); // 프리뷰 업데이트 함수 호출
-        }
-        
-        // 프리뷰 박스에 실시간 반영 로직 (예시)
-        function syncToPreview() {
-            // 선택된 데이터를 수집하여 Right Box의 프리뷰에 그리는 로직을 이곳에 작성하세요.
-            // 예: const selectedBuddies = document.querySelectorAll('.buddy .selected');
-        }
                 
     </script>
 </body>
