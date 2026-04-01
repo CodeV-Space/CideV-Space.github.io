@@ -359,14 +359,16 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
         .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; transition: color 1s ease; }
         .img-option img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 4px; border: 1px solid transparent; transition: 1s ease; }
         .img-option.selected img { border-color: var(--current-accent); }
         .img-option span {
-            margin-top: 5px;
             display: block;
             width: 100%;
+            text-align: center; /* 텍스트 중앙 정렬 */
         }
         /* 플레이 성향 체크 아이템 텍스트 중앙 정렬 */
         #playStyleOpts .check-item {
@@ -623,12 +625,14 @@
                         </div>
                     
                         <div class="section-title">버디 스타일</div>
-                        <div class="image-select-grid single-select" data-group="buddyStyle">
-                            <div class="img-option" onclick="selectImage(this, 'single')">
-                                <img src="Icons/Buddy Style/빙의.png" alt="빙의"><span>빙의</span>
+                        <div class="image-select-grid single-select" data-group="buddyStyle" style="display: flex; justify-content: center; gap: 20px;">
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
+                                <img src="Icons/Buddy Style/빙의.png" alt="빙의">
+                                <span>빙의</span>
                             </div>
-                            <div class="img-option" onclick="selectImage(this, 'single')">
-                                <img src="Icons/Buddy Style/소환.png" alt="소환"><span>소환</span>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
+                                <img src="Icons/Buddy Style/소환.png" alt="소환">
+                                <span>소환</span>
                             </div>
                         </div>
                     
@@ -665,7 +669,7 @@
                             <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png"><span>양손검</span></div>
                             <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/총검.png"><span>총검</span></div>
                             <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/도끼창.png"><span>도끼창</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/망치.png"><span>망치</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/해머.png"><span>해머</span></div>
                             <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/쌍검.png"><span>쌍검</span></div>
                             <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/룬블레이드.png"><span>룬블레이드</span></div>
                         </div>
