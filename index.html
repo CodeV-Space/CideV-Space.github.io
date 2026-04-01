@@ -226,34 +226,22 @@
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
-        .editor-panel {
-            width: var(--editor-w);
-            background: var(--bg-sidebar);
-            display: flex;          /* 추가 */
-            flex-direction: column; /* 추가: 요소를 세로로 배치 */
-            height: 100%;           /* 추가: 부모 높이를 꽉 채움 */
-            overflow: hidden;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
         .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
-            flex: 1;
             right: -20px; 
             /* 위치를 상단에서 100px 지점으로 고정 (상단 탭/주소창 라인과 맞춤) */
             top: 100px; 
+            width: 20px;
             height: 50px;
             background: #222;
             border: 1px solid #000;
             border-left: none; /* 사이드바와 이어지도록 왼쪽 테두리 제거 */
             border-radius: 0 8px 8px 0;
-            padding: 20px;
-            width: 100%;
-            box-sizing: border-box;
-            overflow-y: auto;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -398,8 +386,7 @@
         .sidebar-footer {
             padding: 15px;
             border-top: 1px solid #333;
-            background: var(--bg-sidebar); /* 스크롤되는 내용이 비치지 않게 배경색 지정 */
-            flex-shrink: 0;         /* 추가: 공간이 부족해도 찌그러지지 않음 */
+            background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
             z-index: 10;
         }
         .save-btn {
