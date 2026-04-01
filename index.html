@@ -352,10 +352,29 @@
         .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
 
         .image-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
-        .img-option { cursor: pointer; text-align: center; font-size: 10px; opacity: 0.6; transition: 0.2s; }
+        /* 이미지 선택 옵션 텍스트 중앙 정렬 보강 */
+        .img-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
         .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; transition: color 1s ease; }
         .img-option img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 4px; border: 1px solid transparent; transition: 1s ease; }
         .img-option.selected img { border-color: var(--current-accent); }
+        .img-option span {
+            margin-top: 5px;
+            display: block;
+            width: 100%;
+        }
+        /* 플레이 성향 체크 아이템 텍스트 중앙 정렬 */
+        #playStyleOpts .check-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+        }
 
         .sidebar-footer { padding: 15px; border-top: 1px solid #333; }
         .save-btn { width: 100%; height: 40px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 1s ease; }
@@ -597,8 +616,61 @@
                         <p style="font-size:12px; color:#888;">게임 플레이 스타일 관련 옵션이 들어갈 자리입니다.</p>
                     </div>
                 
-                    <div id="panel-trophy" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">도전과제</div>
+                    <div id="panel-game" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">플레이 성향</div>
+                        <div class="grid-options multi-select" id="playStyleOpts">
+                            <div class="check-item">스토리</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">업적</div><div class="check-item">New Game+</div>
+                            <div class="check-item">빌드 빌딩</div><div class="check-item">잠수</div>
+                        </div>
+                    
+                        <div class="section-title">버디 스타일 (택 1)</div>
+                        <div class="image-select-grid single-select" data-group="buddyStyle">
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Buddy Style/빙의.png" alt="빙의"><span>빙의</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Buddy Style/소환.png" alt="소환"><span>소환</span>
+                            </div>
+                        </div>
+                    
+                        <div class="section-title">버디 (최대 3명)</div>
+                        <div class="image-select-grid multi-select-limit" data-group="buddies" data-limit="3">
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/크레이그.png"><span>크레이그</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/홀리.png"><span>홀리</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/이리스.png"><span>이리스</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/야드비가.png"><span>야드비가</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/조제.png"><span>조제</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라비니아.png"><span>라비니아</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리세.png"><span>리세</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/루.png"><span>루</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리코리스.png"><span>리코리스</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라일.png"><span>라일</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/노아.png"><span>노아</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/발렌틴.png"><span>발렌틴</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/제논.png"><span>제논</span></div>
+                        </div>
+                    
+                        <div class="section-title">제일 (택 1)</div>
+                        <div class="image-select-grid single-select" data-group="jail">
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/오우거.png"><span>오우거</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/하운드.png"><span>하운드</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/스팅어.png"><span>스팅어</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/아이비.png"><span>아이비</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/배트.png"><span>배트</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/리퍼.png"><span>리퍼</span></div>
+                        </div>
+                    
+                        <div class="section-title">무기 (최대 2개)</div>
+                        <div class="image-select-grid multi-select-limit" data-group="weapons" data-limit="2">
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/한손검.png"><span>한손검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png"><span>양손검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/총검.png"><span>총검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/도끼창.png"><span>도끼창</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/망치.png"><span>망치</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/쌍검.png"><span>쌍검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/룬블레이드.png"><span>룬블레이드</span></div>
+                        </div>
                     </div>
                 
                     <div id="panel-plus" class="editor-tab-content" style="display: none;">
@@ -882,6 +954,35 @@ helperBox.addEventListener('click', function() {
             const btns = el.parentElement.querySelectorAll('.check-item');
             btns.forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
+        }
+
+        /**
+         * 이미지 선택 공통 함수
+         * @param {HTMLElement} el 클릭된 요소
+         * @param {string} mode 'single' (하나만) 또는 'limit' (최대 개수 제한)
+         * @param {number} limit 제한 개수 (mode가 'limit'일 때만 사용)
+         */
+        function selectImage(el, mode, limit) {
+            const parent = el.parentElement;
+            
+            if (mode === 'single') {
+                // 단일 선택: 형제들의 클래스 제거 후 본인 추가
+                parent.querySelectorAll('.img-option').forEach(opt => opt.classList.remove('selected'));
+                el.classList.add('selected');
+            } else if (mode === 'limit') {
+                // 개수 제한 다중 선택
+                if (el.classList.contains('selected')) {
+                    el.classList.remove('selected');
+                } else {
+                    const currentSelectedCount = parent.querySelectorAll('.selected').length;
+                    if (currentSelectedCount < limit) {
+                        el.classList.add('selected');
+                    } else {
+                        alert(`최대 ${limit}개까지 선택할 수 있습니다.`);
+                    }
+                }
+            }
+            // 선택 후 프리뷰 렌더링 함수를 호출하고 싶다면 여기에 추가 (예: updatePreview())
         }
 
         // 레이아웃 아이콘 토글 로직
