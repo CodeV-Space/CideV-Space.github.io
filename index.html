@@ -435,7 +435,6 @@
             border-color: #444;       /* 테두리 색상 변경 */
         }
 
-        
         /* 플레이 성향 체크 아이템 텍스트 중앙 정렬 */
         #playStyleOpts .check-item {
             display: flex;
@@ -575,7 +574,49 @@
             scrollbar-width: thin;
             scrollbar-color: #444 var(--bg-rail);
         }
+        /* 전체 캡슐 배경 */
+        .capsule-container {
+            display: flex;
+            position: relative;
+            background: #1a1a1a; /* 어두운 배경 */
+            border: 1px solid #333;
+            border-radius: 30px; /* 완전한 캡슐 모양 */
+            padding: 4px;
+            margin: 10px 0;
+            cursor: pointer;
+            overflow: hidden;
+        }
         
+        /* 안에서 움직이는 작은 캡슐(슬라이더) */
+        .selection-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(25% - 8px); /* 4개 항목일 때 너비 */
+            height: calc(100% - 8px);
+            background: var(--current-accent); /* 테마 강조색 */
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 부드러운 움직임 */
+            z-index: 1;
+        }
+        
+        /* 개별 텍스트 아이템 */
+        .capsule-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            position: relative;
+            z-index: 2; /* 슬라이더보다 위에 텍스트가 와야 함 */
+            transition: color 0.3s;
+        }
+        
+        /* 선택된 상태의 텍스트 색상 */
+        .capsule-item.active {
+            color: #000; /* 강조색 배경 위에서 잘 보이도록 검정색 혹은 흰색 */
+        }
     </style>
 </head>
 <body>
@@ -721,15 +762,21 @@
                 
                 
                         <div class="section-title">타장르 언급</div>
-                        <div class="grid-options single-select">
-                            <div class="check-item" onclick="toggleOtherFandom(false, this)">없음</div>
-                            <div class="check-item" onclick="toggleOtherFandom(true, this)">가끔</div>
-                            <div class="check-item" onclick="toggleOtherFandom(true, this)">보통</div>
-                            <div class="check-item" onclick="toggleOtherFandom(true, this)">많음</div>
+                        <div class="capsule-container">
+                            <div class="selection-slider" id="mentionSlider" style="left: 4px; width: calc(25% - 8px);"></div>
+                            
+                            <div class="capsule-item active" onclick="toggleMention(this, 'none')">없음</div>
+                            <div class="capsule-item" onclick="toggleMention(this, 'little')">적음</div>
+                            <div class="capsule-item" onclick="toggleMention(this, 'normal')">보통</div>
+                            <div class="capsule-item" onclick="toggleMention(this, 'much')">많이</div>
                         </div>
-                        <div id="otherFandomInputArea" class="sub-input" style="display: none;">
-                            <input type="text" placeholder="언급하는 타장르 및 기타 사항을 적어주세요">
+                        
+                        <div id="mentionDetailContainer" style="display: none; margin-top: 10px;">
+                            <input type="text" id="mentionDetail" placeholder="추가 사항을 입력해주세요 (예: 장르명 등)" 
+                                   style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: white; font-size: 12px; box-sizing: border-box;">
                         </div>
+
+                        <input type="hidden" id="genreMention" value="none">
                     </div>
                 
                     <div id="panel-image" class="editor-tab-content" style="display: none;">
@@ -1189,6 +1236,28 @@ helperBox.addEventListener('click', function() {
                 icon.className = 'fa-solid fa-chevron-right';
             }
         });
+
+        function toggleMention(element, value) {
+            const container = element.parentElement;
+            const items = container.querySelectorAll('.capsule-item');
+            const slider = document.getElementById('mentionSlider');
+            
+            // 1. 모든 아이템에서 active 제거 및 클릭한 요소에 추가
+            items.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        
+            // 2. 클릭한 요소의 인덱스 찾기
+            const index = Array.from(items).indexOf(element);
+            
+            // 3. 슬라이더 이동 (너비의 100%씩 이동)
+            slider.style.left = `calc(${index * 25}% + 4px)`;
+        
+            // 4. 기존 데이터 저장 로직 연동
+            document.getElementById('genreMention').value = value;
+            
+            // (선택 사항) 값이 바뀔 때 미리보기 업데이트 함수 실행
+            if (typeof updatePreview === "function") updatePreview();
+        }
     </script>
 </body>
 </html>
