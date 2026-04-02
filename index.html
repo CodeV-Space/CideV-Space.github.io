@@ -1129,17 +1129,17 @@ helperBox.addEventListener('click', function() {
         
 
         document.getElementById('toggleBtn').addEventListener('click', function() {
-    const container = document.getElementById('sidebar');
-    container.classList.toggle('collapsed');
-
-    const isCollapsed = container.classList.contains('collapsed');
-    this.querySelector('i').className = isCollapsed
-        ? 'fa-solid fa-chevron-right'
-        : 'fa-solid fa-chevron-left';
-
-    // ✅ collapsed 상태에 따라 버튼 위치 이동
-    this.style.left = isCollapsed ? '60px' : 'var(--editor-w)';
-});
+            const container = document.getElementById('sidebar');
+            container.classList.toggle('collapsed');
+        
+            const isCollapsed = container.classList.contains('collapsed');
+            this.querySelector('i').className = isCollapsed
+                ? 'fa-solid fa-chevron-right'
+                : 'fa-solid fa-chevron-left';
+        
+            // ✅ collapsed 상태에 따라 버튼 위치 이동
+            this.style.left = isCollapsed ? '60px' : 'var(--editor-w)';
+        });
     </script>
 </body>
 </html>
