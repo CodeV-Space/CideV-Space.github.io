@@ -29,6 +29,7 @@
             --tab-h: 42px;
             --address-h: 50px;
             --editor-w: 525px;
+            --rail-w: 80px;
 
             /* 색상 변화 부드럽게 */
             transition: --current-accent 1s ease;
@@ -121,15 +122,15 @@
         .author-id { font-size: 14px; color: #888; font-weight: 500; }
         /* --- 사이드바 아이콘 버튼 스타일 --- */
         .tab-icon-btn {
-            width: 44px; /* 크기를 살짝 키워 클릭 영역 확보 */
-            height: 44px;
+            width: 56px; /* 크기를 살짝 키워 클릭 영역 확보 */
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #666; /* 기본 비활성 색상 */
             cursor: pointer;
-            border-radius: 12px;
-            font-size: 20px;
+            border-radius: 14px;
+            font-size: 24px;
             transition: all 0.3s ease; /* 부드러운 변화 */
             position: relative;
         }
@@ -150,7 +151,7 @@
         .tab-icon-btn.active::before {
             content: '';
             position: absolute;
-            left: -15px; /* 레일 왼쪽 끝에 붙임 */
+            left: -20px; /* 레일 왼쪽 끝에 붙임 */
             width: 4px;
             height: 20px;
             background: var(--current-accent);
@@ -202,7 +203,7 @@
             overflow: visible !important; 
         }
         .tab-rail {
-            width: 60px; 
+            width: var(--rail-w);
             background: var(--bg-rail); 
             border-right: 1px solid #333;
             display: flex; 
@@ -216,7 +217,7 @@
 
         /* 사이드바 레일 내 구분선 스타일 */
         .rail-divider {
-            width: 30px;         /* 레일 너비보다 좁게 설정 */
+            width: 44px;         /* 레일 너비보다 좁게 설정 */
             height: 1px;
             background-color: #444; /* 은은한 회색 */
             margin: 10px 0;      /* 위아래 적당한 간격 */
@@ -228,8 +229,8 @@
             display: none;
         }
         .tab-icon-btn {
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            color: #666; cursor: pointer; border-radius: 8px; font-size: 18px; transition: 1s ease;
+            width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
+            color: #666; cursor: pointer; border-radius: 10px; font-size: 22px; transition: 1s ease;
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
@@ -256,7 +257,7 @@
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
-            left: calc(60px + var(--editor-w));
+            left: calc(var(--rail-w) + var(--editor-w));
             top: 100px; 
             width: 20px;
             height: 50px;
