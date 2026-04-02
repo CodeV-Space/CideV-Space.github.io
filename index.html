@@ -229,7 +229,14 @@
         .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
-        .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
+        .editor-content { 
+            flex: 1; 
+            padding: 20px; 
+            padding-bottom: 40px; /* ✨ 추가: 마지막 항목이 버튼에 가려지지 않도록 하단 여백 확보 */
+            width: var(--editor-w); 
+            box-sizing: border-box; 
+            overflow-y: auto; 
+        }
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
@@ -415,6 +422,7 @@
             border-top: 1px solid #333;
             background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
             z-index: 10;
+            flex-shrink: 0; /* ✨ 추가: 공간이 부족해도 절대 버튼 영역이 줄어들거나 밀리지 않음 */
         }
         .save-btn {
             width: 100%;
