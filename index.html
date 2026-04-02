@@ -257,8 +257,7 @@
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
-            right: -20px; 
-            /* 위치를 상단에서 100px 지점으로 고정 (상단 탭/주소창 라인과 맞춤) */
+            left" var(--editor-w);
             top: 100px; 
             width: 20px;
             height: 50px;
@@ -271,7 +270,7 @@
             align-items: center;
             justify-content: center;
             color: var(--current-accent);
-            z-index: 1000 !important;
+            z-index: 999 !important;
             transition: color 1s ease, background 0.2s;
         }
         
@@ -332,7 +331,6 @@
             border-right: 1px solid #000;
             z-index: 20;
             position: relative;
-            /* 중요: 토글 버튼이 사이드바 밖으로 삐져나와야 하므로 hidden이면 안 됩니다 */
             overflow: visible !important; 
         }
         
@@ -817,11 +815,12 @@
                         <i class="fa-solid fa-download"></i> PNG로 저장
                     </button>
                 </div>
-            </div>
-            <div class="toggle-btn" id="toggleBtn">
-                <i class="fa-solid fa-chevron-left"></i>
             </div>    
         </aside>
+
+        <div class="toggle-btn" id="toggleBtn">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
 
         <section class="workspace" id="workspace">
             <div id="viewport">
@@ -1127,7 +1126,20 @@ helperBox.addEventListener('click', function() {
             // icon.style.transform = "scale(1.2)";
             // setTimeout(() => icon.style.transform = "scale(1)", 200);
         });
-                
+        
+
+        document.getElementById('toggleBtn').addEventListener('click', function() {
+    const container = document.getElementById('sidebar');
+    container.classList.toggle('collapsed');
+
+    const isCollapsed = container.classList.contains('collapsed');
+    this.querySelector('i').className = isCollapsed
+        ? 'fa-solid fa-chevron-right'
+        : 'fa-solid fa-chevron-left';
+
+    // ✅ collapsed 상태에 따라 버튼 위치 이동
+    this.style.left = isCollapsed ? '60px' : 'var(--editor-w)';
+});
     </script>
 </body>
 </html>
