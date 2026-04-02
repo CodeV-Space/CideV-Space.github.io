@@ -388,7 +388,11 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            
+            flex: 0 0 19%;        /* 가로 너비를 약 1/5로 설정 */
+            max-width: 65px;      /* 너무 커지지 않게 제한 */
+            padding: 8px 2px;
+            margin: 2px;          /* 아이콘 간의 미세 간격 */
+            box-sizing: border-box;
             border-radius: 12px;     /* 모서리를 둥글게 설정 (원하는 만큼 조절 가능) */
             border: 1px solid transparent; /* 기본 테두리는 투명하게 */
             padding: 8px;           /* 내부 여백을 주어 이미지가 답답해 보이지 않게 함 */
@@ -397,8 +401,8 @@
         }
         .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; transition: color 1s ease; }
         .img-option img {
-            width: 45px;
-            height: 45px; 
+            width: 40px;
+            height: 40px; 
             aspect-ratio: 1/1; /* 정사각형 유지 */
             object-fit: contain; 
             display: block; 
@@ -757,7 +761,7 @@
                     
                         <div class="section-title">버디 (최대 3명)</div>
                         <div class="image-select-grid multi-select-limit" data-group="buddies" data-limit="3" 
-                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; width: 100%;">
                             
                             <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/노아.png"><span>노아</span></div>
                             <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/라비니아.png"><span>라비니아</span></div>
