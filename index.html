@@ -533,6 +533,42 @@
         /* --- Text Rendering --- */
         .render-layer { position: absolute; color: #000; pointer-events: none; }
         #render-nickname { top: 100px; left: 100px; font-size: 100px; font-weight: bold; }
+
+        /* --- 스크롤바 전체 디자인 --- */
+
+        /* 1. Chrome, Safari, Edge, Opera (Webkit 엔진) */
+        .editor-content::-webkit-scrollbar,
+        .tab-rail::-webkit-scrollbar {
+            width: 6px; /* 스크롤바 너비 */
+        }
+        
+        /* 스크롤바 트랙 (바탕) */
+        .editor-content::-webkit-scrollbar-track,
+        .tab-rail::-webkit-scrollbar-track {
+            background: var(--bg-rail); /* 사이드바보다 더 어두운 색상 */
+        }
+        
+        /* 스크롤바 핸들 (움직이는 부분) */
+        .editor-content::-webkit-scrollbar-thumb,
+        .tab-rail::-webkit-scrollbar-thumb {
+            background: #444; /* 기본 상태는 짙은 회색 */
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        
+        /* 마우스 올렸을 때 강조색으로 변경 */
+        .editor-content::-webkit-scrollbar-thumb:hover,
+        .tab-rail::-webkit-scrollbar-thumb:hover {
+            background: var(--current-accent); /* 사이트 테마 금색/강조색 적용 */
+        }
+        
+        /* 2. Firefox용 설정 */
+        .editor-content,
+        .tab-rail {
+            scrollbar-width: thin;
+            scrollbar-color: #444 var(--bg-rail);
+        }
+        
     </style>
 </head>
 <body>
@@ -544,7 +580,7 @@
     </div>
 
     <div class="browser-top">
-        <div class="tab" title="코드베인 1 트친소도 제작 생각 있습니다.">
+        <div class="tab" title="코드베인 1 시트는 고민 중입니다.">
             <img src="Icons/Titles/CV1.png" class="tab-icon" alt=""> CODE VEIN
         </div>
         <div class="tab active">
