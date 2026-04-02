@@ -226,17 +226,27 @@
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
-        .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .editor-panel { 
+            height: 100%; 
+            width: var(--editor-w); 
+            background: var(--bg-sidebar); 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; /* ✨ 추가: 버튼을 하단에 고정하기 위한 기준점이 됩니다. */
+            overflow: hidden; 
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
-        .editor-content { 
+        ..editor-content { 
             flex: 1; 
             padding: 20px; 
-            padding-bottom: 40px; /* ✨ 추가: 마지막 항목이 버튼에 가려지지 않도록 하단 여백 확보 */
+            padding-bottom: 80px; /* ✨ 추가: 하단에 고정된 버튼에 마지막 내용이 가려지지 않게 넉넉한 여백을 줍니다. */
             width: var(--editor-w); 
             box-sizing: border-box; 
             overflow-y: auto; 
         }
+        
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
@@ -417,12 +427,16 @@
             min-height: 30px;
         }
 
-        .sidebar-footer {
-            padding: 15px;
-            border-top: 1px solid #333;
-            background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
-            z-index: 10;
-            flex-shrink: 0; /* ✨ 추가: 공간이 부족해도 절대 버튼 영역이 줄어들거나 밀리지 않음 */
+        .sidebar-footer { 
+            position: absolute; /* ✨ 추가: 부모(.editor-panel)를 기준으로 위치를 강제 지정합니다. */
+            bottom: 0;          /* ✨ 추가: 바닥에 빈틈없이 딱 붙입니다. */
+            left: 0;            /* ✨ 추가: 왼쪽 끝에 딱 맞춥니다. */
+            width: 100%;        /* ✨ 추가: 가로 길이를 패널에 꽉 채웁니다. */
+            box-sizing: border-box; /* ✨ 추가: 패딩이 너비를 초과하지 않게 합니다. */
+            padding: 15px; 
+            border-top: 1px solid #333; 
+            background: var(--bg-sidebar); 
+            z-index: 100;       /* ✨ 추가: 스크롤되는 내용물보다 항상 위에 보이도록 층을 높입니다. */
         }
         .save-btn {
             width: 100%;
