@@ -193,7 +193,15 @@
         .main-wrapper { display: flex; height: calc(100vh - var(--tab-h) - var(--address-h)); width: 100vw; position: relative; }
 
         /* Sidebar */
-        .sidebar-container { display: flex; background: var(--bg-sidebar); border-right: 1px solid #000; z-index: 20; position: relative; }
+        .sidebar-container {
+            display: flex;
+            background: var(--bg-sidebar);
+            border-right: 1px solid #000;
+            z-index: 20;
+            position: relative;
+            /* 기존 overflow: hidden; 이 있다면 반드시 지우고 아래 줄을 넣으세요 */
+            overflow: visible !important; 
+        }
         .tab-rail {
             width: 60px; 
             background: var(--bg-rail); 
@@ -264,7 +272,7 @@
             align-items: center;
             justify-content: center;
             color: var(--current-accent);
-            z-index: 25;
+            z-index: 999;
             transition: color 1s ease, background 0.2s;
         }
         
