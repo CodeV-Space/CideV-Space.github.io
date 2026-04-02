@@ -256,7 +256,7 @@
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
-            left" calc(60px + var(--editor-w));
+            left: calc(60px + var(--editor-w));
             top: 100px; 
             width: 20px;
             height: 50px;
@@ -1168,21 +1168,18 @@ helperBox.addEventListener('click', function() {
             const editorPanel = sidebar.querySelector('.editor-panel');
             const icon = this.querySelector('i');
         
-            // 현재 에디터 패널의 너비를 확인 (설정된 너비인지 혹은 0인지)
-            // getComputedStyle을 사용하면 초기 로딩 시의 실제 렌더링 너비를 정확히 가져옵니다.
-            const currentWidth = window.getComputedStyle(editorPanel).width;
-            const isVisible = currentWidth !== '0px';
+            const isCollapsed = editorPanel.style.width === '0px';
         
-            if (isVisible) {
-                // [닫기 동작]
-                editorPanel.style.width = '0px';
-                this.style.left = '60px'; // 레일 너비 위치로 이동
-                icon.className = 'fa-solid fa-chevron-right'; // 아이콘을 '열기' 방향으로 변경
-            } else {
-                // [열기 동작]
+            if (isCollapsed) {
+                // 열기
                 editorPanel.style.width = 'var(--editor-w)';
-                this.style.left = 'calc(60px + var(--editor-w))'; // 에디터 끝 위치로 이동
-                icon.className = 'fa-solid fa-chevron-left'; // 아이콘을 '닫기' 방향으로 변경
+                this.style.left = 'calc(60px + var(--editor-w))';
+                icon.className = 'fa-solid fa-chevron-left';
+            } else {
+                // 닫기
+                editorPanel.style.width = '0px';
+                this.style.left = '60px';
+                icon.className = 'fa-solid fa-chevron-right';
             }
         });
     </script>
