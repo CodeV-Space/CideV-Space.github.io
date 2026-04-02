@@ -390,12 +390,13 @@
             transition: all 0.2s ease;
             flex: 0 0 18%;        /* 가로 너비를 약 1/5로 설정 */
             max-width: 65px;      /* 너무 커지지 않게 제한 */
+            min-height: 85px;
             padding: 8px 2px;
             margin: 2px;          /* 아이콘 간의 미세 간격 */
             box-sizing: border-box;
             border-radius: 12px;     /* 모서리를 둥글게 설정 (원하는 만큼 조절 가능) */
             border: 1px solid transparent; /* 기본 테두리는 투명하게 */
-            padding: 8px;           /* 내부 여백을 주어 이미지가 답답해 보이지 않게 함 */
+            padding: 8px 2px;           /* 내부 여백을 주어 이미지가 답답해 보이지 않게 함 */
             background: transparent;  /* 기본 배경은 투명하게 */
         }
         }
@@ -421,11 +422,10 @@
         .img-option span {
             display: block;
             width: 100%;
-            text-align: center;
-            white-space: nowrap;    
-            font-size: 14px;
+            text-align: center;  
+            font-size: 12px;
             font-weight: 500;
-            word-break: keep-all;
+            white-space: nowrap;
             letter-spacing: -0.5px; /* 자간을 좁혀서 가로 너비 확보 */
             overflow: visible;      /* 텍스트가 칸 밖으로 살짝 나가더라도 보이게 설정 */
         }
