@@ -1168,18 +1168,18 @@ helperBox.addEventListener('click', function() {
             const editorPanel = sidebar.querySelector('.editor-panel');
             const icon = this.querySelector('i');
         
-            const isCollapsed = editorPanel.style.width === '0px';
+            const isVisible = editorPanel.style.width !== '0px';
         
-            if (isCollapsed) {
-                // 열기
+            if (isVisible) {
+                // 닫기 동작
+                editorPanel.style.width = '0px';
+                this.style.left = '60px'; // 레일 너비만큼만 남김
+                icon.className = 'fa-solid fa-chevron-right';
+            } else {
+                // 열기 동작
                 editorPanel.style.width = 'var(--editor-w)';
                 this.style.left = 'calc(60px + var(--editor-w))';
                 icon.className = 'fa-solid fa-chevron-left';
-            } else {
-                // 닫기
-                editorPanel.style.width = '0px';
-                this.style.left = '60px';
-                icon.className = 'fa-solid fa-chevron-right';
             }
         });
     </script>
