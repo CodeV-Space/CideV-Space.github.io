@@ -226,10 +226,22 @@
         }
         .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
 
-        .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .editor-panel {
+            height: 100%;
+            width: var(--editor-w);
+            background: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column; /* 세로로 쌓기 */
+            overflow: hidden;       /* 패널 자체의 스크롤은 막음 */
+        }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
-        .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
+        .editor-content {
+            flex: 1;                /* 남는 공간을 모두 차지하게 함 */
+            padding: 20px;
+            overflow-y: auto;       /* 이 영역 안에서만 스크롤 발생 */
+            box-sizing: border-box;
+        }
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
@@ -411,9 +423,10 @@
         }
 
         .sidebar-footer {
+            flex-shrink: 0;         /* 공간이 부족해도 절대 줄어들지 않음 */
             padding: 15px;
             border-top: 1px solid #333;
-            background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
+            background: var(--bg-sidebar);
             z-index: 10;
         }
         .save-btn {
@@ -593,7 +606,9 @@
             
             <div class="editor-panel">
                 <div class="editor-content">
-                    <div id="panel-basic" class="editor-tab-content">
+                    <div id="panel-basic" class="editor-tab-content"> ... </div>
+                    <div id="panel-game" class="editor-tab-content"> ... </div>
+                </div>
                         
                         <div class="section-title">닉네임</div>
                         <div class="input-group">
@@ -778,7 +793,7 @@
                 </div>
                     
                 <div class="sidebar-footer">
-                    <button class="save-btn" onclick="saveImage()">
+                    <button class="save-btn" id="save-png-btn">
                         <i class="fa-solid fa-download"></i> PNG로 저장
                     </button>
                 </div>
