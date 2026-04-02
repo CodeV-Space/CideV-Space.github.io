@@ -15,17 +15,22 @@
             --accent-border: #bf9739;
             --accent-blood: #ea0000;
             --current-accent: var(--accent-gold);
+
             --bg-frame: #121212;
             --bg-header: #2a2a2a;
             --bg-tab-inactive: #1a1a1a;
             --bg-workspace: #4a4645;
             --bg-sidebar: #2d2a29;
             --bg-rail: #1e1c1b;
+            
             --text-white: #ffffff;
             --text-sub: #aaaaaa;
+
             --tab-h: 42px;
             --address-h: 50px;
             --editor-w: 350px;
+
+            /* 색상 변화 부드럽게 */
             transition: --current-accent 1s ease;
         }
 
@@ -39,59 +44,315 @@
             user-select: none;
         }
 
-        /* --- Window Controls & Header (기존 유지) --- */
-        .window-controls { position: absolute; top: 0; right: 0; height: var(--tab-h); display: flex; z-index: 200; }
-        .win-btn { width: 46px; height: 100%; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        /* --- Window Controls --- */
+        .window-controls {
+            position: absolute; top: 0; right: 0;
+            height: var(--tab-h);
+            display: flex; z-index: 200;
+        }
+        .win-btn {
+            width: 46px; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            color: #888; font-size: 12px; cursor: pointer; transition: 0.2s;
+        }
         .win-btn:hover { background-color: #333; color: #fff; }
         .win-btn.close:hover { background-color: #e81123; color: #fff; }
 
-        .browser-top { height: var(--tab-h); background-color: var(--bg-frame); display: flex; align-items: flex-end; padding-left: 10px; gap: 6px; padding-right: 140px; }
-        .tab { height: 32px; padding: 0 20px; background-color: var(--bg-tab-inactive); color: #888; border-radius: 10px 10px 0 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 1s ease; }
-        .tab.active { height: 36px; background-color: var(--bg-header); color: var(--text-white); z-index: 10; }
+        /* --- Header / Tabs --- */
+        .browser-top {
+            height: var(--tab-h);
+            background-color: var(--bg-frame);
+            display: flex; align-items: flex-end;
+            padding-left: 10px; gap: 6px;
+            padding-right: 140px;
+        }
+        .tab {
+            height: 32px; padding: 0 20px;
+            background-color: var(--bg-tab-inactive);
+            color: #888;
+            border-radius: 10px 10px 0 0;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            cursor: pointer; transition: all 1s ease;
+        }
+        .tab:not(.active):hover { background-color: #333; color: #ccc; transform: scale(1.05); transform-origin: bottom; transition: 0.2s; }
+        .tab.active {
+            height: 36px; background-color: var(--bg-header);
+            color: var(--text-white); z-index: 10;
+        }
         .tab-icon { width: 18px; height: 18px; object-fit: cover; border-radius: 4px; }
-        .tab-plus { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #888; cursor: pointer; border-radius: 50%; transition: 0.2s; margin-bottom: 2px; }
+        .tab-plus {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            color: #888; cursor: pointer; border-radius: 50%; transition: 0.2s; margin-bottom: 2px;
+        }
+        .tab-plus:hover { background-color: #333; color: #fff; }
+
+        #layout-toggle-btn i {
+            transition: transform 0.3s ease, color 0.3s ease;
+            display: inline-block; /* 애니메이션이 잘 먹도록 설정 */
+        }
+        
+        /* 클릭 시 살짝 눌리는 느낌 (선택사항) */
+        #layout-toggle-btn:active i {
+            transform: scale(0.8);
+        }
 
         /* --- Address Bar --- */
-        .address-bar-row { height: var(--address-h); background-color: var(--bg-header); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 20px; gap: 16px; position: relative; z-index: 9; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .address-input { flex: 1; height: 32px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #ddd; font-size: 14px; }
-
-        /* --- Layout 구조 (수정됨) --- */
-        .main-wrapper { display: flex; height: calc(100vh - var(--tab-h) - var(--address-h)); width: 100vw; position: relative; }
-        
-        .sidebar-container { display: flex; background: var(--bg-sidebar); border-right: 1px solid #000; z-index: 20; position: relative; overflow: visible !important; }
-        .tab-rail { width: 60px; background: var(--bg-rail); border-right: 1px solid #333; display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 10px; overflow-y: auto; padding-bottom: 20px; }
-        .tab-rail::-webkit-scrollbar { display: none; }
-
-        /* 사이드바 패널 및 저장 버튼 하단 고정 핵심 CSS */
-        .editor-panel { 
-            height: 100%; 
-            width: var(--editor-w); 
-            background: var(--bg-sidebar); 
-            display: flex; 
-            flex-direction: column; /* 세로 정렬 */
-            overflow: hidden; 
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        .address-bar-row {
+            height: var(--address-h);
+            background-color: var(--bg-header);
+            border-bottom: 1px solid #000;
+            display: flex; align-items: center;
+            padding: 0 20px; gap: 16px;
+            position: relative; z-index: 9;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+        .nav-controls { display: flex; gap: 8px; color: #888; }
+        .nav-btn { cursor: pointer; transition: 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .nav-btn:hover { background-color: #444; color: #fff; }
+
+        .address-input {
+            flex: 1; height: 32px; background-color: #1a1a1a; border: 1px solid #444;
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            color: #ddd; font-size: 14px; font-family: 'Segoe UI', sans-serif;
+        }
+
+        .right-controls { display: flex; align-items: center; gap: 12px; }
+        .author-id { font-size: 14px; color: #888; font-weight: 500; }
+        /* --- 사이드바 아이콘 버튼 스타일 --- */
+        .tab-icon-btn {
+            width: 44px; /* 크기를 살짝 키워 클릭 영역 확보 */
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666; /* 기본 비활성 색상 */
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 20px;
+            transition: all 0.3s ease; /* 부드러운 변화 */
+            position: relative;
+        }
+        
+        /* 마우스 오버 효과: 살짝 밝아지며 배경이 나타남 */
+        .tab-icon-btn:hover {
+            color: #bbb;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* 활성화 상태 (클릭된 상태): 금색 강조 및 배경 처리 */
+        .tab-icon-btn.active {
+            color: var(--current-accent);
+            background: rgba(211, 175, 55, 0.15); /* 강조색의 투명한 배경 */
+        }
+        
+        /* 활성화 상태일 때 왼쪽에 작은 강조선 추가 (디테일) */
+        .tab-icon-btn.active::before {
+            content: '';
+            position: absolute;
+            left: -15px; /* 레일 왼쪽 끝에 붙임 */
+            width: 4px;
+            height: 20px;
+            background: var(--current-accent);
+            border-radius: 0 4px 4px 0;
+            transition: background 1s ease;
+        }
+
+        /* --- 주소창 오른쪽 아이콘 버튼 복구 --- */
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            background: #333;           /* 어두운 회색 배경 */
+            border: 1px solid #555;     /* 기본 테두리 복구 */
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;  /* 부드러운 전환 효과 */
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        
+        /* 마우스 오버 시 테두리와 아이콘 색상 변경 */
+        .icon-btn:hover {
+            border-color: var(--current-accent); /* 테두리가 금색으로 변경 */
+            color: var(--current-accent);        /* 아이콘이 금색으로 변경 */
+            background: #3a3a3a;                 /* 배경 살짝 밝게 */
+        }
+        
+        /* 트위터 이미지 전용 여백 설정 */
+        .icon-btn img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        /* --- Layout --- */
+        .main-wrapper { display: flex; height: calc(100vh - var(--tab-h) - var(--address-h)); width: 100vw; position: relative; }
+
+        /* Sidebar */
+        .sidebar-container { display: flex; background: var(--bg-sidebar); border-right: 1px solid #000; z-index: 20; position: relative; }
+        .tab-rail {
+            width: 60px; 
+            background: var(--bg-rail); 
+            border-right: 1px solid #333;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 15px; 
+            gap: 10px; /* 기존 15px에서 10px로 줄여 여유 공간 확보 */
+            overflow-y: auto; /* 아이콘이 너무 많아질 경우 대비 */
+            padding-bottom: 20px; /* 맨 아래 아이콘이 바닥에 붙지 않게 여유분 추가 */
+        }
+
+        /* 사이드바 레일 내 구분선 스타일 */
+        .rail-divider {
+            width: 30px;         /* 레일 너비보다 좁게 설정 */
+            height: 1px;
+            background-color: #444; /* 은은한 회색 */
+            margin: 10px 0;      /* 위아래 적당한 간격 */
+            flex-shrink: 0;
+        }
+        
+        /* 스크롤바 숨기기 (깔끔한 외관용) */
+        .tab-rail::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-icon-btn {
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            color: #666; cursor: pointer; border-radius: 8px; font-size: 18px; transition: 1s ease;
+        }
+        .tab-icon-btn.active { color: var(--current-accent); background: rgba(255,255,255,0.08); }
+
+        .editor-panel { height: 100%; width: var(--editor-w); background: var(--bg-sidebar); display: flex; flex-direction: column; overflow: hidden; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
-        .editor-content { 
-            flex: 1; /* 남는 공간 모두 차지하여 푸터를 아래로 밀어냄 */
-            padding: 20px; 
-            width: var(--editor-w); 
-            box-sizing: border-box; 
-            overflow-y: auto; 
-            padding-bottom: 40px; /* 마지막 항목 여유 공간 */
+        .editor-content { flex: 1; padding: 20px; width: var(--editor-w); box-sizing: border-box; overflow-y: auto; }
+        /* --- 사이드바 토글 버튼 수정 --- */
+        .toggle-btn {
+            position: absolute;
+            right: -20px; 
+            /* 위치를 상단에서 100px 지점으로 고정 (상단 탭/주소창 라인과 맞춤) */
+            top: 100px; 
+            width: 20px;
+            height: 50px;
+            background: #222;
+            border: 1px solid #000;
+            border-left: none; /* 사이드바와 이어지도록 왼쪽 테두리 제거 */
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--current-accent);
+            z-index: 25;
+            transition: color 1s ease, background 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background: #333;
+        }
+        
+        /* 화살표 아이콘 크기 살짝 조정 */
+        .toggle-btn i {
+            font-size: 12px;
         }
 
-        .sidebar-footer { 
-            flex-shrink: 0; /* 절대 줄어들지 않음 */
-            padding: 15px; 
-            border-top: 1px solid #333; 
-            background: var(--bg-sidebar); 
-            z-index: 10; 
+        .section-title {
+            font-size: 18px; /* 16px보다 조금 더 키웠습니다 */
+            color: var(--current-accent);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        /* 닉네임 섹션 전용 레이아웃 */
+        .nickname-container {
+            display: flex;
+            flex-direction: column; /* 위아래로 쌓이게 강제 */
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        /* 태그들이 가로로 나열되는 박스 */
+        /* 태그 아이템 디자인 유지 */
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            padding: 0 14px;
+            height: 26px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 99px;
+            cursor: pointer;
+            color: #888;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        
+        .tag-item.active {
+            border-color: var(--current-accent);
+            color: var(--current-accent);
+            background: rgba(211, 175, 55, 0.15);
+        }
+        
+        /* 사이드바 탈출 방지 및 버튼 복구 */
+        .sidebar-container {
+            overflow: visible !important; /* 토글 버튼 실종 방지 */
+        }
+        
+        .sub-input {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--current-accent);
+            margin: 10px 0 20px 0;
         }
 
-        /* --- 이미지 선택 옵션 (둥근 모서리 및 콤팩트 크기) --- */
+        /* --- Form Elements --- */
+        .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; transition: color 1s ease; }
+        .input-group {
+            margin-bottom: 15px;
+            display: block !important; /* 가로 정렬(flex)을 강제로 해제하여 아래로 쌓이게 함 */
+        }
+        #inNick {
+            width: 100% !important;
+            margin-bottom: 0px;
+            display: block;
+            box-sizing: border-box; /* 패딩이 너비를 초과하지 않게 방지 */
+        }
+        
+        .tag-selector {
+            display: flex;
+            flex-direction: row; /* 태그 버튼들끼리는 가로로 나열 */
+            gap: 6px;
+            flex-wrap: wrap;    /* 공간이 좁으면 다음 줄로 넘김 */
+        }
+        .input-label { display: block; margin-bottom: 5px; font-size: 11px; color: #aaa; }
+        input[type="text"], select { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
+
+        .nickname-wrapper {
+            display: flex;
+            flex-direction: column; /* 입력창과 태그 박스를 위아래로 배치 */
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .grid-options { 
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 3에서 4로 수정  */
+            gap: 5px; 
+        }
+        .check-item { font-size: 11px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 1s ease; }
+        .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
+
+        .image-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
+        /* 이미지 선택 옵션 텍스트 중앙 정렬 보강 */
         .img-option {
             display: flex;
             flex-direction: column;
@@ -100,40 +361,146 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            border-radius: 12px; /* 둥근 모서리 적용 */
-            border: 1px solid transparent;
-            background: transparent;
-            flex: 0 0 18%;      /* 한 줄 5개 배치용 */
-            max-width: 65px;    /* 가로 길이 제한 */
-            padding: 5px;
-            margin: 2px;
-            box-sizing: border-box;
+            
+            border-radius: 12px;     /* 모서리를 둥글게 설정 (원하는 만큼 조절 가능) */
+            border: 1px solid transparent; /* 기본 테두리는 투명하게 */
+            padding: 8px;           /* 내부 여백을 주어 이미지가 답답해 보이지 않게 함 */
+            background: transparent;  /* 기본 배경은 투명하게 */
         }
-        .img-option:hover { background: rgba(255, 255, 255, 0.03); border-color: #444; }
-        .img-option.selected { 
-            background: rgba(211, 175, 55, 0.1); 
-            border-color: var(--current-accent); 
+        }
+        .img-option.selected { opacity: 1; color: var(--current-accent); font-weight: bold; transition: color 1s ease; }
+        .img-option img {
+            width: 35px;
+            height: 35px; 
+            aspect-ratio: 1/1; /* 정사각형 유지 */
+            object-fit: contain; 
+            display: block; 
+            margin-bottom: 5px;
+            border: 1px solid transparent; 
+            transition: 1s ease;
+        }
+        .img-option.selected {
+            opacity: 1;
             color: var(--current-accent);
             font-weight: bold;
+            background: rgba(211, 175, 55, 0.1); /* 강조색의 투명한 배경 추가 */
+            border-color: var(--current-accent); /* 테두리를 금색으로 변경 */
+            transition: color 1s ease, background 1s ease;
         }
-        .img-option img { width: 30px; height: 30px; object-fit: contain; margin-bottom: 4px; }
-        .img-option span { font-size: 9px; white-space: nowrap; letter-spacing: -0.7px; }
+        .img-option span {
+            display: block;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;    
+            font-size: 12px;        
+            letter-spacing: -0.5px; /* 자간을 좁혀서 가로 너비 확보 */
+            overflow: visible;      /* 텍스트가 칸 밖으로 살짝 나가더라도 보이게 설정 */
+        }
+        .img-option:hover {
+            background: rgba(255, 255, 255, 0.03); /* 살짝 밝아지는 배경 */
+            border-color: #444;       /* 테두리 색상 변경 */
+        }
 
-        /* --- 공통 폼 스타일 --- */
-        .section-title { font-size: 14px; font-weight: 700; color: var(--current-accent); border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; margin-top: 10px; transition: color 1s ease; }
-        .grid-options { display: grid; gap: 5px; }
-        .check-item { font-size: 11px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 1s ease; }
-        .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
-        input[type="text"] { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
-        .sub-input { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid var(--current-accent); margin: 10px 0 20px 0; }
-
-        /* --- Workspace & Preview (기존 유지) --- */
-        .workspace { flex: 1; background-color: var(--bg-workspace); position: relative; overflow: hidden; cursor: grab; }
-        #viewport { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.18); transform-origin: center center; display: flex; flex-direction: column; align-items: center; }
-        .preview-box { width: 3840px; height: 2160px; background-color: #ffffff; position: relative; border-radius: 30px; border: 1px solid var(--accent-border); box-shadow: 0 0 100px rgba(0,0,0,0.5); flex-shrink: 0; overflow: hidden; }
-        .save-btn { width: 100%; height: 45px; background-color: var(--current-accent); color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
-        .toggle-btn { position: absolute; right: -20px; top: 100px; width: 20px; height: 50px; background: #222; border: 1px solid #000; border-left: none; border-radius: 0 8px 8px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--current-accent); z-index: 25; }
+        /* 플레이 성향 체크 아이템 텍스트 중앙 정렬 */
+        #playStyleOpts .check-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid #333;
+            background: var(--bg-sidebar); /* 배경색 지정으로 뒤가 비치지 않게 함 */
+            z-index: 10;
+        }
+        .save-btn {
+            width: 100%;
+            height: 45px;
+            background-color: var(--current-accent);
+            color: #111;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* --- Workspace --- */
+        /* 프리뷰 박스가 검게 변하거나 레이아웃이 깨지는 현상 방지 */
+        .workspace {
+            flex: 1;
+            background-color: var(--bg-workspace);
+            position: relative; /* 기준점 */
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        /* 프리뷰 박스를 감싸는 컨테이너 */
+        #viewport {
+            position: absolute;
+            /* 정중앙 배치 공식 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.18); 
+            transform-origin: center center;
+            will-change: transform;
+            
+            /* 내부 요소(박스+저작권)를 세로로 정렬 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 실제 4K 시트 박스 */
+        .preview-box {
+            width: 3840px;
+            height: 2160px;
+            background-color: #ffffff;
+            position: relative;
+            border-radius: 30px;
+            border: 1px solid var(--accent-border);
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+            flex-shrink: 0; /* 절대 수축하지 않음 */
+            overflow: hidden;
+        }
+
+        /* 저작권 문구가 박스 아래에 잘 붙도록 수정 */
+        .copyright-notice {
+            width: 3840px; 
+            margin-top: 80px; /* 박스와의 간격 */
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+        .copyright-notice p { margin: 0; font-size: 32px; line-height: 1.6; }
+
+        /* --- Helper Box --- */
+        .helper-box {
+            position: absolute; bottom: 30px; right: 30px;
+            height: 60px; background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px; color: #eee; font-size: 13px;
+            display: flex; align-items: center; padding: 0 25px; gap: 15px;
+            cursor: pointer; z-index: 50;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+        .helper-box.minimized { width: 60px; padding: 0; justify-content: center; border-radius: 50%; }
+        .helper-icon-min { display: none; font-size: 20px; color: var(--current-accent); transition: color 1s ease; }
+        .helper-box.minimized .helper-content { display: none; }
+        .helper-box.minimized .helper-icon-min { display: block; }
+        .helper-content i { transition: color 1s ease; }
+
+        /* --- Text Rendering --- */
+        .render-layer { position: absolute; color: #000; pointer-events: none; }
+        #render-nickname { top: 100px; left: 100px; font-size: 100px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -145,10 +512,16 @@
     </div>
 
     <div class="browser-top">
-        <div class="tab"><img src="Icons/Titles/CV1.png" class="tab-icon"> CODE VEIN</div>
-        <div class="tab active"><img src="Icons/Titles/CV2.png" class="tab-icon"> CODE VEIN Ⅱ</div>
+        <div class="tab" title="코드베인 1 트친소도 제작 생각 있습니다.">
+            <img src="Icons/Titles/CV1.png" class="tab-icon" alt=""> CODE VEIN
+        </div>
+        <div class="tab active">
+            <img src="Icons/Titles/CV2.png" class="tab-icon" alt=""> CODE VEIN Ⅱ
+        </div>
         <div class="tab" id="eggTab">TBA</div>
-        <div class="tab-plus"><i class="fa-solid fa-plus"></i></div>
+        <div class="tab-plus" title="추후 공략 사이트 추가 예정이 있습니다.">
+            <i class="fa-solid fa-plus"></i>
+        </div>
     </div>
 
     <div class="address-bar-row">
@@ -157,62 +530,250 @@
             <div class="nav-btn"><i class="fa-solid fa-arrow-right"></i></div>
             <div class="nav-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></div>
         </div>
-        <div class="address-input">
-            <i class="fa-solid fa-lock" id="addrLock" style="color: var(--current-accent); margin-right: 8px;"></i>
-            <span>https://codevein.sheet/2/main</span>
+
+        <div class="address-input" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-lock" id="addrLock" style="font-size: 12px; color: var(--current-accent); transition: color 1s ease; margin-top: 1px;"></i>
+            <span style="font-size: 14px; letter-spacing: 0.5px; color: #ddd;">https://codevein.sheet/2/main</span>
         </div>
-        <div class="right-controls" style="display:flex; align-items:center; gap:10px;">
-            <span class="author-id" style="color:#888; font-size:12px;">Made by @D3LTA_CV</span>
-            <div class="icon-btn" style="cursor:pointer;"><i class="fa-solid fa-question"></i></div>
+
+        <div class="right-controls">
+            <span class="author-id">Made by @D3LTA_CV</span>
+            
+            <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
+                <img src="Icons/Titles/Twitter.png" alt="Twitter">
+            </a>
+        
+            <div class="icon-btn" title="Help" onclick="alert('화면 우측 하단을 확인하세요.')">
+                <i class="fa-solid fa-question" style="font-size: 14px;"></i>
+            </div>
         </div>
     </div>
 
     <div class="main-wrapper">
         <aside class="sidebar-container" id="sidebar">
             <div class="tab-rail">
-                <div class="tab-icon-btn active" title="트위터 계정 성향"><i class="fa-solid fa-pen-to-square"></i></div>
-                <div class="tab-icon-btn" title="게임 성향"><i class="fa-solid fa-gamepad"></i></div>
-                <div class="tab-icon-btn" title="엔딩 및 도전과제"><i class="fa-solid fa-trophy"></i></div>
-                <div class="tab-icon-btn" title="덕질 성향"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="tab-icon-btn active" title="트위터 계정 성향">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+
+                <div class="tab-icon-btn" title="게임 성향">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+            
+                <div class="tab-icon-btn" title="엔딩 및 도전과제">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+            
+                <div class="tab-icon-btn" title="덕질 성향">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                
+                <div class="tab-icon-btn" title="이미지 추가">
+                    <i class="fa-regular fa-image"></i>
+                </div>
+                
+                <div class="tab-icon-btn" title="텍스트 추가">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+
+                <div class="rail-divider"></div>
+
+                <div class="tab-icon-btn" title="레이아웃 변경" id="layout-toggle-btn">
+                    <i class="fa-solid fa-chevron-left"></i> 
+                </div>
+                
+                <div class="tab-icon-btn" title="폰트 변경">
+                    <i class="fa-solid fa-font"></i>
+                </div>
+                
+                <div class="tab-icon-btn" title="테마 색상 변경">
+                    <i class="fa-solid fa-palette"></i>
+                </div>
             </div>
             
             <div class="editor-panel">
                 <div class="editor-content">
                     <div id="panel-basic" class="editor-tab-content">
-                        <div class="section-title">닉네임</div>
-                        <input type="text" id="inNick" placeholder="닉네임을 입력하세요">
                         
+                        <div class="section-title">닉네임</div>
+                        <div class="input-group">
+                            <div class="nickname-wrapper">
+                                <input type="text" id="inNick" placeholder="닉네임을 입력하세요" style="width: 100%;">
+                                <div class="tag-selector">
+                                    <div class="tag-item" onclick="toggleTag(this, 'nickChange')">#자주바뀜</div>
+                                    <div class="tag-item" onclick="toggleTag(this, 'prefNick')">#선호닉있음</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prefNickArea" class="sub-input" style="display: none;">
+                            <label class="input-label">선호 닉네임</label>
+                            <input type="text" id="inSubNick" placeholder="닉네임을 입력하세요">
+                        </div>
+                
+                
+                        <div class="section-title">트윗 성향</div>
+                        <div class="grid-options multi-select">
+                            <div class="check-item">RT</div><div class="check-item">마음</div>
+                            <div class="check-item">인용</div><div class="check-item">탐라대화</div>
+                            <div class="check-item">일상</div><div class="check-item">욕설</div>
+                            <div class="check-item">19금</div><div class="check-item">기타</div>
+                        </div>
+                
+                
+                        <div class="section-title">연성</div>
+                        <div class="grid-options multi-select">
+                            <div class="check-item">썰</div><div class="check-item">글</div>
+                            <div class="check-item">디자인</div><div class="check-item">그림</div>
+                            <div class="check-item">영상</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">소비</div><div class="check-item">기타</div>
+                        </div>
+                
+                
+                        <div class="section-title">외부링크 사용 여부</div>
+                        <div class="grid-options binary-select" style="margin-bottom: 10px; grid-template-columns: repeat(2, 1fr);">
+                            <div class="check-item" onclick="toggleExternal(false, this)">X</div>
+                            <div class="check-item" onclick="toggleExternal(true, this)">O</div>
+                        </div>
+                        <div id="externalDetailArea" class="sub-input" style="display: none;">
+                            <label class="input-label">포함 내용 (다중 선택)</label>
+                            <div class="grid-options multi-select" style="margin-bottom: 12px; grid-template-columns: repeat(3, 1fr);">
+                                <div class="check-item">R-18</div><div class="check-item">G-18</div>
+                                <div class="check-item">스토리</div><div class="check-item">스포일러</div>
+                                <div class="check-item">스크린샷</div><div class="check-item">연성</div>
+                            </div>
+                            <input type="text" placeholder="추가 참고 및 적고싶은 사항을 적어주세요">
+                        </div>
+                
+                
                         <div class="section-title">타장르 언급</div>
-                        <div class="grid-options single-select" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="grid-options single-select">
                             <div class="check-item" onclick="toggleOtherFandom(false, this)">없음</div>
                             <div class="check-item" onclick="toggleOtherFandom(true, this)">가끔</div>
                             <div class="check-item" onclick="toggleOtherFandom(true, this)">보통</div>
                             <div class="check-item" onclick="toggleOtherFandom(true, this)">많음</div>
                         </div>
                         <div id="otherFandomInputArea" class="sub-input" style="display: none;">
-                            <input type="text" placeholder="언급하는 타장르를 적어주세요">
+                            <input type="text" placeholder="언급하는 타장르 및 기타 사항을 적어주세요">
                         </div>
                     </div>
-
-                    <div id="panel-game" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">버디 (5-5-3 배치)</div>
-                        <div class="image-select-grid multi-select-limit" data-group="buddies" data-limit="3" 
-                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
-                            
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/크레이그.png"><span>크레이그</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/홀리.png"><span>홀리</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/이리스.png"><span>이리스</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/야드비가.png"><span>야드비가</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/조제.png"><span>조제</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라비니아.png"><span>라비니아</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리세.png"><span>리세</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/루.png"><span>루</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리코리스.png"><span>리코리스</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라일.png"><span>라일</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/노아.png"><span>노아</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/발렌틴.png"><span>발렌틴</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/제논.png"><span>제논</span></div>
+                
+                    <div id="panel-image" class="editor-tab-content" style="display: none;">
                         </div>
+                
+                    <div id="panel-plus" class="editor-tab-content" style="display: none;">
+                        </div>
+                
+                    <div id="panel-game" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">플레이 성향</div>
+                        <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                            <div class="check-item">스토리</div>
+                            <div class="check-item">스크린샷</div>
+                            <div class="check-item">업적</div>
+                            <div class="check-item">New Game+</div>
+                            <div class="check-item">빌드 빌딩</div>
+                            <div class="check-item">잠수</div>
+                        </div>
+                    
+                        <div class="section-title">버디 스타일</div>
+                        <div class="image-select-grid single-select" data-group="buddyStyle" style="display: flex; justify-content: center; gap: 20px;">
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
+                                <img src="Icons/Buddy Style/빙의.png" alt="빙의">
+                                <span>빙의</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
+                                <img src="Icons/Buddy Style/소환.png" alt="소환">
+                                <span>소환</span>
+                            </div>
+                        </div>
+                    
+                        <div class="section-title">버디 (최대 3명)</div>
+                        <div class="image-select-grid multi-select-limit" data-group="buddies" data-limit="3" 
+                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+                            
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/노아.png"><span>노아</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/라비니아.png"><span>라비니아</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/라일.png"><span>라일</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/루.png"><span>루</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/리세.png"><span>리세</span></div>
+                            
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/리코리스.png"><span>리코리스</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/발렌틴.png"><span>발렌틴</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/야드비가.png"><span>야드비가</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/이리스.png"><span>이리스</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/조제.png"><span>조제</span></div>
+                            
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/제논.png"><span>제논</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/크레이그.png"><span>크레이그</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"style="flex: 0 0 18%; min-width: 55px;"><img src="Icons/Buddy Icons/홀리.png"><span>홀리</span></div>
+                        </div>
+                    
+                        <div class="section-title">제일</div>
+                        <div class="image-select-grid single-select" data-group="jail" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/오우거.png"><span>오우거</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/하운즈.png"><span>하운즈</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/스팅어.png"><span>스팅어</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/아이비.png"><span>아이비</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/배트.png"><span>배트</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'single')">
+                                <img src="Icons/Jails/리퍼.png"><span>리퍼</span>
+                            </div>
+                        </div>
+                    
+                        <div class="section-title">무기 (최대 2개)</div>
+                        <div class="image-select-grid multi-select-limit" data-group="weapons" data-limit="2" 
+                             style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                            
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/한손검.png"><span>한손검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/양손검.png"><span>양손검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/총검.png"><span>총검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/도끼창.png"><span>도끼창</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/해머.png"><span>해머</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/쌍검.png"><span>쌍검</span>
+                            </div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;">
+                                <img src="Icons/Weapons/룬 블레이드.png"><span>룬 블레이드</span>
+                            </div>
+                        </div>
+                
+                    <div id="panel-plus" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">덕질 성향</div>
+                    </div>
+                
+                    <div id="panel-image" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">이미지 관리</div>
+                    </div>
+                
+                    <div id="panel-text" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">커스텀 텍스트</div>
+                    </div>
+                
+                    <div id="panel-font" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">폰트 설정</div>
+                    </div>
+                
+                    <div id="panel-theme" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">테마 및 컬러</div>
                     </div>
                 </div>
                     
@@ -228,68 +789,308 @@
         <section class="workspace" id="workspace">
             <div id="viewport">
                 <div class="preview-box" id="board">
-                    <div id="render-nickname" style="position:absolute; top:100px; left:100px; font-size:100px; color:#000;"></div>
+                    <div id="render-nickname" class="render-layer"></div>
                 </div>
-                <div class="copyright-notice" style="margin-top:50px; color:rgba(255,255,255,0.3); text-align:center;">
-                    <p>©Bandai Namco Entertainment Inc. All Rights Reserved.</p>
+
+                <div class="copyright-notice">
+                    <p>CODE VEIN™ II & ©Bandai Namco Entertainment Inc. All Rights Reserved.</p>
+                    <p>해당 사이트는 팬메이드 사이트로 비상업적 용도만을 위해 만들어 졌으며</p>
+                    <p>모든 Code Vein 관련 저작권은 ©Bandai Namco Entertainment Inc.에 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="helper-box" id="helperBox" title="클릭하여 최소화/확대">
+                <i class="fa-solid fa-circle-info helper-icon-min"></i>
+                <div class="helper-content" style="display: flex; align-items: center; gap: 20px; white-space: nowrap;">
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-hand-back-fist" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>드래그: <span style="font-weight: 700; color: #fff;">이동</span></span>
+                    </div>
+                    <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>휠: <span style="font-weight: 700; color: #fff;">확대/축소</span></span>
+                    </div>
+                    <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
+                    <div class="helper-item" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-computer-mouse" style="color: var(--current-accent); font-size: 14px;"></i>
+                        <span>휠 클릭: <span style="font-weight: 700; color: #fff;">중앙 정렬</span></span>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        // 사이드바 토글
-        document.getElementById('toggleBtn').addEventListener('click', function() {
-            const container = document.getElementById('sidebar');
-            container.classList.toggle('collapsed');
-            this.querySelector('i').className = container.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+        // --- 1. Viewport Logic (Pan & Zoom) ---
+        const workspace = document.getElementById('workspace');
+        const viewport = document.getElementById('viewport');
+        const INITIAL_SCALE = 0.18;
+        let scale = INITIAL_SCALE, isDragging = false, startX, startY, pointX = 0, pointY = 0;
+
+        const updateTransform = () => {
+            viewport.style.transform = `translate(calc(-50% + ${pointX}px), calc(-50% + ${pointY}px)) scale(${scale})`;
+        };
+
+        workspace.addEventListener('wheel', e => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.05 : 0.05;
+            scale = Math.min(Math.max(0.05, scale + delta), 3);
+            updateTransform();
+        }, { passive: false });
+
+        workspace.addEventListener('mousedown', e => {
+            if (e.button === 1) {
+                scale = INITIAL_SCALE; pointX = 0; pointY = 0; updateTransform();
+            } else if (e.button === 0) {
+                isDragging = true; startX = e.clientX - pointX; startY = e.clientY - pointY;
+                workspace.style.cursor = 'grabbing';
+            }
         });
 
-        // 탭 전환
-        document.querySelectorAll('.tab-icon-btn').forEach((btn, idx) => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-icon-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelectorAll('.editor-tab-content').forEach(p => p.style.display = 'none');
-                const panels = ['panel-basic', 'panel-game', 'panel-trophy', 'panel-plus'];
-                if(panels[idx]) document.getElementById(panels[idx]).style.display = 'block';
+        window.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            pointX = e.clientX - startX; pointY = e.clientY - startY;
+            updateTransform();
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; workspace.style.cursor = 'grab'; });
+
+        // --- 2. UI Interactions (편의성 박스 로직 수정) ---
+document.getElementById('toggleBtn').addEventListener('click', function() {
+    const container = document.getElementById('sidebar');
+    container.classList.toggle('collapsed');
+    this.querySelector('i').className = container.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+});
+
+// Helper Box 클릭 이벤트 수정
+const helperBox = document.getElementById('helperBox');
+helperBox.addEventListener('click', function() {
+    this.classList.toggle('minimized');
+    
+    // minimized 클래스 유무에 따라 내부 텍스트 영역(helper-content)을 숨기거나 보임
+    const content = this.querySelector('.helper-content');
+    if (this.classList.contains('minimized')) {
+        content.style.display = 'none';  // 닫히면 텍스트 숨김 -> CSS에 의해 아이콘만 남음
+    } else {
+        content.style.display = 'flex';  // 열리면 텍스트 다시 보임
+    }
+});
+
+        // --- 3. Easter Egg (BLOOD -> TO -> GOLD -> TBA 시퀀스) ---
+        let eggCount = 0;
+        let isAnimating = false;
+        const eggTab = document.getElementById('eggTab');
+        const addrLock = document.getElementById('addrLock');
+
+        eggTab.addEventListener('click', function() {
+            if (isAnimating) return;
+            eggCount++;
+            
+            if (eggCount >= 7) {
+                isAnimating = true;
+                eggCount = 0;
+
+                // [1] BLOOD (빨강 시작)
+                document.documentElement.style.setProperty('--current-accent', '#ea0000');
+                if(addrLock) addrLock.style.color = '#ea0000';
+                this.style.color = '#ea0000';
+                this.innerText = "BLOOD";
+
+                // [2] 1초 뒤 TO
+                setTimeout(() => { this.innerText = "TO"; }, 1000);
+
+                // [3] 2초 뒤 GOLD (복구 시작)
+                setTimeout(() => {
+                    this.innerText = "GOLD";
+                    document.documentElement.style.setProperty('--current-accent', '#D3AF37');
+                    if(addrLock) addrLock.style.color = '#D3AF37';
+                    this.style.color = '#D3AF37';
+                }, 2000);
+
+                // [4] 3초 뒤 TBA 복구 완료
+                setTimeout(() => {
+                    this.innerText = "TBA";
+                    this.style.color = ''; 
+                    isAnimating = false;
+                }, 3000);
+            }
+        });
+
+        // --- 4. Form Actions ---
+        document.querySelectorAll('#tweetType .check-item').forEach(item => {
+            item.addEventListener('click', () => item.classList.toggle('selected'));
+        });
+
+        document.querySelectorAll('#buddyStyle .img-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('#buddyStyle .img-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
             });
         });
 
-        // 이미지 선택 (둥근 모서리 디자인 포함)
-        function selectImage(el, mode, limit) {
-            const parent = el.parentElement;
-            if (mode === 'limit') {
-                if (el.classList.contains('selected')) {
-                    el.classList.remove('selected');
-                } else if (parent.querySelectorAll('.selected').length < limit) {
-                    el.classList.add('selected');
+        document.getElementById('inNick').addEventListener('input', (e) => {
+            document.getElementById('render-nickname').innerText = e.target.value;
+        });
+
+        // --- 사이드바 탭 전환 로직 (수정본) ---
+        document.querySelectorAll('.tab-rail .tab-icon-btn').forEach((btn, index) => {
+            // 레이아웃 변경 버튼(id="layout-toggle-btn")은 패널 전환에서 제외
+            if (btn.id === 'layout-toggle-btn') return;
+        
+            btn.addEventListener('click', function() {
+                // 1. 모든 버튼에서 active 클래스 제거
+                document.querySelectorAll('.tab-rail .tab-icon-btn').forEach(b => b.classList.remove('active'));
+                
+                // 2. 클릭한 버튼에 active 클래스 추가
+                this.classList.add('active');
+                
+                // 3. 모든 에디터 패널 숨기기
+                document.querySelectorAll('.editor-tab-content').forEach(panel => {
+                    panel.style.display = 'none';
+                });
+        
+                // 4. 인덱스에 매칭되는 패널 표시
+                // 0: 트위터(Basic), 1: 게임, 2: 트로피, 3: 덕질(Plus), 4: 이미지, 5: 텍스트추가, 7: 폰트, 8: 테마
+                const panels = [
+                    'panel-basic',   // 0: 트위터 계정 성향
+                    'panel-game',    // 1: 게임 성향
+                    'panel-trophy',  // 2: 엔딩 및 도전과제
+                    'panel-plus',    // 3: 덕질 성향
+                    'panel-image',   // 4: 이미지 추가
+                    'panel-text',    // 5: 텍스트 추가
+                    '',              // 6: (구분선/레이아웃 버튼 자리 - 건너뜀)
+                    'panel-font',    // 7: 폰트 변경
+                    'panel-theme'    // 8: 테마 색상 변경
+                ];
+        
+                const targetId = panels[index];
+                if (targetId && document.getElementById(targetId)) {
+                    document.getElementById(targetId).style.display = 'block';
                 } else {
-                    alert(`최대 ${limit}개까지 선택 가능합니다.`);
+                    // 패널이 아직 생성되지 않았을 경우를 대비한 기본 처리
+                    console.warn(this.title + " 패널이 구현되지 않았습니다.");
                 }
-            }
-        }
+                
+                console.log(this.title + " 탭 활성화");
+            });
+        });
 
-        function toggleOtherFandom(show, el) {
-            document.getElementById('otherFandomInputArea').style.display = show ? 'block' : 'none';
-            el.parentElement.querySelectorAll('.check-item').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        // PNG 저장 (기존 로직 유지)
+        // --- 5. Save Function (파일명 수정) ---
         function saveImage() {
             const board = document.getElementById('board');
-            const viewport = document.getElementById('viewport');
+            // 저장 시점의 트랜스폼 상태 저장
             const originalTransform = viewport.style.transform;
+            // 캡처를 위해 트랜스폼 초기화 (1:1 비율 캡처용)
             viewport.style.transform = 'none';
-            html2canvas(board, { scale: 1, width: 3840, height: 2160, useCORS: true }).then(canvas => {
+            
+            html2canvas(board, {
+                scale: 1, 
+                width: 3840, 
+                height: 2160, 
+                useCORS: true,
+                backgroundColor: "#ffffff" // 배경색 명시
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'CodeVein_Sheet.png';
-                link.href = canvas.toDataURL();
+                
+                // 파일명을 요청하신 대로 변경했습니다.
+                link.download = 'CodeVein_twt_Sheet.png'; 
+                
+                link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                // 캡처 후 원래 화면 배율로 복구
                 viewport.style.transform = originalTransform;
             });
         }
+
+        // 1. 태그 토글 및 선호닉 칸 활성화
+        function toggleTag(el, type) {
+            el.classList.toggle('active');
+            if (type === 'prefNick') {
+                const area = document.getElementById('prefNickArea');
+                area.style.display = el.classList.contains('active') ? 'block' : 'none';
+            }
+        }
+        
+        // 2. 다중 선택 (트윗/연성 성향 전체 적용)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('check-item') && e.target.parentElement.classList.contains('multi-select')) {
+                e.target.classList.toggle('selected');
+            }
+        });
+        
+        // 3. 외부 링크 O/X 선택
+        function toggleExternal(show, el) {
+            const area = document.getElementById('externalDetailArea');
+            area.style.display = show ? 'block' : 'none';
+            
+            const btns = el.parentElement.querySelectorAll('.check-item');
+            btns.forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        
+        // 4. 타장르 언급 수준 선택
+        function toggleOtherFandom(show, el) {
+            const area = document.getElementById('otherFandomInputArea');
+            area.style.display = show ? 'block' : 'none';
+        
+            const btns = el.parentElement.querySelectorAll('.check-item');
+            btns.forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        /**
+         * 이미지 선택 공통 함수
+         * @param {HTMLElement} el 클릭된 요소
+         * @param {string} mode 'single' (하나만) 또는 'limit' (최대 개수 제한)
+         * @param {number} limit 제한 개수 (mode가 'limit'일 때만 사용)
+         */
+        function selectImage(el, mode, limit) {
+            const parent = el.parentElement;
+            
+            if (mode === 'single') {
+                // 단일 선택: 형제들의 클래스 제거 후 본인 추가
+                parent.querySelectorAll('.img-option').forEach(opt => opt.classList.remove('selected'));
+                el.classList.add('selected');
+            } else if (mode === 'limit') {
+                // 개수 제한 다중 선택
+                if (el.classList.contains('selected')) {
+                    el.classList.remove('selected');
+                } else {
+                    const currentSelectedCount = parent.querySelectorAll('.selected').length;
+                    if (currentSelectedCount < limit) {
+                        el.classList.add('selected');
+                    } else {
+                        alert(`최대 ${limit}개까지 선택할 수 있습니다.`);
+                    }
+                }
+            }
+            // 선택 후 프리뷰 렌더링 함수를 호출하고 싶다면 여기에 추가 (예: updatePreview())
+        }
+
+        // 레이아웃 아이콘 토글 로직
+        const layoutBtn = document.getElementById('layout-toggle-btn');
+        
+        layoutBtn.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            
+            // 클래스 교체 로직
+            if (icon.classList.contains('fa-chevron-left')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+                console.log("레이아웃 방향: 오른쪽");
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+                console.log("레이아웃 방향: 왼쪽");
+            }
+            
+            // 시각적 피드백을 위해 살짝 회전하거나 애니메이션을 넣고 싶다면 아래 주석 해제
+            // icon.style.transform = "scale(1.2)";
+            // setTimeout(() => icon.style.transform = "scale(1)", 200);
+        });
+                
     </script>
 </body>
 </html>
