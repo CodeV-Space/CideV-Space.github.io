@@ -199,7 +199,6 @@
             border-right: 1px solid #000;
             z-index: 20;
             position: relative;
-            /* 기존 overflow: hidden; 이 있다면 반드시 지우고 아래 줄을 넣으세요 */
             overflow: visible !important; 
         }
         .tab-rail {
@@ -248,7 +247,7 @@
 
         ..editor-content { 
             flex: 1; 
-            padding: 20px; 
+            padding: 20px 30px;
             padding-bottom: 80px; /* ✨ 추가: 하단에 고정된 버튼에 마지막 내용이 가려지지 않게 넉넉한 여백을 줍니다. */
             width: var(--editor-w); 
             box-sizing: border-box; 
