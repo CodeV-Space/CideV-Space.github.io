@@ -320,7 +320,13 @@
         
         /* 사이드바 탈출 방지 및 버튼 복구 */
         .sidebar-container {
-            overflow: visible !important; /* 토글 버튼 실종 방지 */
+            display: flex;
+            background: var(--bg-sidebar);
+            border-right: 1px solid #000;
+            z-index: 20;
+            position: relative;
+            /* 중요: 토글 버튼이 사이드바 밖으로 삐져나와야 하므로 hidden이면 안 됩니다 */
+            overflow: visible !important; 
         }
         
         .sub-input {
