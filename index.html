@@ -241,7 +241,7 @@
             flex-direction: column; 
             position: relative; /* ✨ 추가: 버튼을 하단에 고정하기 위한 기준점이 됩니다. */
             overflow: hidden; 
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-container.collapsed .editor-panel { width: 0px; }
 
@@ -257,7 +257,7 @@
         /* --- 사이드바 토글 버튼 수정 --- */
         .toggle-btn {
             position: absolute;
-            left" var(--editor-w);
+            left" calc(60px + var(--editor-w));
             top: 100px; 
             width: 20px;
             height: 50px;
@@ -271,7 +271,7 @@
             justify-content: center;
             color: var(--current-accent);
             z-index: 999 !important;
-            transition: color 1s ease, background 0.2s;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .toggle-btn:hover {
@@ -1137,8 +1137,10 @@ helperBox.addEventListener('click', function() {
                 ? 'fa-solid fa-chevron-right'
                 : 'fa-solid fa-chevron-left';
         
-            // ✅ collapsed 상태에 따라 버튼 위치 이동
-            this.style.left = isCollapsed ? '60px' : 'var(--editor-w)';
+            // 레일(60px) 기준으로 정확하게 이동
+            this.style.left = isCollapsed
+                ? '60px'
+                : 'calc(60px + var(--editor-w))';
         });
     </script>
 </body>
