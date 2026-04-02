@@ -247,7 +247,7 @@
 
         ..editor-content { 
             flex: 1; 
-            padding: 20px 30px;
+            padding: 20px 30px 80px 30px;
             padding-bottom: 80px; /* ✨ 추가: 하단에 고정된 버튼에 마지막 내용이 가려지지 않게 넉넉한 여백을 줍니다. */
             width: var(--editor-w); 
             box-sizing: border-box; 
@@ -271,7 +271,7 @@
             align-items: center;
             justify-content: center;
             color: var(--current-accent);
-            z-index: 999;
+            z-index: 1000 !important;
             transition: color 1s ease, background 0.2s;
         }
         
@@ -446,7 +446,7 @@
             left: 0;            /* ✨ 추가: 왼쪽 끝에 딱 맞춥니다. */
             width: 100%;        /* ✨ 추가: 가로 길이를 패널에 꽉 채웁니다. */
             box-sizing: border-box; /* ✨ 추가: 패딩이 너비를 초과하지 않게 합니다. */
-            padding: 15px; 
+            padding: 15px 30px; 
             border-top: 1px solid #333; 
             background: var(--bg-sidebar); 
             z-index: 100;       /* ✨ 추가: 스크롤되는 내용물보다 항상 위에 보이도록 층을 높입니다. */
