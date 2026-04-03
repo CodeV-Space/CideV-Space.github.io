@@ -622,23 +622,6 @@
             transition: all 0.3s ease;
             animation: fadeIn 0.4s ease;
         }
-
-        .input-field {
-            width: 100%;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 13px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--current-accent);
-        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
@@ -805,9 +788,9 @@
                             <div class="capsule-item" onclick="toggleMention(this, 'much')">많이</div>
                         </div>
                         
-                        <div id="mentionDetailContainer" class="input-group" style="display: none; margin-top: 10px;">
+                        <div id="externalDetailArea" class="sub-input" style="display: none;">
                             <div class="input-label">타장르 언급 상세</div>
-                            <input type="text" id="mentionDetail" class="input-field" placeholder="장르명이나 주의사항을 입력해주세요">
+                            <<input type="text" placeholder="장르명이나 주의사항을 입력해주세요">
                         </div>
                         
                         <input type="hidden" id="genreMention" value="none">
