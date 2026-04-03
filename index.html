@@ -490,12 +490,17 @@
         /* ============================================================
            버디 아이콘 공통 스타일 (인라인 style 대체)
         ============================================================ */
+        /* 버디 그리드: 5-5-3 배열 */
         .buddy-grid {
-            display: flex; flex-wrap: wrap;
-            justify-content: center; align-items: flex-start;
-            gap: 2px; width: 100%;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px; width: 100%;
         }
-        .buddy-grid .img-option { flex: 0 0 18%; min-width: 55px; }
+        .buddy-grid .img-option {
+            flex: unset; max-width: unset; min-height: 90px;
+            padding: 8px 4px;
+        }
+        .buddy-grid .img-option img { width: 54px; height: 54px; }
 
     </style>
 </head>
@@ -703,24 +708,24 @@
                         </div>
 
                         <div class="section-title">제일</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/오우거.png" alt="오우거"><span>오우거</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/하운즈.png" alt="하운즈"><span>하운즈</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/스팅어.png" alt="스팅어"><span>스팅어</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/아이비.png" alt="아이비"><span>아이비</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/배트.png" alt="배트"><span>배트</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/리퍼.png" alt="리퍼"><span>리퍼</span></div>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/오우거.png" alt="오우거" style="width:60px;height:60px;"><span>오우거</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/하운즈.png" alt="하운즈" style="width:60px;height:60px;"><span>하운즈</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/스팅어.png" alt="스팅어" style="width:60px;height:60px;"><span>스팅어</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/아이비.png" alt="아이비" style="width:60px;height:60px;"><span>아이비</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/배트.png" alt="배트" style="width:60px;height:60px;"><span>배트</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/리퍼.png" alt="리퍼" style="width:60px;height:60px;"><span>리퍼</span></div>
                         </div>
 
                         <div class="section-title">무기 (최대 2개)</div>
-                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/한손검.png" alt="한손검"><span>한손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/양손검.png" alt="양손검"><span>양손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/총검.png" alt="총검"><span>총검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/도끼창.png" alt="도끼창"><span>도끼창</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/해머.png" alt="해머"><span>해머</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/쌍검.png" alt="쌍검"><span>쌍검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="width: calc(25% - 10px); min-width: 70px;"><img src="Icons/Weapons/룬 블레이드.png" alt="룬 블레이드"><span>룬 블레이드</span></div>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/한손검.png" alt="한손검" style="width:56px;height:56px;"><span>한손검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/양손검.png" alt="양손검" style="width:56px;height:56px;"><span>양손검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/총검.png" alt="총검" style="width:56px;height:56px;"><span>총검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/도끼창.png" alt="도끼창" style="width:56px;height:56px;"><span>도끼창</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/해머.png" alt="해머" style="width:56px;height:56px;"><span>해머</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/쌍검.png" alt="쌍검" style="width:56px;height:56px;"><span>쌍검</span></div>
+                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/룬 블레이드.png" alt="룬 블레이드" style="width:56px;height:56px;"><span>룬 블레이드</span></div>
                         </div>
 
                     </div><!-- /panel-game -->
