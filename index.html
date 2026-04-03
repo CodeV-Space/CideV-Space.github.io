@@ -622,6 +622,23 @@
             transition: all 0.3s ease;
             animation: fadeIn 0.4s ease;
         }
+
+        .input-field {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--current-accent);
+        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
@@ -788,11 +805,11 @@
                             <div class="capsule-item" onclick="toggleMention(this, 'much')">많이</div>
                         </div>
                         
-                        <div id="mentionDetailContainer" style="display: none; margin-top: 10px;">
-                            <input type="text" id="mentionDetail" placeholder="추가 사항을 입력해주세요 (예: 장르명 등)" 
-                                   style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: white; font-size: 14px; box-sizing: border-box;">
+                        <div id="mentionDetailContainer" class="input-group" style="display: none; margin-top: 10px;">
+                            <div class="input-label">타장르 언급 상세</div>
+                            <input type="text" id="mentionDetail" class="input-field" placeholder="장르명이나 주의사항을 입력해주세요">
                         </div>
-
+                        
                         <input type="hidden" id="genreMention" value="none">
                     </div>
                 
@@ -1258,26 +1275,24 @@ helperBox.addEventListener('click', function() {
             const container = element.parentElement;
             const items = container.querySelectorAll('.capsule-item');
             const slider = document.getElementById('mentionSlider');
-            const detailContainer = document.getElementById('mentionDetailContainer'); // 입력칸 컨테이너
+            const detailContainer = document.getElementById('mentionDetailContainer');
             
-            // 1. 활성화 스타일 변경
+            // 1. 활성화 스타일 및 슬라이더 이동
             items.forEach(item => item.classList.remove('active'));
             element.classList.add('active');
-        
-            // 2. 슬라이더 이동
             const index = Array.from(items).indexOf(element);
             slider.style.left = `calc(${index * 25}% + 4px)`;
         
-            // 3. 데이터 업데이트
+            // 2. 값 저장
             document.getElementById('genreMention').value = value;
         
-            // 4. ✨ 추가 사항 입력 칸 표시/숨김 로직
+            // 3. 상세 입력창 표시 로직 (애니메이션 효과 포함)
             if (value === 'none') {
                 detailContainer.style.display = 'none';
-                // (선택사항) '없음' 클릭 시 입력했던 내용을 지우고 싶다면 아래 주석 해제
-                // document.getElementById('mentionDetail').value = '';
             } else {
                 detailContainer.style.display = 'block';
+                // 서서히 나타나는 효과를 원할 경우 클래스 추가 가능
+                detailContainer.style.animation = 'fadeIn 0.3s ease';
             }
         
             if (typeof updatePreview === "function") updatePreview();
