@@ -504,6 +504,150 @@
             padding: 8px 4px; min-height: 90px;
         }
 
+        /* ============================================================
+           IMAGE / TEXT PANEL STYLES
+        ============================================================ */
+        .panel-desc {
+            font-size: 12px; color: #666;
+            margin: -8px 0 14px; line-height: 1.4;
+        }
+
+        .add-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 38px;
+            background: rgba(211,175,55,0.12);
+            border: 1px dashed var(--current-accent);
+            border-radius: 6px;
+            color: var(--current-accent);
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .add-btn:hover { background: rgba(211,175,55,0.22); }
+
+        .layer-list {
+            margin-top: 14px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+
+        .layer-item {
+            background: #1e1c1b;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        /* 레이어 상단 행: 번호 + 이름 + 화살표 + 삭제 */
+        .layer-item-header {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .layer-num {
+            font-size: 11px; color: #666;
+            min-width: 18px; font-weight: 700;
+        }
+        .layer-name {
+            flex: 1;
+            font-size: 12px; color: #ccc;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .layer-arrow {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            background: #2a2a2a; border: 1px solid #444;
+            border-radius: 4px; cursor: pointer; color: #aaa;
+            font-size: 10px; flex-shrink: 0;
+            transition: 0.15s;
+        }
+        .layer-arrow:hover { background: #333; color: #fff; }
+        .layer-delete {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: 1px solid #555;
+            border-radius: 4px; cursor: pointer; color: #666;
+            font-size: 11px; flex-shrink: 0;
+            transition: 0.15s;
+        }
+        .layer-delete:hover { border-color: #e81123; color: #e81123; }
+
+        /* 텍스트 레이어 전용: 편집 영역 */
+        .text-edit-area {
+            margin-top: 10px;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 10px;
+        }
+        .text-toolbar {
+            display: flex; flex-wrap: wrap; gap: 4px;
+            margin-bottom: 8px;
+        }
+        .txt-btn {
+            height: 26px; min-width: 26px; padding: 0 6px;
+            background: #2a2a2a; border: 1px solid #444;
+            border-radius: 4px; cursor: pointer; color: #aaa;
+            font-size: 12px; display: flex; align-items: center; justify-content: center;
+            transition: 0.15s; font-family: inherit;
+        }
+        .txt-btn:hover { background: #333; color: #fff; }
+        .txt-btn.on { background: rgba(211,175,55,0.2); border-color: var(--current-accent); color: var(--current-accent); }
+
+        .text-input-box {
+            width: 100%; min-height: 60px;
+            background: #111; border: 1px solid #333;
+            border-radius: 4px; color: #fff;
+            font-size: 14px; padding: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .text-input-box:focus { outline: none; border-color: var(--current-accent); }
+
+        .text-size-row {
+            display: flex; align-items: center; gap: 6px;
+            margin-bottom: 6px;
+        }
+        .text-size-row label { font-size: 11px; color: #888; }
+        .text-size-row input[type=range] {
+            flex: 1; height: 4px;
+            accent-color: var(--current-accent);
+            padding: 0; border: none; background: transparent;
+        }
+        .text-size-val { font-size: 11px; color: #ccc; min-width: 28px; text-align: right; }
+
+        .color-row {
+            display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+        }
+        .color-row label { font-size: 11px; color: #888; }
+        .color-row input[type=color] {
+            width: 28px; height: 22px; border: 1px solid #444;
+            border-radius: 4px; cursor: pointer; padding: 1px; background: #1a1a1a;
+        }
+
+        /* preview-box 위의 드래그 가능한 요소 */
+        .board-layer {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        .board-layer:active { cursor: grabbing; }
+        .board-layer.selected-layer {
+            outline: 6px dashed rgba(211,175,55,0.7);
+        }
+        .board-layer img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+        /* 리사이즈 핸들 (우측 하단 모서리) */
+        .resize-handle {
+            position: absolute; right: -12px; bottom: -12px;
+            width: 32px; height: 32px;
+            background: var(--current-accent);
+            border-radius: 50%;
+            cursor: nwse-resize;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: #111;
+            z-index: 10;
+        }
+
     </style>
 </head>
 <body>
@@ -695,8 +839,34 @@
 
                     <div id="panel-trophy" class="editor-tab-content" style="display: none;"><div class="section-title">엔딩 및 도전과제</div></div>
                     <div id="panel-plus" class="editor-tab-content" style="display: none;"><div class="section-title">덕질 성향</div></div>
-                    <div id="panel-image" class="editor-tab-content" style="display: none;"><div class="section-title">이미지 관리</div></div>
-                    <div id="panel-text" class="editor-tab-content" style="display: none;"><div class="section-title">커스텀 텍스트</div></div>
+                    <!-- 패널 4: 이미지 추가 -->
+                    <div id="panel-image" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">이미지 추가</div>
+                        <p class="panel-desc">PNG 파일만 가능 · 최대 5개</p>
+
+                        <label class="add-btn" id="imgUploadLabel">
+                            <i class="fa-solid fa-plus"></i> 이미지 추가
+                            <input type="file" id="imgFileInput" accept=".png" multiple style="display:none;">
+                        </label>
+
+                        <div id="imgLayerList" class="layer-list">
+                            <!-- 레이어 아이템이 여기에 동적으로 추가됨 (1=최상위) -->
+                        </div>
+                    </div>
+
+                    <!-- 패널 5: 텍스트 추가 -->
+                    <div id="panel-text" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">텍스트 추가</div>
+                        <p class="panel-desc">최대 10개</p>
+
+                        <button class="add-btn" onclick="addTextLayer()">
+                            <i class="fa-solid fa-plus"></i> 텍스트 추가
+                        </button>
+
+                        <div id="textLayerList" class="layer-list">
+                            <!-- 텍스트 레이어 아이템이 여기에 동적으로 추가됨 -->
+                        </div>
+                    </div>
                     <div id="panel-font" class="editor-tab-content" style="display: none;"><div class="section-title">폰트 설정</div></div>
                     <div id="panel-theme" class="editor-tab-content" style="display: none;"><div class="section-title">테마 및 컬러</div></div>
 
@@ -879,6 +1049,269 @@
                 viewport.style.transform = originalTransform;
             });
         }
+
+        /* ============================================================
+           LAYER SYSTEM (이미지 & 텍스트 공통)
+           layers 배열: index 0 = 최상위 레이어 (z-index 높음)
+        ============================================================ */
+        const MAX_IMG  = 5;
+        const MAX_TEXT = 10;
+        const board = document.getElementById('board');
+
+        // layers[0] = 1번(최상위), layers[N-1] = 가장 아래
+        let imgLayers  = [];  // { id, name, el }
+        let textLayers = [];  // { id, name, el, textarea, ... }
+        let layerIdCounter = 0;
+
+        // z-index 재계산: 배열 앞 = 높은 z-index
+        function reindexLayers(arr) {
+            const base = 10;
+            arr.forEach((l, i) => {
+                l.el.style.zIndex = base + (arr.length - i);
+            });
+        }
+
+        // 레이어 목록 UI 갱신
+        function renderImgList() {
+            const list = document.getElementById('imgLayerList');
+            list.innerHTML = '';
+            imgLayers.forEach((l, i) => {
+                const item = document.createElement('div');
+                item.className = 'layer-item';
+                item.innerHTML = `
+                    <div class="layer-item-header">
+                        <span class="layer-num">${i + 1}</span>
+                        <span class="layer-name" title="${l.name}">${l.name}</span>
+                        <div class="layer-arrow" title="위 레이어로" onclick="moveLayer('img',${l.id},-1)"><i class="fa-solid fa-chevron-up"></i></div>
+                        <div class="layer-arrow" title="아래 레이어로" onclick="moveLayer('img',${l.id},1)"><i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="layer-delete" onclick="deleteLayer('img',${l.id})"><i class="fa-solid fa-xmark"></i></div>
+                    </div>`;
+                list.appendChild(item);
+            });
+        }
+
+        function renderTextList() {
+            const list = document.getElementById('textLayerList');
+            list.innerHTML = '';
+            textLayers.forEach((l, i) => {
+                const item = document.createElement('div');
+                item.className = 'layer-item';
+                item.dataset.lid = l.id;
+                item.innerHTML = `
+                    <div class="layer-item-header">
+                        <span class="layer-num">${i + 1}</span>
+                        <span class="layer-name" id="tname-${l.id}" title="${l.name}">${l.name}</span>
+                        <div class="layer-arrow" title="위 레이어로" onclick="moveLayer('text',${l.id},-1)"><i class="fa-solid fa-chevron-up"></i></div>
+                        <div class="layer-arrow" title="아래 레이어로" onclick="moveLayer('text',${l.id},1)"><i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="layer-delete" onclick="deleteLayer('text',${l.id})"><i class="fa-solid fa-xmark"></i></div>
+                    </div>
+                    <div class="text-edit-area">
+                        <div class="text-size-row">
+                            <label>크기</label>
+                            <input type="range" min="12" max="24" value="${l.fontSize}"
+                                oninput="updateTextStyle(${l.id},'size',this.value); document.getElementById('tsz-${l.id}').textContent=this.value+'px'">
+                            <span class="text-size-val" id="tsz-${l.id}">${l.fontSize}px</span>
+                        </div>
+                        <div class="color-row">
+                            <label>색상</label>
+                            <input type="color" value="${l.color}"
+                                oninput="updateTextStyle(${l.id},'color',this.value)">
+                        </div>
+                        <div class="text-toolbar">
+                            <button class="txt-btn ${l.bold?'on':''}" title="굵게" onclick="toggleTextStyle(${l.id},'bold',this)"><b>B</b></button>
+                            <button class="txt-btn ${l.italic?'on':''}" title="기울임" onclick="toggleTextStyle(${l.id},'italic',this)"><i>I</i></button>
+                            <button class="txt-btn ${l.underline?'on':''}" title="밑줄" onclick="toggleTextStyle(${l.id},'underline',this)"><u>U</u></button>
+                            <button class="txt-btn ${l.strike?'on':''}" title="취소선" onclick="toggleTextStyle(${l.id},'strike',this)"><s>S</s></button>
+                        </div>
+                        <textarea class="text-input-box" placeholder="텍스트를 입력하세요"
+                            oninput="updateTextContent(${l.id},this.value)">${l.content}</textarea>
+                    </div>`;
+                list.appendChild(item);
+            });
+        }
+
+        // 레이어 이동 (dir: -1 위로, 1 아래로)
+        function moveLayer(type, id, dir) {
+            const arr = type === 'img' ? imgLayers : textLayers;
+            const idx = arr.findIndex(l => l.id === id);
+            if (idx < 0) return;
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= arr.length) return;
+            [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+            reindexLayers(arr);
+            type === 'img' ? renderImgList() : renderTextList();
+        }
+
+        // 레이어 삭제
+        function deleteLayer(type, id) {
+            const arr = type === 'img' ? imgLayers : textLayers;
+            const idx = arr.findIndex(l => l.id === id);
+            if (idx < 0) return;
+            arr[idx].el.remove();
+            arr.splice(idx, 1);
+            reindexLayers(arr);
+            type === 'img' ? renderImgList() : renderTextList();
+        }
+
+        /* ============================================================
+           DRAG & RESIZE (board 내부 요소 공통)
+        ============================================================ */
+        function makeDraggable(el) {
+            let ox, oy, ex, ey, dragging = false;
+            el.addEventListener('mousedown', e => {
+                if (e.target.classList.contains('resize-handle') ||
+                    e.target.closest('.resize-handle') ||
+                    e.target.tagName === 'TEXTAREA') return;
+                e.stopPropagation();
+                dragging = true;
+                ox = parseInt(el.style.left) || 0;
+                oy = parseInt(el.style.top)  || 0;
+                ex = e.clientX; ey = e.clientY;
+                document.querySelectorAll('.board-layer').forEach(b => b.classList.remove('selected-layer'));
+                el.classList.add('selected-layer');
+            });
+            window.addEventListener('mousemove', e => {
+                if (!dragging) return;
+                const dx = (e.clientX - ex) / scale;
+                const dy = (e.clientY - ey) / scale;
+                el.style.left = (ox + dx) + 'px';
+                el.style.top  = (oy + dy) + 'px';
+            });
+            window.addEventListener('mouseup', () => { dragging = false; });
+        }
+
+        function makeResizable(el, aspect) {
+            // aspect: true = 비율 고정
+            const handle = el.querySelector('.resize-handle');
+            if (!handle) return;
+            let startW, startH, startX, startY, resizing = false;
+            handle.addEventListener('mousedown', e => {
+                e.stopPropagation();
+                resizing = true;
+                startW = el.offsetWidth;
+                startH = el.offsetHeight;
+                startX = e.clientX; startY = e.clientY;
+            });
+            window.addEventListener('mousemove', e => {
+                if (!resizing) return;
+                const dw = (e.clientX - startX) / scale;
+                const dh = (e.clientY - startY) / scale;
+                let nw = Math.max(80, startW + dw);
+                let nh = Math.max(80, startH + dh);
+                if (aspect) {
+                    const ratio = startW / startH;
+                    // 더 큰 delta 기준으로 비율 유지
+                    if (Math.abs(dw) >= Math.abs(dh)) nh = nw / ratio;
+                    else nw = nh * ratio;
+                }
+                el.style.width  = nw + 'px';
+                el.style.height = nh + 'px';
+            });
+            window.addEventListener('mouseup', () => { resizing = false; });
+        }
+
+        /* ============================================================
+           이미지 레이어 추가
+        ============================================================ */
+        document.getElementById('imgFileInput').addEventListener('change', function(e) {
+            const files = [...e.target.files].filter(f => f.type === 'image/png');
+            const available = MAX_IMG - imgLayers.length;
+            if (available <= 0) { alert('이미지는 최대 5개까지 추가할 수 있습니다.'); this.value=''; return; }
+            const toAdd = files.slice(0, available);
+            if (files.length > available) alert(`최대 ${MAX_IMG}개 제한으로 ${available}개만 추가됩니다.`);
+
+            toAdd.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    const id = ++layerIdCounter;
+                    const el = document.createElement('div');
+                    el.className = 'board-layer';
+                    el.style.cssText = 'left:200px;top:200px;width:400px;height:400px;';
+                    el.innerHTML = `<img src="${ev.target.result}" draggable="false">
+                        <div class="resize-handle"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:12px;"></i></div>`;
+                    board.appendChild(el);
+                    // 새 이미지는 최상위(배열 맨 앞)
+                    imgLayers.unshift({ id, name: file.name, el });
+                    reindexLayers(imgLayers);
+                    makeDraggable(el);
+                    makeResizable(el, true);
+                    renderImgList();
+                };
+                reader.readAsDataURL(file);
+            });
+            this.value = '';
+        });
+
+        /* ============================================================
+           텍스트 레이어 추가 & 편집
+        ============================================================ */
+        function addTextLayer() {
+            if (textLayers.length >= MAX_TEXT) { alert('텍스트는 최대 10개까지 추가할 수 있습니다.'); return; }
+            const id = ++layerIdCounter;
+            const defaultText = '텍스트';
+            const el = document.createElement('div');
+            el.className = 'board-layer';
+            el.style.cssText = 'left:300px;top:300px;width:auto;height:auto;min-width:80px;white-space:pre-wrap;padding:10px;font-size:80px;color:#000;line-height:1.3;';
+            el.innerHTML = `<span class="board-text-span">${defaultText}</span>
+                <div class="resize-handle"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:12px;"></i></div>`;
+            board.appendChild(el);
+
+            const layer = { id, name: defaultText, el,
+                content: defaultText, fontSize: 80, color: '#000000',
+                bold: false, italic: false, underline: false, strike: false };
+            textLayers.unshift(layer);
+            reindexLayers(textLayers);
+            makeDraggable(el);
+            makeResizable(el, false);
+            renderTextList();
+        }
+
+        function applyTextStyle(layer) {
+            const span = layer.el.querySelector('.board-text-span');
+            if (!span) return;
+            layer.el.style.fontSize  = layer.fontSize + 'px';
+            layer.el.style.color     = layer.color;
+            span.style.fontWeight    = layer.bold    ? '700' : '400';
+            span.style.fontStyle     = layer.italic  ? 'italic' : 'normal';
+            span.style.textDecoration = [
+                layer.underline ? 'underline' : '',
+                layer.strike    ? 'line-through' : ''
+            ].filter(Boolean).join(' ') || 'none';
+            span.textContent = layer.content;
+        }
+
+        function updateTextContent(id, val) {
+            const l = textLayers.find(l => l.id === id);
+            if (!l) return;
+            l.content = val;
+            l.name = val.slice(0, 20) || '(빈 텍스트)';
+            const nameEl = document.getElementById('tname-' + id);
+            if (nameEl) nameEl.textContent = l.name;
+            applyTextStyle(l);
+        }
+
+        function updateTextStyle(id, prop, val) {
+            const l = textLayers.find(l => l.id === id);
+            if (!l) return;
+            if (prop === 'size')  l.fontSize = Number(val);
+            if (prop === 'color') l.color = val;
+            applyTextStyle(l);
+        }
+
+        function toggleTextStyle(id, prop, btn) {
+            const l = textLayers.find(l => l.id === id);
+            if (!l) return;
+            l[prop] = !l[prop];
+            btn.classList.toggle('on', l[prop]);
+            applyTextStyle(l);
+        }
+
+        // board 클릭 → 선택 해제
+        board.addEventListener('mousedown', e => {
+            if (!e.target.closest('.board-layer')) {
+                document.querySelectorAll('.board-layer').forEach(b => b.classList.remove('selected-layer'));
+            }
+        });
     </script>
 </body>
 </html>
