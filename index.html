@@ -1034,7 +1034,16 @@
         document.getElementById('toggleBtn').addEventListener('click', function() {
             const container = document.getElementById('sidebar');
             container.classList.toggle('collapsed');
-            this.querySelector('i').className = container.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+        
+            const isCollapsed = container.classList.contains('collapsed');
+        
+            // ← style.left 직접 건드리는 코드 완전 제거
+            // 대신 버튼에 클래스만 토글
+            this.classList.toggle('collapsed', isCollapsed);
+        
+            this.querySelector('i').className = isCollapsed
+                ? 'fa-solid fa-chevron-right'
+                : 'fa-solid fa-chevron-left';
         });
         
         // Helper Box 클릭 이벤트 수정
@@ -1286,25 +1295,32 @@
             }
         });
 
-        document.getElementById('toggleBtn').addEventListener('click', function() {
-            const container = document.getElementById('sidebar');
-            const editorPanel = container.querySelector('.editor-panel');
-            const isCollapsed = editorPanel.style.width === '0px';
+        function toggleMention(element, value) {
+            const container = element.parentElement;
+            const items = container.querySelectorAll('.capsule-item');
+            const slider = document.getElementById('mentionSlider');
+            const detailContainer = document.getElementById('mentionDetailContainer');
+            
+            // 1. 활성화 스타일 및 슬라이더 이동
+            items.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            const index = Array.from(items).indexOf(element);
+            slider.style.left = `calc(${index * 25}% + 4px)`;
         
-            if (isCollapsed) {
-                editorPanel.style.width = 'var(--editor-w)';
-                this.querySelector('i').className = 'fa-solid fa-chevron-left';
+            // 2. 값 저장
+            document.getElementById('genreMention').value = value;
+        
+            // 3. 상세 입력창 표시 로직 (애니메이션 효과 포함)
+            if (value === 'none') {
+                detailContainer.style.display = 'none';
             } else {
-                editorPanel.style.width = '0px';
-                this.querySelector('i').className = 'fa-solid fa-chevron-right';
+                detailContainer.style.display = 'block';
+                // 서서히 나타나는 효과를 원할 경우 클래스 추가 가능
+                detailContainer.style.animation = 'fadeIn 0.3s ease';
             }
         
-            // transition이 끝난 뒤 실제 너비 기준으로 버튼 위치 재계산
-            setTimeout(() => {
-                const sidebarRight = container.getBoundingClientRect().right;
-                this.style.left = sidebarRight + 'px';
-            }, 310); // transition 0.3s보다 살짝 길게
-        });
+            if (typeof updatePreview === "function") updatePreview();
+        }
     </script>
 </body>
 </html>
