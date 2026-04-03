@@ -364,6 +364,28 @@
         .input-label { display: block; margin-bottom: 5px; font-size: 11px; color: #aaa; }
         input[type="text"], select { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
 
+        .input-field {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--current-accent);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .nickname-wrapper {
             display: flex;
             flex-direction: column; /* 입력창과 태그 박스를 위아래로 배치 */
@@ -623,11 +645,6 @@
             animation: fadeIn 0.4s ease;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         /* 입력창 포커스 시 테마 색상으로 강조 */
         #mentionDetail:focus {
             outline: none;
@@ -788,9 +805,9 @@
                             <div class="capsule-item" onclick="toggleMention(this, 'much')">많이</div>
                         </div>
                         
-                        <div id="externalDetailArea" class="sub-input" style="display: none;">
+                        <div id="mentionDetailContainer" class="input-group" style="display: none; margin-top: 10px;">
                             <div class="input-label">타장르 언급 상세</div>
-                            <<input type="text" placeholder="장르명이나 주의사항을 입력해주세요">
+                            <input type="text" id="mentionDetail" class="input-field" placeholder="장르명이나 주의사항을 입력해주세요">
                         </div>
                         
                         <input type="hidden" id="genreMention" value="none">
