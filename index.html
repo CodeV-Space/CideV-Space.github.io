@@ -283,6 +283,10 @@
             font-size: 12px;
         }
 
+        .toggle-btn.collapsed {
+            left: var(--rail-w);
+        }
+
         .section-title {
             font-size: 18px; /* 16px보다 조금 더 키웠습니다 */
             color: var(--current-accent);
@@ -333,6 +337,11 @@
             position: relative;
             overflow: visible !important; 
         }
+
+        .sidebar-container.collapsed ~ #toggleBtn,
+        .collapsed-toggle {
+            left: var(--rail-w);
+        }    
         
         .sub-input {
             background: rgba(0,0,0,0.2);
@@ -361,8 +370,14 @@
             gap: 6px;
             flex-wrap: wrap;    /* 공간이 좁으면 다음 줄로 넘김 */
         }
-        .input-label { display: block; margin-bottom: 5px; font-size: 11px; color: #aaa; }
-        input[type="text"], select { width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .input-label { display: block; margin-bottom: 5px; font-size: 14px; color: #aaa; }
+        input[type="text"], select {
+            width: 100%; padding: 8px;
+            background: #1a1a1a; border: 1px solid #444;
+            color: #fff; border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px; /* ← 추가 */
+        }x; }
 
         .input-field {
             width: 100%;
@@ -371,7 +386,7 @@
             border-radius: 6px;
             padding: 10px 12px;
             color: #fff;
-            font-size: 13px;
+            font-size: 14px;
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
@@ -398,7 +413,7 @@
             grid-template-columns: repeat(4, 1fr); /* 3에서 4로 수정  */
             gap: 5px; 
         }
-        .check-item { font-size: 11px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 1s ease; }
+        .check-item { font-size: 14px; background: #222; padding: 5px; border-radius: 3px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: 1s ease; }
         .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
 
         .image-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
@@ -446,7 +461,7 @@
             display: block;
             width: 100%;
             text-align: center;  
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             white-space: nowrap;
             letter-spacing: -0.5px; /* 자간을 좁혀서 가로 너비 확보 */
@@ -805,9 +820,9 @@
                             <div class="capsule-item" onclick="toggleMention(this, 'much')">많이</div>
                         </div>
                         
-                        <div id="mentionDetailContainer" class="input-group" style="display: none; margin-top: 10px;">
-                            <div class="input-label">타장르 언급 상세</div>
-                            <input type="text" id="mentionDetail" class="input-field" placeholder="장르명이나 주의사항을 입력해주세요">
+                        <div id="mentionDetailContainer" class="sub-input" style="display: none; margin-top: 10px;">
+                            <label class="input-label">타장르 언급 상세</label>
+                            <input type="text" id="mentionDetail" placeholder="장르명이나 주의사항을 입력해주세요">
                         </div>
                         
                         <input type="hidden" id="genreMention" value="none">
@@ -1019,7 +1034,16 @@
         document.getElementById('toggleBtn').addEventListener('click', function() {
             const container = document.getElementById('sidebar');
             container.classList.toggle('collapsed');
-            this.querySelector('i').className = container.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+        
+            const isCollapsed = container.classList.contains('collapsed');
+        
+            // ← style.left 직접 건드리는 코드 완전 제거
+            // 대신 버튼에 클래스만 토글
+            this.classList.toggle('collapsed', isCollapsed);
+        
+            this.querySelector('i').className = isCollapsed
+                ? 'fa-solid fa-chevron-right'
+                : 'fa-solid fa-chevron-left';
         });
         
         // Helper Box 클릭 이벤트 수정
