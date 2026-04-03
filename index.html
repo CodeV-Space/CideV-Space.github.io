@@ -128,7 +128,6 @@
         .right-controls { display: flex; align-items: center; gap: 12px; }
         .author-id { font-size: 14px; color: #888; font-weight: 500; }
 
-        /* 주소창 오른쪽 아이콘 버튼 */
         .icon-btn {
             width: 32px; height: 32px;
             background: #333; border: 1px solid #555; border-radius: 6px;
@@ -165,7 +164,6 @@
             overflow: visible;
         }
 
-        /* 레일 (아이콘 세로 목록) */
         .tab-rail {
             width: var(--rail-w);
             background: var(--bg-rail);
@@ -189,7 +187,6 @@
             flex-shrink: 0;
         }
 
-        /* 레일 아이콘 버튼 */
         .tab-icon-btn {
             width: 52px; height: 52px;
             display: flex; align-items: center; justify-content: center;
@@ -206,7 +203,6 @@
             color: var(--current-accent);
             background: rgba(211, 175, 55, 0.15);
         }
-        /* 활성 탭 왼쪽 강조선 */
         .tab-icon-btn.active::before {
             content: '';
             position: absolute; left: -20px;
@@ -215,14 +211,12 @@
             border-radius: 0 4px 4px 0;
             transition: background 1s ease;
         }
-        /* 레이아웃 토글 버튼 아이콘 애니메이션 */
         #layout-toggle-btn i {
             transition: transform 0.3s ease, color 0.3s ease;
             display: inline-block;
         }
         #layout-toggle-btn:active i { transform: scale(0.8); }
 
-        /* 에디터 패널 */
         .editor-panel {
             height: 100%;
             width: var(--editor-w);
@@ -233,7 +227,6 @@
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* 에디터 내용 스크롤 영역 */
         .editor-content {
             flex: 1;
             padding: 20px 30px 80px;
@@ -247,7 +240,6 @@
         .editor-content::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
         .editor-content::-webkit-scrollbar-thumb:hover { background: var(--current-accent); }
 
-        /* 사이드바 하단 고정 저장 버튼 영역 */
         .sidebar-footer {
             position: absolute; bottom: 0; left: 0;
             width: 100%; box-sizing: border-box;
@@ -310,13 +302,11 @@
             border-color: var(--current-accent);
         }
 
-        /* 닉네임 입력 래퍼 */
         .nickname-wrapper {
             display: flex; flex-direction: column;
             gap: 10px; width: 100%;
         }
 
-        /* 태그 선택기 */
         .tag-selector {
             display: flex; flex-direction: row;
             gap: 6px; flex-wrap: wrap;
@@ -334,7 +324,6 @@
             background: rgba(211, 175, 55, 0.15);
         }
 
-        /* 펼쳐지는 서브 입력 박스 */
         .sub-input {
             background: rgba(0,0,0,0.2);
             padding: 15px; border-radius: 8px;
@@ -342,7 +331,6 @@
             margin: 10px 0 20px;
         }
 
-        /* 그리드 선택지 */
         .grid-options {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -396,14 +384,13 @@
             transition: color 1s ease, background 1s ease;
         }
 
-        /* 플레이 성향 체크 아이템 */
         #playStyleOpts .check-item {
             display: flex; align-items: center; justify-content: center;
             min-height: 30px;
         }
 
         /* ============================================================
-           CAPSULE SELECTOR (타장르 언급)
+           CAPSULE SELECTOR
         ============================================================ */
         .capsule-container {
             display: flex; position: relative;
@@ -426,7 +413,6 @@
         }
         .capsule-item.active { color: #000; }
 
-        /* 타장르 언급 상세 입력 애니메이션 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -488,9 +474,8 @@
         #render-nickname { top: 100px; left: 100px; font-size: 100px; font-weight: bold; }
 
         /* ============================================================
-           버디 아이콘 공통 스타일 (인라인 style 대체)
+           BUDDY / JAIL / WEAPON GRID STYLES
         ============================================================ */
-        /* 버디 그리드: 5-5-3 배열 */
         .buddy-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -501,6 +486,23 @@
             padding: 8px 4px;
         }
         .buddy-grid .img-option img { width: 54px; height: 54px; }
+
+        .buddy-last {
+            flex: unset; max-width: unset; min-height: 90px;
+            width: calc(20% - 6px); min-width: 80px;
+            padding: 8px 4px;
+        }
+        .buddy-last img { width: 54px; height: 54px; }
+
+        .jail-option {
+            max-width: unset; width: 100%;
+            padding: 12px 10px; min-height: 100px;
+        }
+
+        .weapon-option {
+            max-width: unset;
+            padding: 8px 4px; min-height: 90px;
+        }
 
     </style>
 </head>
@@ -531,12 +533,10 @@
             <div class="nav-btn"><i class="fa-solid fa-arrow-right"></i></div>
             <div class="nav-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></div>
         </div>
-
         <div class="address-input" style="gap: 8px;">
             <i class="fa-solid fa-lock" id="addrLock" style="font-size: 12px; color: var(--current-accent); transition: color 1s ease; margin-top: 1px;"></i>
             <span style="font-size: 14px; letter-spacing: 0.5px; color: #ddd;">https://codevein.sheet/2/main</span>
         </div>
-
         <div class="right-controls">
             <span class="author-id">Made by @D3LTA_CV</span>
             <a href="https://x.com/D3LTA_CV" target="_blank" class="icon-btn" title="Twitter">
@@ -550,48 +550,24 @@
 
     <div class="main-wrapper">
         <aside class="sidebar-container" id="sidebar">
-
-            <!-- 레일: 아이콘 탭 목록 -->
             <div class="tab-rail">
-                <div class="tab-icon-btn active" title="트위터 계정 성향">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </div>
-                <div class="tab-icon-btn" title="게임 성향">
-                    <i class="fa-solid fa-gamepad"></i>
-                </div>
-                <div class="tab-icon-btn" title="엔딩 및 도전과제">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-                <div class="tab-icon-btn" title="덕질 성향">
-                    <i class="fa-solid fa-file-lines"></i>
-                </div>
-                <div class="tab-icon-btn" title="이미지 추가">
-                    <i class="fa-regular fa-image"></i>
-                </div>
-                <div class="tab-icon-btn" title="텍스트 추가">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-
+                <div class="tab-icon-btn active" title="트위터 계정 성향"><i class="fa-solid fa-pen-to-square"></i></div>
+                <div class="tab-icon-btn" title="게임 성향"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="tab-icon-btn" title="엔딩 및 도전과제"><i class="fa-solid fa-trophy"></i></div>
+                <div class="tab-icon-btn" title="덕질 성향"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="tab-icon-btn" title="이미지 추가"><i class="fa-regular fa-image"></i></div>
+                <div class="tab-icon-btn" title="텍스트 추가"><i class="fa-solid fa-plus"></i></div>
                 <div class="rail-divider"></div>
-
-                <div class="tab-icon-btn" title="레이아웃 변경" id="layout-toggle-btn">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </div>
-                <div class="tab-icon-btn" title="폰트 변경">
-                    <i class="fa-solid fa-font"></i>
-                </div>
-                <div class="tab-icon-btn" title="테마 색상 변경">
-                    <i class="fa-solid fa-palette"></i>
-                </div>
+                <div class="tab-icon-btn" title="레이아웃 변경" id="layout-toggle-btn"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="tab-icon-btn" title="폰트 변경"><i class="fa-solid fa-font"></i></div>
+                <div class="tab-icon-btn" title="테마 색상 변경"><i class="fa-solid fa-palette"></i></div>
             </div>
 
-            <!-- 에디터 패널 -->
             <div class="editor-panel">
                 <div class="editor-content">
 
                     <!-- 패널 0: 트위터 계정 성향 -->
                     <div id="panel-basic" class="editor-tab-content">
-
                         <div class="section-title">닉네임</div>
                         <div class="input-group">
                             <div class="nickname-wrapper">
@@ -609,26 +585,18 @@
 
                         <div class="section-title">트윗 성향</div>
                         <div class="grid-options multi-select">
-                            <div class="check-item">RT</div>
-                            <div class="check-item">마음</div>
-                            <div class="check-item">인용</div>
-                            <div class="check-item">탐라대화</div>
-                            <div class="check-item">일상</div>
-                            <div class="check-item">욕설</div>
-                            <div class="check-item">19금</div>
-                            <div class="check-item">기타</div>
+                            <div class="check-item">RT</div><div class="check-item">마음</div>
+                            <div class="check-item">인용</div><div class="check-item">탐라대화</div>
+                            <div class="check-item">일상</div><div class="check-item">욕설</div>
+                            <div class="check-item">19금</div><div class="check-item">기타</div>
                         </div>
 
                         <div class="section-title">연성</div>
                         <div class="grid-options multi-select">
-                            <div class="check-item">썰</div>
-                            <div class="check-item">글</div>
-                            <div class="check-item">디자인</div>
-                            <div class="check-item">그림</div>
-                            <div class="check-item">영상</div>
-                            <div class="check-item">스크린샷</div>
-                            <div class="check-item">소비</div>
-                            <div class="check-item">기타</div>
+                            <div class="check-item">썰</div><div class="check-item">글</div>
+                            <div class="check-item">디자인</div><div class="check-item">그림</div>
+                            <div class="check-item">영상</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">소비</div><div class="check-item">기타</div>
                         </div>
 
                         <div class="section-title">외부링크 사용 여부</div>
@@ -639,12 +607,9 @@
                         <div id="externalDetailArea" class="sub-input" style="display: none;">
                             <label class="input-label">포함 내용 (다중 선택)</label>
                             <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 12px;">
-                                <div class="check-item">R-18</div>
-                                <div class="check-item">G-18</div>
-                                <div class="check-item">스토리</div>
-                                <div class="check-item">스포일러</div>
-                                <div class="check-item">스크린샷</div>
-                                <div class="check-item">연성</div>
+                                <div class="check-item">R-18</div><div class="check-item">G-18</div>
+                                <div class="check-item">스토리</div><div class="check-item">스포일러</div>
+                                <div class="check-item">스크린샷</div><div class="check-item">연성</div>
                             </div>
                             <input type="text" placeholder="추가 참고 및 적고 싶은 사항을 적어주세요">
                         </div>
@@ -662,116 +627,88 @@
                             <input type="text" id="mentionDetail" placeholder="장르명이나 주의사항을 입력해주세요">
                         </div>
                         <input type="hidden" id="genreMention" value="none">
-
-                    </div><!-- /panel-basic -->
+                    </div>
 
                     <!-- 패널 1: 게임 성향 -->
                     <div id="panel-game" class="editor-tab-content" style="display: none;">
-
                         <div class="section-title">플레이 성향</div>
                         <div class="grid-options multi-select" id="playStyleOpts" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                            <div class="check-item">스토리</div>
-                            <div class="check-item">스크린샷</div>
-                            <div class="check-item">업적</div>
-                            <div class="check-item">New Game+</div>
-                            <div class="check-item">빌드 빌딩</div>
-                            <div class="check-item">잠수</div>
+                            <div class="check-item">스토리</div><div class="check-item">스크린샷</div>
+                            <div class="check-item">업적</div><div class="check-item">New Game+</div>
+                            <div class="check-item">빌드 빌딩</div><div class="check-item">잠수</div>
                         </div>
 
                         <div class="section-title">버디 스타일</div>
                         <div style="display: flex; justify-content: center; gap: 20px;">
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
-                                <img src="Icons/Buddy Style/빙의.png" alt="빙의">
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
+                                <img src="Icons/Buddy Style/빙의.png" alt="빙의" style="width:54px;height:54px;">
                                 <span>빙의</span>
                             </div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px;">
-                                <img src="Icons/Buddy Style/소환.png" alt="소환">
+                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
+                                <img src="Icons/Buddy Style/소환.png" alt="소환" style="width:54px;height:54px;">
                                 <span>소환</span>
                             </div>
                         </div>
 
                         <div class="section-title">버디 (최대 3명)</div>
                         <div class="buddy-grid">
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/노아.png" alt="노아"><span>노아</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라비니아.png" alt="라비니아"><span>라비니아</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라일.png" alt="라일"><span>라일</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/루.png" alt="루"><span>루</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리세.png" alt="리세"><span>리세</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리코리스.png" alt="리코리스"><span>리코리스</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/발렌틴.png" alt="발렌틴"><span>발렌틴</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/야드비가.png" alt="야드비가"><span>야드비가</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/이리스.png" alt="이리스"><span>이리스</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/조제.png" alt="조제"><span>조제</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/제논.png" alt="제논"><span>제논</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/크레이그.png" alt="크레이그"><span>크레이그</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/홀리.png" alt="홀리"><span>홀리</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/노아.png" alt="노아"><span>노아</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라비니아.png" alt="라비니아"><span>라비니아</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라일.png" alt="라일"><span>라일</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/루.png" alt="루"><span>루</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리세.png" alt="리세"><span>리세</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/리코리스.png" alt="리코리스"><span>리코리스</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/발렌틴.png" alt="발렌틴"><span>발렌틴</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/야드비가.png" alt="야드비가"><span>야드비가</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/이리스.png" alt="이리스"><span>이리스</span></div>
+                            <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/조제.png" alt="조제"><span>조제</span></div>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 6px; margin-top: 6px;">
+                            <div class="img-option buddy-last" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/제논.png" alt="제논"><span>제논</span></div>
+                            <div class="img-option buddy-last" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/크레이그.png" alt="크레이그"><span>크레이그</span></div>
+                            <div class="img-option buddy-last" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/홀리.png" alt="홀리"><span>홀리</span></div>
                         </div>
 
                         <div class="section-title">제일</div>
-                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/오우거.png" alt="오우거" style="width:60px;height:60px;"><span>오우거</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/하운즈.png" alt="하운즈" style="width:60px;height:60px;"><span>하운즈</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/스팅어.png" alt="스팅어" style="width:60px;height:60px;"><span>스팅어</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/아이비.png" alt="아이비" style="width:60px;height:60px;"><span>아이비</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/배트.png" alt="배트" style="width:60px;height:60px;"><span>배트</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 100px;"><img src="Icons/Jails/리퍼.png" alt="리퍼" style="width:60px;height:60px;"><span>리퍼</span></div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-items: center;">
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/오우거.png" alt="오우거" style="width:60px;height:60px;"><span>오우거</span></div>
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/하운즈.png" alt="하운즈" style="width:60px;height:60px;"><span>하운즈</span></div>
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/스팅어.png" alt="스팅어" style="width:60px;height:60px;"><span>스팅어</span></div>
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/아이비.png" alt="아이비" style="width:60px;height:60px;"><span>아이비</span></div>
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/배트.png" alt="배트" style="width:60px;height:60px;"><span>배트</span></div>
+                            <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/리퍼.png" alt="리퍼" style="width:60px;height:60px;"><span>리퍼</span></div>
                         </div>
 
                         <div class="section-title">무기 (최대 2개)</div>
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/한손검.png" alt="한손검" style="width:56px;height:56px;"><span>한손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/양손검.png" alt="양손검" style="width:56px;height:56px;"><span>양손검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/총검.png" alt="총검" style="width:56px;height:56px;"><span>총검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/도끼창.png" alt="도끼창" style="width:56px;height:56px;"><span>도끼창</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/해머.png" alt="해머" style="width:56px;height:56px;"><span>해머</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/쌍검.png" alt="쌍검" style="width:56px;height:56px;"><span>쌍검</span></div>
-                            <div class="img-option" onclick="selectImage(this, 'limit', 2)" style="max-width:unset;"><img src="Icons/Weapons/룬 블레이드.png" alt="룬 블레이드" style="width:56px;height:56px;"><span>룬 블레이드</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/한손검.png" alt="한손검" style="width:56px;height:56px;"><span>한손검</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png" alt="양손검" style="width:56px;height:56px;"><span>양손검</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/총검.png" alt="총검" style="width:56px;height:56px;"><span>총검</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/도끼창.png" alt="도끼창" style="width:56px;height:56px;"><span>도끼창</span></div>
                         </div>
-
-                    </div><!-- /panel-game -->
-
-                    <!-- 패널 2: 엔딩 및 도전과제 (미구현) -->
-                    <div id="panel-trophy" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">엔딩 및 도전과제</div>
+                        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 8px;">
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/해머.png" alt="해머" style="width:56px;height:56px;"><span>해머</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/쌍검.png" alt="쌍검" style="width:56px;height:56px;"><span>쌍검</span></div>
+                            <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/룬 블레이드.png" alt="룬 블레이드" style="width:56px;height:56px;"><span>룬 블레이드</span></div>
+                        </div>
                     </div>
 
-                    <!-- 패널 3: 덕질 성향 (미구현) -->
-                    <div id="panel-plus" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">덕질 성향</div>
-                    </div>
+                    <div id="panel-trophy" class="editor-tab-content" style="display: none;"><div class="section-title">엔딩 및 도전과제</div></div>
+                    <div id="panel-plus" class="editor-tab-content" style="display: none;"><div class="section-title">덕질 성향</div></div>
+                    <div id="panel-image" class="editor-tab-content" style="display: none;"><div class="section-title">이미지 관리</div></div>
+                    <div id="panel-text" class="editor-tab-content" style="display: none;"><div class="section-title">커스텀 텍스트</div></div>
+                    <div id="panel-font" class="editor-tab-content" style="display: none;"><div class="section-title">폰트 설정</div></div>
+                    <div id="panel-theme" class="editor-tab-content" style="display: none;"><div class="section-title">테마 및 컬러</div></div>
 
-                    <!-- 패널 4: 이미지 추가 (미구현) -->
-                    <div id="panel-image" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">이미지 관리</div>
-                    </div>
-
-                    <!-- 패널 5: 텍스트 추가 (미구현) -->
-                    <div id="panel-text" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">커스텀 텍스트</div>
-                    </div>
-
-                    <!-- 패널 7: 폰트 변경 (미구현) -->
-                    <div id="panel-font" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">폰트 설정</div>
-                    </div>
-
-                    <!-- 패널 8: 테마 색상 변경 (미구현) -->
-                    <div id="panel-theme" class="editor-tab-content" style="display: none;">
-                        <div class="section-title">테마 및 컬러</div>
-                    </div>
-
-                </div><!-- /editor-content -->
-
+                </div>
                 <div class="sidebar-footer">
                     <button class="save-btn" onclick="saveImage()">
                         <i class="fa-solid fa-download"></i> PNG로 저장
                     </button>
                 </div>
-
-            </div><!-- /editor-panel -->
+            </div>
         </aside>
 
-        <!-- 사이드바 열기/닫기 토글 버튼 -->
         <div class="toggle-btn" id="toggleBtn">
             <i class="fa-solid fa-chevron-left"></i>
         </div>
@@ -787,7 +724,6 @@
                     <p>모든 Code Vein 관련 저작권은 ©Bandai Namco Entertainment Inc.에 있습니다.</p>
                 </div>
             </div>
-
             <div class="helper-box" id="helperBox" title="클릭하여 최소화/확대">
                 <i class="fa-solid fa-circle-info helper-icon-min"></i>
                 <div class="helper-content" style="display: flex; align-items: center; gap: 20px; white-space: nowrap;">
@@ -811,9 +747,6 @@
     </div>
 
     <script>
-        // ============================================================
-        // 1. VIEWPORT (Pan & Zoom)
-        // ============================================================
         const workspace = document.getElementById('workspace');
         const viewport  = document.getElementById('viewport');
         const INITIAL_SCALE = 0.18;
@@ -831,116 +764,54 @@
         }, { passive: false });
 
         workspace.addEventListener('mousedown', e => {
-            if (e.button === 1) {
-                scale = INITIAL_SCALE; pointX = 0; pointY = 0; updateTransform();
-            } else if (e.button === 0) {
-                isDragging = true;
-                startX = e.clientX - pointX; startY = e.clientY - pointY;
-                workspace.style.cursor = 'grabbing';
-            }
+            if (e.button === 1) { scale = INITIAL_SCALE; pointX = 0; pointY = 0; updateTransform(); }
+            else if (e.button === 0) { isDragging = true; startX = e.clientX - pointX; startY = e.clientY - pointY; workspace.style.cursor = 'grabbing'; }
         });
-        window.addEventListener('mousemove', e => {
-            if (!isDragging) return;
-            pointX = e.clientX - startX; pointY = e.clientY - startY;
-            updateTransform();
-        });
+        window.addEventListener('mousemove', e => { if (!isDragging) return; pointX = e.clientX - startX; pointY = e.clientY - startY; updateTransform(); });
         window.addEventListener('mouseup', () => { isDragging = false; workspace.style.cursor = 'grab'; });
 
-        // ============================================================
-        // 2. SIDEBAR TOGGLE
-        // ============================================================
         document.getElementById('toggleBtn').addEventListener('click', function() {
-            const sidebar     = document.getElementById('sidebar');
+            const sidebar = document.getElementById('sidebar');
             const editorPanel = sidebar.querySelector('.editor-panel');
-            const icon        = this.querySelector('i');
+            const icon = this.querySelector('i');
             const isCollapsed = editorPanel.style.width === '0px';
-
-            if (isCollapsed) {
-                editorPanel.style.width = 'var(--editor-w)';
-                icon.className = 'fa-solid fa-chevron-left';
-                this.classList.remove('collapsed');
-            } else {
-                editorPanel.style.width = '0px';
-                icon.className = 'fa-solid fa-chevron-right';
-                this.classList.add('collapsed');
-            }
-
-            // transition 끝난 뒤 실제 위치 재계산
-            setTimeout(() => {
-                this.style.left = sidebar.getBoundingClientRect().right + 'px';
-            }, 310);
+            if (isCollapsed) { editorPanel.style.width = 'var(--editor-w)'; icon.className = 'fa-solid fa-chevron-left'; this.classList.remove('collapsed'); }
+            else { editorPanel.style.width = '0px'; icon.className = 'fa-solid fa-chevron-right'; this.classList.add('collapsed'); }
+            setTimeout(() => { this.style.left = sidebar.getBoundingClientRect().right + 'px'; }, 310);
         });
 
-        // ============================================================
-        // 3. HELPER BOX
-        // ============================================================
         document.getElementById('helperBox').addEventListener('click', function() {
             this.classList.toggle('minimized');
-            const content = this.querySelector('.helper-content');
-            content.style.display = this.classList.contains('minimized') ? 'none' : 'flex';
+            this.querySelector('.helper-content').style.display = this.classList.contains('minimized') ? 'none' : 'flex';
         });
 
-        // ============================================================
-        // 4. EASTER EGG (BLOOD → TO → GOLD → TBA)
-        // ============================================================
         let eggCount = 0, isAnimating = false;
-        const eggTab  = document.getElementById('eggTab');
+        const eggTab = document.getElementById('eggTab');
         const addrLock = document.getElementById('addrLock');
-
         eggTab.addEventListener('click', function() {
             if (isAnimating) return;
             if (++eggCount < 7) return;
-
             isAnimating = true; eggCount = 0;
-
-            const setAccent = (color) => {
-                document.documentElement.style.setProperty('--current-accent', color);
-                if (addrLock) addrLock.style.color = color;
-                this.style.color = color;
-            };
-
+            const setAccent = (c) => { document.documentElement.style.setProperty('--current-accent', c); if (addrLock) addrLock.style.color = c; this.style.color = c; };
             setAccent('#ea0000'); this.innerText = "BLOOD";
             setTimeout(() => { this.innerText = "TO"; }, 1000);
             setTimeout(() => { setAccent('#D3AF37'); this.innerText = "GOLD"; }, 2000);
             setTimeout(() => { this.innerText = "TBA"; this.style.color = ''; isAnimating = false; }, 3000);
         });
 
-        // ============================================================
-        // 5. SIDEBAR TAB SWITCHING
-        // ============================================================
-        const panels = [
-            'panel-basic',   // 0: 트위터 계정 성향
-            'panel-game',    // 1: 게임 성향
-            'panel-trophy',  // 2: 엔딩 및 도전과제
-            'panel-plus',    // 3: 덕질 성향
-            'panel-image',   // 4: 이미지 추가
-            'panel-text',    // 5: 텍스트 추가
-            '',              // 6: 레이아웃 버튼 (건너뜀)
-            'panel-font',    // 7: 폰트 변경
-            'panel-theme',   // 8: 테마 색상 변경
-        ];
-
+        const panels = ['panel-basic','panel-game','panel-trophy','panel-plus','panel-image','panel-text','','panel-font','panel-theme'];
         document.querySelectorAll('.tab-rail .tab-icon-btn').forEach((btn, index) => {
             if (btn.id === 'layout-toggle-btn') return;
-
             btn.addEventListener('click', function() {
-                // 버튼 active 전환
                 document.querySelectorAll('.tab-rail .tab-icon-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-
-                // 패널 전환
                 document.querySelectorAll('.editor-tab-content').forEach(p => p.style.display = 'none');
-                const targetId = panels[index];
-                const target = targetId && document.getElementById(targetId);
-                if (target) {
-                    target.style.display = 'block';
-                } else {
-                    console.warn(`${this.title} 패널이 구현되지 않았습니다.`);
-                }
+                const target = panels[index] && document.getElementById(panels[index]);
+                if (target) target.style.display = 'block';
+                else console.warn(this.title + ' 패널이 구현되지 않았습니다.');
             });
         });
 
-        // 레이아웃 방향 토글
         document.getElementById('layout-toggle-btn').addEventListener('click', function() {
             const icon = this.querySelector('i');
             const isLeft = icon.classList.contains('fa-chevron-left');
@@ -948,83 +819,59 @@
             icon.classList.toggle('fa-chevron-right', isLeft);
         });
 
-        // ============================================================
-        // 6. FORM ACTIONS
-        // ============================================================
-
-        // 닉네임 실시간 렌더
         document.getElementById('inNick').addEventListener('input', e => {
             document.getElementById('render-nickname').innerText = e.target.value;
         });
 
-        // 태그 토글 (선호닉 영역 연동)
         function toggleTag(el, type) {
             el.classList.toggle('active');
-            if (type === 'prefNick') {
-                document.getElementById('prefNickArea').style.display =
-                    el.classList.contains('active') ? 'block' : 'none';
-            }
+            if (type === 'prefNick') document.getElementById('prefNickArea').style.display = el.classList.contains('active') ? 'block' : 'none';
         }
 
-        // 외부링크 O/X 선택
         function toggleExternal(show, el) {
             document.getElementById('externalDetailArea').style.display = show ? 'block' : 'none';
             el.parentElement.querySelectorAll('.check-item').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
         }
 
-        // 다중 선택 (multi-select 클래스 컨테이너 공통 처리)
         document.addEventListener('click', e => {
-            if (e.target.classList.contains('check-item') &&
-                e.target.parentElement.classList.contains('multi-select')) {
+            if (e.target.classList.contains('check-item') && e.target.parentElement.classList.contains('multi-select'))
                 e.target.classList.toggle('selected');
-            }
         });
 
-        // 이미지 선택 (single / limit)
         function selectImage(el, mode, limit) {
-            const parent = el.parentElement;
-            if (mode === 'single') {
-                parent.querySelectorAll('.img-option').forEach(o => o.classList.remove('selected'));
-                el.classList.add('selected');
-            } else if (mode === 'limit') {
-                if (el.classList.contains('selected')) {
-                    el.classList.remove('selected');
-                } else if (parent.querySelectorAll('.selected').length < limit) {
-                    el.classList.add('selected');
-                } else {
-                    alert(`최대 ${limit}개까지 선택할 수 있습니다.`);
+            const group = el.dataset.group;
+            const allInGroup = group
+                ? document.querySelectorAll(`.img-option[data-group="${group}"]`)
+                : el.parentElement.querySelectorAll('.img-option');
+            if (mode === 'single') { allInGroup.forEach(o => o.classList.remove('selected')); el.classList.add('selected'); }
+            else if (mode === 'limit') {
+                if (el.classList.contains('selected')) { el.classList.remove('selected'); }
+                else {
+                    const count = [...allInGroup].filter(o => o.classList.contains('selected')).length;
+                    if (count < limit) el.classList.add('selected');
+                    else alert(`최대 ${limit}개까지 선택할 수 있습니다.`);
                 }
             }
         }
 
-        // 타장르 언급 캡슐 선택
         function toggleMention(element, value) {
             const container = element.parentElement;
-            const items  = container.querySelectorAll('.capsule-item');
+            const items = container.querySelectorAll('.capsule-item');
             const slider = document.getElementById('mentionSlider');
             const detail = document.getElementById('mentionDetailContainer');
-
             items.forEach(item => item.classList.remove('active'));
             element.classList.add('active');
             slider.style.left = `calc(${Array.from(items).indexOf(element) * 25}% + 4px)`;
-
             document.getElementById('genreMention').value = value;
             detail.style.display = value === 'none' ? 'none' : 'block';
             if (value !== 'none') detail.style.animation = 'fadeIn 0.3s ease';
         }
 
-        // ============================================================
-        // 7. SAVE (PNG Export)
-        // ============================================================
         function saveImage() {
             const originalTransform = viewport.style.transform;
             viewport.style.transform = 'none';
-
-            html2canvas(document.getElementById('board'), {
-                scale: 1, width: 3840, height: 2160,
-                useCORS: true, backgroundColor: '#ffffff'
-            }).then(canvas => {
+            html2canvas(document.getElementById('board'), { scale: 1, width: 3840, height: 2160, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'CodeVein_twt_Sheet.png';
                 link.href = canvas.toDataURL('image/png');
