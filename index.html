@@ -577,19 +577,59 @@
             border-top: 1px solid #2a2a2a;
             padding-top: 10px;
         }
-        .text-toolbar {
-            display: flex; flex-wrap: wrap; gap: 4px;
+
+        /* 크기 + 색상 한 줄 레이아웃 */
+        .text-size-color-row {
+            display: flex; align-items: center; gap: 6px;
             margin-bottom: 8px;
+        }
+        .text-size-color-row label { font-size: 11px; color: #888; flex-shrink: 0; }
+        .text-size-color-row input[type=range] {
+            flex: 1; height: 4px; min-width: 0;
+            accent-color: var(--current-accent);
+            padding: 0; border: none; background: transparent;
+        }
+        .text-size-num {
+            width: 38px; height: 24px;
+            background: #1a1a1a; border: 1px solid #444;
+            border-radius: 4px; color: #ccc;
+            font-size: 11px; text-align: center;
+            padding: 0 2px; box-sizing: border-box; flex-shrink: 0;
+        }
+        .text-size-num:focus { outline: none; border-color: var(--current-accent); }
+
+        /* 색상 버튼 — 테마 스타일 */
+        .color-swatch-btn {
+            position: relative; flex-shrink: 0;
+            width: 28px; height: 24px;
+            border-radius: 4px; border: 1px solid #555;
+            cursor: pointer; overflow: hidden;
+            background: #1a1a1a;
+        }
+        .color-swatch-btn input[type=color] {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; padding: 0; border: none;
+        }
+        .color-swatch-preview {
+            position: absolute; inset: 3px;
+            border-radius: 2px; pointer-events: none;
+        }
+
+        .text-toolbar-row {
+            display: flex; align-items: center;
+            gap: 4px; margin-bottom: 8px;
         }
         .txt-btn {
             height: 26px; min-width: 26px; padding: 0 6px;
             background: #2a2a2a; border: 1px solid #444;
             border-radius: 4px; cursor: pointer; color: #aaa;
             font-size: 12px; display: flex; align-items: center; justify-content: center;
-            transition: 0.15s; font-family: inherit;
+            transition: 0.15s; font-family: inherit; flex-shrink: 0;
         }
         .txt-btn:hover { background: #333; color: #fff; }
         .txt-btn.on { background: rgba(211,175,55,0.2); border-color: var(--current-accent); color: var(--current-accent); }
+        .toolbar-spacer { flex: 1; }
 
         .text-input-box {
             width: 100%; min-height: 60px;
@@ -602,26 +642,11 @@
         }
         .text-input-box:focus { outline: none; border-color: var(--current-accent); }
 
-        .text-size-row {
-            display: flex; align-items: center; gap: 6px;
-            margin-bottom: 6px;
-        }
-        .text-size-row label { font-size: 11px; color: #888; }
-        .text-size-row input[type=range] {
-            flex: 1; height: 4px;
-            accent-color: var(--current-accent);
-            padding: 0; border: none; background: transparent;
-        }
-        .text-size-val { font-size: 11px; color: #ccc; min-width: 28px; text-align: right; }
-
-        .color-row {
-            display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
-        }
-        .color-row label { font-size: 11px; color: #888; }
-        .color-row input[type=color] {
-            width: 28px; height: 22px; border: 1px solid #444;
-            border-radius: 4px; cursor: pointer; padding: 1px; background: #1a1a1a;
-        }
+        /* 게임 패널 이미지 선택 border padding 통일 */
+        .img-option { padding: 10px 6px; }
+        .img-option.buddy-last { padding: 10px 6px; }
+        .img-option.jail-option { padding: 10px 8px; }
+        .img-option.weapon-option { padding: 10px 6px; }
 
         /* preview-box 위의 드래그 가능한 요소 */
         .board-layer {
@@ -638,15 +663,28 @@
 
         /* 리사이즈 핸들 (우측 하단 모서리) */
         .resize-handle {
-            position: absolute; right: -12px; bottom: -12px;
-            width: 32px; height: 32px;
+            position: absolute; right: -16px; bottom: -16px;
+            width: 36px; height: 36px;
             background: var(--current-accent);
             border-radius: 50%;
             cursor: nwse-resize;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; color: #111;
+            font-size: 13px; color: #111;
             z-index: 10;
         }
+        /* 회전 핸들 (우측 상단) */
+        .rotate-handle {
+            position: absolute; right: -16px; top: -16px;
+            width: 30px; height: 30px;
+            background: #444;
+            border: 2px solid var(--current-accent);
+            border-radius: 50%;
+            cursor: grab;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: var(--current-accent);
+            z-index: 10;
+        }
+        .rotate-handle:active { cursor: grabbing; }
 
     </style>
 </head>
@@ -837,7 +875,56 @@
                         </div>
                     </div>
 
-                    <div id="panel-trophy" class="editor-tab-content" style="display: none;"><div class="section-title">엔딩 및 도전과제</div></div>
+                    <div id="panel-trophy" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">엔딩 진행 상황</div>
+
+                        <!-- 1회차 진행: 단독 선택 -->
+                        <div class="grid-options" style="grid-template-columns: 1fr; margin-bottom: 8px;">
+                            <div class="check-item" id="ending-1st" onclick="toggleEnding1st(this)">1회차 진행</div>
+                        </div>
+                        <!-- 배드/굿/진 엔딩: 다중 선택 -->
+                        <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 4px;" id="endingGroup">
+                            <div class="check-item">배드 엔딩</div>
+                            <div class="check-item">굿 엔딩</div>
+                            <div class="check-item">진 엔딩</div>
+                        </div>
+                        <p class="panel-desc" style="margin-top:6px;">배드·굿·진 엔딩은 다중 선택 가능</p>
+
+                        <div class="section-title">New Game+ 횟수</div>
+                        <input type="number" id="ngPlusCount" min="0" placeholder="횟수를 입력하세요"
+                            style="width:100%;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;">
+
+                        <div class="section-title">도전과제 달성 수</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                            <input type="number" id="achieveCount" min="0" max="36" value="0"
+                                oninput="clampAchieve(this)"
+                                style="flex:1;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;">
+                            <span style="font-size:13px;color:#888;white-space:nowrap;">/ 36</span>
+                        </div>
+                        <p class="panel-desc">0~36 범위만 입력 가능 · 빈칸은 자동으로 0</p>
+
+                        <div class="section-title">구매 인증 스크린샷</div>
+                        <p class="panel-desc">CODE VEIN 1 & 2 구매 인증 (PNG)</p>
+
+                        <!-- CV1 구매 인증 -->
+                        <div style="margin-bottom:12px;">
+                            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 1</label>
+                            <label class="add-btn" style="height:32px;font-size:12px;">
+                                <i class="fa-solid fa-upload"></i> 업로드
+                                <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv1')">
+                            </label>
+                            <div id="cv1-proof-info" style="margin-top:6px;font-size:11px;color:#666;display:none;"></div>
+                        </div>
+                        <!-- CV2 구매 인증 -->
+                        <div>
+                            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 2</label>
+                            <label class="add-btn" style="height:32px;font-size:12px;">
+                                <i class="fa-solid fa-upload"></i> 업로드
+                                <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv2')">
+                            </label>
+                            <div id="cv2-proof-info" style="margin-top:6px;font-size:11px;color:#666;display:none;"></div>
+                        </div>
+                    </div>
                     <div id="panel-plus" class="editor-tab-content" style="display: none;"><div class="section-title">덕질 성향</div></div>
                     <!-- 패널 4: 이미지 추가 -->
                     <div id="panel-image" class="editor-tab-content" style="display: none;">
@@ -1106,22 +1193,32 @@
                         <div class="layer-delete" onclick="deleteLayer('text',${l.id})"><i class="fa-solid fa-xmark"></i></div>
                     </div>
                     <div class="text-edit-area">
-                        <div class="text-size-row">
+                        <!-- 크기 슬라이더 + 직접 입력 한 줄 -->
+                        <div class="text-size-color-row">
                             <label>크기</label>
                             <input type="range" min="12" max="80" value="${l.fontSize}"
-                                oninput="updateTextStyle(${l.id},'size',this.value); document.getElementById('tsz-${l.id}').textContent=this.value+'px'">
-                            <span class="text-size-val" id="tsz-${l.id}">${l.fontSize}px</span>
+                                id="tslider-${l.id}"
+                                oninput="syncTextSize(${l.id},'slider',this.value)">
+                            <input type="number" class="text-size-num" min="12" max="80"
+                                value="${l.fontSize}" id="tnum-${l.id}"
+                                oninput="syncTextSize(${l.id},'num',this.value)"
+                                onblur="clampTextSize(${l.id})">
                         </div>
-                        <div class="color-row">
-                            <label>색상</label>
-                            <input type="color" value="${l.color}"
-                                oninput="updateTextStyle(${l.id},'color',this.value)">
-                        </div>
-                        <div class="text-toolbar">
+                        <!-- 툴바 + 색상 오른쪽 정렬 -->
+                        <div class="text-toolbar-row">
                             <button class="txt-btn ${l.bold?'on':''}" title="굵게" onclick="toggleTextStyle(${l.id},'bold',this)"><b>B</b></button>
-                            <button class="txt-btn ${l.italic?'on':''}" title="기울임" onclick="toggleTextStyle(${l.id},'italic',this)"><i>I</i></button>
+                            <button class="txt-btn ${l.italic?'on':''}" title="기울임" onclick="toggleTextStyle(${l.id},'italic',this)"><i style="font-style:italic;">I</i></button>
                             <button class="txt-btn ${l.underline?'on':''}" title="밑줄" onclick="toggleTextStyle(${l.id},'underline',this)"><u>U</u></button>
                             <button class="txt-btn ${l.strike?'on':''}" title="취소선" onclick="toggleTextStyle(${l.id},'strike',this)"><s>S</s></button>
+                            <button class="txt-btn ${l.stroke?'on':''}" title="외곽선 (흰색)" onclick="toggleTextStyle(${l.id},'stroke',this)" style="letter-spacing:-1px;font-size:11px;">S<span style="font-size:8px;vertical-align:super;">T</span></button>
+                            <div class="toolbar-spacer"></div>
+                            <!-- 색상: 오른쪽 정렬 -->
+                            <label style="font-size:11px;color:#888;">색상</label>
+                            <div class="color-swatch-btn" id="cswatch-${l.id}" style="border-color:#555;">
+                                <div class="color-swatch-preview" style="background:${l.color};"></div>
+                                <input type="color" value="${l.color}"
+                                    oninput="updateTextStyle(${l.id},'color',this.value); document.querySelector('#cswatch-${l.id} .color-swatch-preview').style.background=this.value">
+                            </div>
                         </div>
                         <textarea class="text-input-box" placeholder="텍스트를 입력하세요"
                             oninput="updateTextContent(${l.id},this.value)">${l.content}</textarea>
@@ -1159,8 +1256,7 @@
         function makeDraggable(el) {
             let ox, oy, ex, ey, dragging = false;
             el.addEventListener('mousedown', e => {
-                if (e.target.classList.contains('resize-handle') ||
-                    e.target.closest('.resize-handle') ||
+                if (e.target.closest('.resize-handle') || e.target.closest('.rotate-handle') ||
                     e.target.tagName === 'TEXTAREA') return;
                 e.stopPropagation();
                 dragging = true;
@@ -1181,15 +1277,13 @@
         }
 
         function makeResizable(el, aspect) {
-            // aspect: true = 비율 고정
             const handle = el.querySelector('.resize-handle');
             if (!handle) return;
             let startW, startH, startX, startY, resizing = false;
             handle.addEventListener('mousedown', e => {
                 e.stopPropagation();
                 resizing = true;
-                startW = el.offsetWidth;
-                startH = el.offsetHeight;
+                startW = el.offsetWidth; startH = el.offsetHeight;
                 startX = e.clientX; startY = e.clientY;
             });
             window.addEventListener('mousemove', e => {
@@ -1200,7 +1294,6 @@
                 let nh = Math.max(80, startH + dh);
                 if (aspect) {
                     const ratio = startW / startH;
-                    // 더 큰 delta 기준으로 비율 유지
                     if (Math.abs(dw) >= Math.abs(dh)) nh = nw / ratio;
                     else nw = nh * ratio;
                 }
@@ -1210,8 +1303,35 @@
             window.addEventListener('mouseup', () => { resizing = false; });
         }
 
+        // 이미지 레이어에만 rotate 핸들 적용
+        function makeRotatable(el) {
+            const handle = el.querySelector('.rotate-handle');
+            if (!handle) return;
+            let rotating = false;
+            let startAngle = 0;
+            let currentAngle = 0;
+
+            handle.addEventListener('mousedown', e => {
+                e.stopPropagation();
+                rotating = true;
+                const rect = el.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top  + rect.height / 2;
+                startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI - currentAngle;
+            });
+            window.addEventListener('mousemove', e => {
+                if (!rotating) return;
+                const rect = el.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top  + rect.height / 2;
+                currentAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI - startAngle;
+                el.style.transform = `rotate(${currentAngle}deg)`;
+            });
+            window.addEventListener('mouseup', () => { rotating = false; });
+        }
+
         /* ============================================================
-           이미지 레이어 추가
+           이미지 레이어 추가 (rotate handle 포함)
         ============================================================ */
         document.getElementById('imgFileInput').addEventListener('change', function(e) {
             const files = [...e.target.files].filter(f => f.type === 'image/png');
@@ -1227,14 +1347,15 @@
                     const el = document.createElement('div');
                     el.className = 'board-layer';
                     el.style.cssText = 'left:200px;top:200px;width:400px;height:400px;';
-                    el.innerHTML = `<img src="${ev.target.result}" draggable="false">
-                        <div class="resize-handle"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:12px;"></i></div>`;
+                    el.innerHTML = `<img src="${ev.target.result}" draggable="false" style="width:100%;height:100%;object-fit:contain;display:block;">
+                        <div class="rotate-handle" title="회전"><i class="fa-solid fa-rotate" style="font-size:12px;"></i></div>
+                        <div class="resize-handle" title="크기 조절"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:11px;"></i></div>`;
                     board.appendChild(el);
-                    // 새 이미지는 최상위(배열 맨 앞)
                     imgLayers.unshift({ id, name: file.name, el });
                     reindexLayers(imgLayers);
                     makeDraggable(el);
                     makeResizable(el, true);
+                    makeRotatable(el);
                     renderImgList();
                 };
                 reader.readAsDataURL(file);
@@ -1251,14 +1372,13 @@
             const defaultText = '텍스트';
             const el = document.createElement('div');
             el.className = 'board-layer';
-            el.style.cssText = 'left:300px;top:300px;width:auto;height:auto;min-width:80px;white-space:pre-wrap;padding:10px;font-size:80px;color:#000;line-height:1.3;';
+            el.style.cssText = 'left:300px;top:300px;width:auto;height:auto;min-width:80px;white-space:pre-wrap;padding:10px;font-size:40px;color:#000;line-height:1.3;';
             el.innerHTML = `<span class="board-text-span">${defaultText}</span>
-                <div class="resize-handle"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:12px;"></i></div>`;
+                <div class="resize-handle" title="크기 조절"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:11px;"></i></div>`;
             board.appendChild(el);
-
             const layer = { id, name: defaultText, el,
-                content: defaultText, fontSize: 80, color: '#000000',
-                bold: false, italic: false, underline: false, strike: false };
+                content: defaultText, fontSize: 40, color: '#000000',
+                bold: false, italic: false, underline: false, strike: false, stroke: false };
             textLayers.unshift(layer);
             reindexLayers(textLayers);
             makeDraggable(el);
@@ -1269,41 +1389,125 @@
         function applyTextStyle(layer) {
             const span = layer.el.querySelector('.board-text-span');
             if (!span) return;
-            layer.el.style.fontSize  = layer.fontSize + 'px';
-            layer.el.style.color     = layer.color;
-            span.style.fontWeight    = layer.bold    ? '700' : '400';
-            span.style.fontStyle     = layer.italic  ? 'italic' : 'normal';
+            layer.el.style.fontSize = layer.fontSize + 'px';
+            layer.el.style.color    = layer.color;
+            span.style.fontWeight   = layer.bold   ? '700' : '400';
+            span.style.fontStyle    = layer.italic ? 'italic' : 'normal';
             span.style.textDecoration = [
                 layer.underline ? 'underline' : '',
                 layer.strike    ? 'line-through' : ''
             ].filter(Boolean).join(' ') || 'none';
+            // stroke: font-size 기준 자동 두께 (약 1/10)
+            const sw = Math.max(2, Math.round(layer.fontSize / 10));
+            span.style.webkitTextStroke = layer.stroke ? `${sw}px #ffffff` : '0px transparent';
             span.textContent = layer.content;
         }
 
+        // 슬라이더 ↔ 숫자 입력 동기화 (12~80 제한)
+        function syncTextSize(id, from, raw) {
+            const l = textLayers.find(l => l.id === id); if (!l) return;
+            let v = parseInt(raw);
+            if (isNaN(v)) return;
+            v = Math.min(80, Math.max(12, v));
+            l.fontSize = v;
+            const slider = document.getElementById('tslider-' + id);
+            const numIn  = document.getElementById('tnum-'    + id);
+            if (slider && from !== 'slider') slider.value = v;
+            if (numIn  && from !== 'num')   numIn.value  = v;
+            applyTextStyle(l);
+        }
+        function clampTextSize(id) {
+            const l = textLayers.find(l => l.id === id); if (!l) return;
+            const numIn = document.getElementById('tnum-' + id);
+            if (!numIn) return;
+            let v = parseInt(numIn.value);
+            if (isNaN(v) || v < 12) v = 12;
+            if (v > 80) v = 80;
+            numIn.value = v;
+            syncTextSize(id, 'num', v);
+        }
+
         function updateTextContent(id, val) {
-            const l = textLayers.find(l => l.id === id);
-            if (!l) return;
+            const l = textLayers.find(l => l.id === id); if (!l) return;
             l.content = val;
             l.name = val.slice(0, 20) || '(빈 텍스트)';
             const nameEl = document.getElementById('tname-' + id);
             if (nameEl) nameEl.textContent = l.name;
             applyTextStyle(l);
         }
-
         function updateTextStyle(id, prop, val) {
-            const l = textLayers.find(l => l.id === id);
-            if (!l) return;
-            if (prop === 'size')  l.fontSize = Number(val);
+            const l = textLayers.find(l => l.id === id); if (!l) return;
             if (prop === 'color') l.color = val;
             applyTextStyle(l);
         }
-
         function toggleTextStyle(id, prop, btn) {
-            const l = textLayers.find(l => l.id === id);
-            if (!l) return;
+            const l = textLayers.find(l => l.id === id); if (!l) return;
             l[prop] = !l[prop];
             btn.classList.toggle('on', l[prop]);
             applyTextStyle(l);
+        }
+
+        /* ============================================================
+           엔딩 선택: 1회차 단독, 나머지 다중
+        ============================================================ */
+        function toggleEnding1st(el) {
+            el.classList.toggle('selected');
+            // 1회차 선택 시 다른 엔딩 선택 해제
+            if (el.classList.contains('selected')) {
+                document.querySelectorAll('#endingGroup .check-item').forEach(b => b.classList.remove('selected'));
+            }
+        }
+        // 엔딩 그룹 클릭 시 1회차 해제
+        document.addEventListener('click', e => {
+            if (e.target.closest('#endingGroup') && e.target.classList.contains('check-item')) {
+                document.getElementById('ending-1st').classList.remove('selected');
+            }
+        });
+
+        /* ============================================================
+           도전과제 범위 체크
+        ============================================================ */
+        function clampAchieve(el) {
+            let v = parseInt(el.value);
+            if (isNaN(v) || v < 0) el.value = 0;
+            else if (v > 36) el.value = 36;
+        }
+        document.addEventListener('blur', e => {
+            if (e.target.id === 'achieveCount' && e.target.value === '') e.target.value = 0;
+        }, true);
+
+        /* ============================================================
+           구매 인증 스크린샷 업로드
+        ============================================================ */
+        const proofLayers = {}; // { cv1: { el, ... }, cv2: { el, ... } }
+
+        function uploadProof(input, key) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                // 기존 레이어 있으면 제거
+                if (proofLayers[key]) proofLayers[key].el.remove();
+
+                const el = document.createElement('div');
+                el.className = 'board-layer';
+                const startX = key === 'cv1' ? 100 : 600;
+                el.style.cssText = `left:${startX}px;top:100px;width:500px;height:400px;`;
+                el.innerHTML = `<img src="${ev.target.result}" draggable="false" style="width:100%;height:100%;object-fit:contain;display:block;">
+                    <div class="resize-handle" title="크기 조절"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:11px;"></i></div>`;
+                board.appendChild(el);
+                el.style.zIndex = 5; // 일반 레이어보다 아래
+
+                proofLayers[key] = { el };
+                makeDraggable(el);
+                makeResizable(el, true);
+
+                const info = document.getElementById(key + '-proof-info');
+                info.textContent = file.name;
+                info.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+            input.value = '';
         }
 
         // board 클릭 → 선택 해제
