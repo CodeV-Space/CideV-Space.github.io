@@ -7,6 +7,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -41,7 +42,8 @@
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            font-weight: 600;
             background-color: var(--bg-frame);
             color: var(--text-white);
             overflow: hidden;
@@ -645,8 +647,11 @@
         /* 게임 패널 이미지 선택 border padding 통일 */
         .img-option { padding: 10px 6px; }
         .img-option.buddy-last { padding: 10px 6px; }
-        .img-option.jail-option { padding: 10px 8px; }
-        .img-option.weapon-option { padding: 10px 6px; }
+        /* 제일: 좌우 padding 줄이고 gap은 부모에서 처리 */
+        .img-option.jail-option { padding: 10px 6px; min-height: 100px; max-width: unset; width: 100%; }
+        .img-option.weapon-option { padding: 10px 6px; min-height: 90px; max-width: unset; }
+        /* 빙의/소환: 버디와 동일한 padding */
+        .buddy-style-option { padding: 10px 6px !important; }
 
         /* preview-box 위의 드래그 가능한 요소 */
         .board-layer {
@@ -661,30 +666,89 @@
         }
         .board-layer img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
-        /* 리사이즈 핸들 (우측 하단 모서리) */
+        /* 리사이즈/회전 핸들 크기 키우기 */
         .resize-handle {
-            position: absolute; right: -16px; bottom: -16px;
-            width: 36px; height: 36px;
+            position: absolute; right: -20px; bottom: -20px;
+            width: 44px; height: 44px;
             background: var(--current-accent);
             border-radius: 50%;
             cursor: nwse-resize;
             display: flex; align-items: center; justify-content: center;
-            font-size: 13px; color: #111;
+            font-size: 16px; color: #111;
             z-index: 10;
         }
-        /* 회전 핸들 (우측 상단) */
         .rotate-handle {
-            position: absolute; right: -16px; top: -16px;
-            width: 30px; height: 30px;
+            position: absolute; right: -20px; top: -20px;
+            width: 40px; height: 40px;
             background: #444;
             border: 2px solid var(--current-accent);
             border-radius: 50%;
             cursor: grab;
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: var(--current-accent);
+            font-size: 16px; color: var(--current-accent);
             z-index: 10;
         }
         .rotate-handle:active { cursor: grabbing; }
+
+        /* ============================================================
+           엔딩 캡슐 전용 스타일
+        ============================================================ */
+        /* 단독 캡슐 (1회차 진행) */
+        .ending-solo-capsule {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px 20px;
+            background: #1a1a1a; border: 1px solid #333;
+            border-radius: 30px; cursor: pointer;
+            font-size: 14px; font-weight: 600; color: #888;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .ending-solo-capsule.active {
+            background: var(--current-accent);
+            border-color: var(--current-accent);
+            color: #111;
+        }
+
+        /* 다중 선택 머지 캡슐 (배드/굿/진) */
+        .ending-multi-wrap {
+            display: flex; align-items: center;
+            background: #1a1a1a; border: 1px solid #333;
+            border-radius: 30px; overflow: hidden;
+            padding: 4px;
+            gap: 0;
+            flex: 1;
+        }
+        .ending-cap-item {
+            flex: 1; text-align: center; padding: 8px 6px;
+            font-size: 13px; font-weight: 600; color: #555;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            white-space: nowrap;
+        }
+        .ending-cap-item.active {
+            background: var(--current-accent);
+            color: #111;
+        }
+        /* 인접한 active들이 이어진 하나의 큰 캡슐처럼 보이도록 */
+        .ending-cap-item.active + .ending-cap-item.active {
+            border-radius: 25px;
+            margin-left: -4px;
+        }
+        .ending-cap-item.disabled {
+            opacity: 0.3; cursor: not-allowed;
+        }
+
+        /* 엔딩 한 줄 레이아웃 */
+        .ending-row {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        /* number input: 스피너 숨기기 */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
 
     </style>
 </head>
@@ -822,11 +886,11 @@
 
                         <div class="section-title">버디 스타일</div>
                         <div style="display: flex; justify-content: center; gap: 20px;">
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
+                            <div class="img-option buddy-style-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
                                 <img src="Icons/Buddy Style/빙의.png" alt="빙의" style="width:54px;height:54px;">
                                 <span>빙의</span>
                             </div>
-                            <div class="img-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
+                            <div class="img-option buddy-style-option" onclick="selectImage(this, 'single')" style="width: 80px; min-height: 90px;">
                                 <img src="Icons/Buddy Style/소환.png" alt="소환" style="width:54px;height:54px;">
                                 <span>소환</span>
                             </div>
@@ -852,7 +916,7 @@
                         </div>
 
                         <div class="section-title">제일</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-items: center;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; justify-items: center;">
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/오우거.png" alt="오우거" style="width:60px;height:60px;"><span>오우거</span></div>
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/하운즈.png" alt="하운즈" style="width:60px;height:60px;"><span>하운즈</span></div>
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/스팅어.png" alt="스팅어" style="width:60px;height:60px;"><span>스팅어</span></div>
@@ -862,13 +926,15 @@
                         </div>
 
                         <div class="section-title">무기 (최대 2개)</div>
+                        <!-- 4+3 모두 동일한 grid로 통일 → 마지막 3개 중앙을 위해 flex 래퍼 사용 -->
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/한손검.png" alt="한손검" style="width:56px;height:56px;"><span>한손검</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png" alt="양손검" style="width:56px;height:56px;"><span>양손검</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/총검.png" alt="총검" style="width:56px;height:56px;"><span>총검</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/도끼창.png" alt="도끼창" style="width:56px;height:56px;"><span>도끼창</span></div>
                         </div>
-                        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 8px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px;">
+                            <div style="visibility:hidden;"></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/해머.png" alt="해머" style="width:56px;height:56px;"><span>해머</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/쌍검.png" alt="쌍검" style="width:56px;height:56px;"><span>쌍검</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/룬 블레이드.png" alt="룬 블레이드" style="width:56px;height:56px;"><span>룬 블레이드</span></div>
@@ -878,51 +944,68 @@
                     <div id="panel-trophy" class="editor-tab-content" style="display: none;">
                         <div class="section-title">엔딩 진행 상황</div>
 
-                        <!-- 1회차 진행: 단독 선택 -->
-                        <div class="grid-options" style="grid-template-columns: 1fr; margin-bottom: 8px;">
-                            <div class="check-item" id="ending-1st" onclick="toggleEnding1st(this)">1회차 진행</div>
+                        <!-- 한 줄: 1회차 단독캡슐 + 배드/굿/진 머지캡슐 -->
+                        <div class="ending-row">
+                            <!-- 1회차: 단독 캡슐 -->
+                            <div class="ending-solo-capsule" id="ending-1st" onclick="toggleEnding1st(this)">1회차 진행</div>
+                            <!-- 배드/굿/진: 머지 캡슐 -->
+                            <div class="ending-multi-wrap" id="endingGroup">
+                                <div class="ending-cap-item" id="ec-bad" onclick="toggleEndingCap('bad')">배드</div>
+                                <div class="ending-cap-item disabled" id="ec-good" onclick="toggleEndingCap('good')">굿</div>
+                                <div class="ending-cap-item disabled" id="ec-true" onclick="toggleEndingCap('true')">진</div>
+                            </div>
                         </div>
-                        <!-- 배드/굿/진 엔딩: 다중 선택 -->
-                        <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 4px;" id="endingGroup">
-                            <div class="check-item">배드 엔딩</div>
-                            <div class="check-item">굿 엔딩</div>
-                            <div class="check-item">진 엔딩</div>
-                        </div>
-                        <p class="panel-desc" style="margin-top:6px;">배드·굿·진 엔딩은 다중 선택 가능</p>
+                        <p class="panel-desc" style="margin-top:2px;">굿 엔딩은 배드 선택 후, 진 엔딩은 굿 선택 후 활성화</p>
 
-                        <div class="section-title">New Game+ 횟수</div>
-                        <input type="number" id="ngPlusCount" min="0" placeholder="횟수를 입력하세요"
-                            style="width:100%;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;">
-
-                        <div class="section-title">도전과제 달성 수</div>
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                            <input type="number" id="achieveCount" min="0" max="36" value="0"
-                                oninput="clampAchieve(this)"
-                                style="flex:1;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;">
-                            <span style="font-size:13px;color:#888;white-space:nowrap;">/ 36</span>
+                        <!-- NG+ 횟수 + 도전과제 좌우 배치 -->
+                        <div class="section-title">New Game+ 횟수 &amp; 도전과제</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
+                            <div>
+                                <label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">NG+ 횟수</label>
+                                <input type="number" id="ngPlusCount" min="0" placeholder="0"
+                                    style="width:100%;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+                            </div>
+                            <div>
+                                <label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">도전과제 달성</label>
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    <input type="number" id="achieveCount" min="0" max="36" value="0"
+                                        oninput="clampAchieve(this)"
+                                        style="flex:1;min-width:0;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+                                    <span style="font-size:12px;color:#666;white-space:nowrap;">/ 36</span>
+                                </div>
+                            </div>
                         </div>
-                        <p class="panel-desc">0~36 범위만 입력 가능 · 빈칸은 자동으로 0</p>
 
                         <div class="section-title">구매 인증 스크린샷</div>
-                        <p class="panel-desc">CODE VEIN 1 & 2 구매 인증 (PNG)</p>
+                        <p class="panel-desc">CODE VEIN 1 &amp; 2 구매 인증 (PNG)</p>
 
                         <!-- CV1 구매 인증 -->
                         <div style="margin-bottom:12px;">
                             <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 1</label>
-                            <label class="add-btn" style="height:32px;font-size:12px;">
-                                <i class="fa-solid fa-upload"></i> 업로드
-                                <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv1')">
-                            </label>
-                            <div id="cv1-proof-info" style="margin-top:6px;font-size:11px;color:#666;display:none;"></div>
+                            <div style="display:flex;gap:6px;">
+                                <label class="add-btn" style="height:32px;font-size:12px;flex:1;">
+                                    <i class="fa-solid fa-upload"></i> 업로드
+                                    <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv1')">
+                                </label>
+                                <button onclick="deleteProof('cv1')" style="height:32px;padding:0 10px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:12px;white-space:nowrap;transition:0.2s;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'">
+                                    <i class="fa-solid fa-xmark"></i> 삭제
+                                </button>
+                            </div>
+                            <div id="cv1-proof-info" style="margin-top:5px;font-size:11px;color:#666;display:none;"></div>
                         </div>
                         <!-- CV2 구매 인증 -->
                         <div>
                             <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 2</label>
-                            <label class="add-btn" style="height:32px;font-size:12px;">
-                                <i class="fa-solid fa-upload"></i> 업로드
-                                <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv2')">
-                            </label>
-                            <div id="cv2-proof-info" style="margin-top:6px;font-size:11px;color:#666;display:none;"></div>
+                            <div style="display:flex;gap:6px;">
+                                <label class="add-btn" style="height:32px;font-size:12px;flex:1;">
+                                    <i class="fa-solid fa-upload"></i> 업로드
+                                    <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv2')">
+                                </label>
+                                <button onclick="deleteProof('cv2')" style="height:32px;padding:0 10px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:12px;white-space:nowrap;transition:0.2s;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'">
+                                    <i class="fa-solid fa-xmark"></i> 삭제
+                                </button>
+                            </div>
+                            <div id="cv2-proof-info" style="margin-top:5px;font-size:11px;color:#666;display:none;"></div>
                         </div>
                     </div>
                     <div id="panel-plus" class="editor-tab-content" style="display: none;"><div class="section-title">덕질 성향</div></div>
@@ -1397,8 +1480,8 @@
                 layer.underline ? 'underline' : '',
                 layer.strike    ? 'line-through' : ''
             ].filter(Boolean).join(' ') || 'none';
-            // stroke: font-size 기준 자동 두께 (약 1/10)
-            const sw = Math.max(2, Math.round(layer.fontSize / 10));
+            // stroke: 폰트크기 기준으로 매우 얇게 (약 1/30, 최소 1px)
+            const sw = Math.max(1, Math.round(layer.fontSize / 30));
             span.style.webkitTextStroke = layer.stroke ? `${sw}px #ffffff` : '0px transparent';
             span.textContent = layer.content;
         }
@@ -1448,21 +1531,52 @@
         }
 
         /* ============================================================
-           엔딩 선택: 1회차 단독, 나머지 다중
+           엔딩 선택: 1회차 단독, 배드→굿→진 순서 의존 머지 캡슐
         ============================================================ */
         function toggleEnding1st(el) {
-            el.classList.toggle('selected');
-            // 1회차 선택 시 다른 엔딩 선택 해제
-            if (el.classList.contains('selected')) {
-                document.querySelectorAll('#endingGroup .check-item').forEach(b => b.classList.remove('selected'));
+            el.classList.toggle('active');
+            // 1회차 선택 시 배드/굿/진 전부 해제
+            if (el.classList.contains('active')) {
+                ['bad','good','true'].forEach(k => {
+                    const cap = document.getElementById('ec-' + k);
+                    if (cap) cap.classList.remove('active');
+                });
+                updateEndingDeps();
             }
         }
-        // 엔딩 그룹 클릭 시 1회차 해제
-        document.addEventListener('click', e => {
-            if (e.target.closest('#endingGroup') && e.target.classList.contains('check-item')) {
-                document.getElementById('ending-1st').classList.remove('selected');
+
+        function toggleEndingCap(key) {
+            const cap = document.getElementById('ec-' + key);
+            if (!cap || cap.classList.contains('disabled')) return;
+
+            cap.classList.toggle('active');
+
+            // 1회차 해제
+            document.getElementById('ending-1st').classList.remove('active');
+
+            // 의존성: 굿 비활성 → 진도 비활성
+            if (key === 'good' && !cap.classList.contains('active')) {
+                const trueCap = document.getElementById('ec-true');
+                if (trueCap) trueCap.classList.remove('active');
             }
-        });
+            // 배드 비활성 → 굿, 진도 비활성
+            if (key === 'bad' && !cap.classList.contains('active')) {
+                ['good','true'].forEach(k => {
+                    const c = document.getElementById('ec-' + k);
+                    if (c) c.classList.remove('active');
+                });
+            }
+            updateEndingDeps();
+        }
+
+        function updateEndingDeps() {
+            const badOn  = document.getElementById('ec-bad')?.classList.contains('active');
+            const goodOn = document.getElementById('ec-good')?.classList.contains('active');
+            const goodEl = document.getElementById('ec-good');
+            const trueEl = document.getElementById('ec-true');
+            if (goodEl) goodEl.classList.toggle('disabled', !badOn);
+            if (trueEl) trueEl.classList.toggle('disabled', !goodOn);
+        }
 
         /* ============================================================
            도전과제 범위 체크
@@ -1477,37 +1591,42 @@
         }, true);
 
         /* ============================================================
-           구매 인증 스크린샷 업로드
+           구매 인증 스크린샷 업로드 & 삭제
         ============================================================ */
-        const proofLayers = {}; // { cv1: { el, ... }, cv2: { el, ... } }
+        const proofLayers = {};
 
         function uploadProof(input, key) {
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = ev => {
-                // 기존 레이어 있으면 제거
                 if (proofLayers[key]) proofLayers[key].el.remove();
-
                 const el = document.createElement('div');
                 el.className = 'board-layer';
                 const startX = key === 'cv1' ? 100 : 600;
                 el.style.cssText = `left:${startX}px;top:100px;width:500px;height:400px;`;
                 el.innerHTML = `<img src="${ev.target.result}" draggable="false" style="width:100%;height:100%;object-fit:contain;display:block;">
-                    <div class="resize-handle" title="크기 조절"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:11px;"></i></div>`;
+                    <div class="resize-handle" title="크기 조절"><i class="fa-solid fa-up-right-and-down-left-from-center" style="font-size:14px;"></i></div>`;
                 board.appendChild(el);
-                el.style.zIndex = 5; // 일반 레이어보다 아래
-
+                el.style.zIndex = 5;
                 proofLayers[key] = { el };
                 makeDraggable(el);
                 makeResizable(el, true);
-
                 const info = document.getElementById(key + '-proof-info');
-                info.textContent = file.name;
+                info.textContent = '📎 ' + file.name;
                 info.style.display = 'block';
             };
             reader.readAsDataURL(file);
             input.value = '';
+        }
+
+        function deleteProof(key) {
+            if (proofLayers[key]) {
+                proofLayers[key].el.remove();
+                delete proofLayers[key];
+            }
+            const info = document.getElementById(key + '-proof-info');
+            if (info) { info.textContent = ''; info.style.display = 'none'; }
         }
 
         // board 클릭 → 선택 해제
