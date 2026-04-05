@@ -336,14 +336,31 @@
         .grid-options {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
+            gap: 8px;
         }
         .check-item {
-            font-size: 14px; background: #222; padding: 5px;
+            font-size: 13px; background: #222; padding: 4px 2px;
             border-radius: 3px; cursor: pointer; text-align: center;
             border: 1px solid transparent; transition: border-color 1s ease, color 1s ease;
+            display: flex; align-items: center; justify-content: center; min-height: 30px;
         }
         .check-item.selected { border-color: var(--current-accent); color: var(--current-accent); }
+
+        /* 소형 캡슐 버튼 (#찾아가는 중 등) */
+        .mini-capsule {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 4px 12px; height: 26px;
+            background: #1a1a1a; border: 1px solid #444;
+            border-radius: 99px; cursor: pointer;
+            font-size: 12px; font-weight: 600; color: #888;
+            transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+        }
+        .mini-capsule.active {
+            border-color: var(--current-accent);
+            color: var(--current-accent);
+            background: rgba(211,175,55,0.12);
+        }
+        .mini-capsule:hover { background: rgba(255,255,255,0.05); }
 
         /* ============================================================
            IMAGE SELECT GRID
@@ -710,33 +727,40 @@
 
         /* 다중 선택 머지 캡슐 (배드/굿/진) */
         .ending-multi-wrap {
-            display: flex; align-items: center;
+            display: flex; align-items: stretch;
             background: #1a1a1a; border: 1px solid #333;
             border-radius: 30px; overflow: hidden;
-            padding: 4px;
-            gap: 0;
+            padding: 3px;
+            gap: 2px;
             flex: 1;
         }
         .ending-cap-item {
-            flex: 1; text-align: center; padding: 8px 6px;
+            flex: 1; text-align: center; padding: 7px 4px;
             font-size: 13px; font-weight: 600; color: #555;
-            border-radius: 25px;
+            border-radius: 22px;
             cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            transition: background 0.15s, color 0.15s, border-radius 0.15s;
             white-space: nowrap;
+            z-index: 1;
         }
         .ending-cap-item.active {
             background: var(--current-accent);
             color: #111;
         }
-        /* 인접한 active들이 이어진 하나의 큰 캡슐처럼 보이도록 */
+        /* 좌측 이웃이 active일 때 왼쪽 radius 없애서 이음새 처리 */
         .ending-cap-item.active + .ending-cap-item.active {
-            border-radius: 25px;
-            margin-left: -4px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-left: -2px;
+            padding-left: 6px;
+        }
+        .ending-cap-item.active:has(+ .ending-cap-item.active) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            padding-right: 6px;
         }
         .ending-cap-item.disabled {
-            opacity: 0.3; cursor: not-allowed;
+            opacity: 0.28; cursor: not-allowed;
         }
 
         /* 엔딩 한 줄 레이아웃 */
@@ -749,6 +773,80 @@
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+
+        /* stroke: 텍스트 바깥에만 적용 */
+        .board-text-span { paint-order: stroke fill; }
+
+        /* ============================================================
+           폰트 패널
+        ============================================================ */
+        .font-option-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; padding: 14px 10px;
+            background: #1e1c1b; border: 1px solid #333;
+            border-radius: 10px; cursor: pointer;
+            transition: all 0.2s; text-align: center;
+        }
+        .font-option-btn:hover { border-color: #555; background: #2a2828; }
+        .font-option-btn.active {
+            border-color: var(--current-accent);
+            background: rgba(211,175,55,0.1);
+        }
+        .font-option-btn .font-preview {
+            font-size: 22px; color: #fff;
+        }
+        .font-option-btn .font-label {
+            font-size: 11px; color: #888;
+        }
+        .font-option-btn.active .font-label { color: var(--current-accent); }
+
+        /* ============================================================
+           테마 색상 패널
+        ============================================================ */
+        .theme-swatch-grid {
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+            margin-bottom: 16px;
+        }
+        .theme-swatch {
+            width: 100%; aspect-ratio: 1/1;
+            border-radius: 8px; cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s; box-sizing: border-box;
+        }
+        .theme-swatch:hover { transform: scale(1.1); }
+        .theme-swatch.active { border-color: #fff; box-shadow: 0 0 0 2px var(--current-accent); }
+
+        .theme-hex-row {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 12px;
+        }
+        .theme-hex-input {
+            flex: 1; padding: 8px 10px;
+            background: #1a1a1a; border: 1px solid #444;
+            border-radius: 6px; color: #fff;
+            font-size: 13px; font-family: monospace;
+            box-sizing: border-box;
+        }
+        .theme-hex-input:focus { outline: none; border-color: var(--current-accent); }
+        .theme-apply-btn {
+            padding: 8px 16px;
+            background: rgba(211,175,55,0.15);
+            border: 1px solid var(--current-accent);
+            border-radius: 6px; cursor: pointer;
+            color: var(--current-accent); font-size: 13px; font-weight: 600;
+            white-space: nowrap;
+        }
+        .theme-apply-btn:hover { background: rgba(211,175,55,0.25); }
+
+        /* 현재 테마 색상 프리뷰 */
+        .theme-current-preview {
+            width: 100%; height: 36px;
+            border-radius: 8px; margin-bottom: 14px;
+            background: var(--current-accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #111; font-weight: 700;
+            transition: background 0.3s;
+        }
 
     </style>
 </head>
@@ -830,7 +928,7 @@
                         </div>
 
                         <div class="section-title">트윗 성향</div>
-                        <div class="grid-options multi-select">
+                        <div class="grid-options multi-select" style="grid-template-columns: repeat(4,1fr); gap:8px;">
                             <div class="check-item">RT</div><div class="check-item">마음</div>
                             <div class="check-item">인용</div><div class="check-item">탐라대화</div>
                             <div class="check-item">일상</div><div class="check-item">욕설</div>
@@ -838,7 +936,7 @@
                         </div>
 
                         <div class="section-title">연성</div>
-                        <div class="grid-options multi-select">
+                        <div class="grid-options multi-select" style="grid-template-columns: repeat(4,1fr); gap:8px;">
                             <div class="check-item">썰</div><div class="check-item">글</div>
                             <div class="check-item">디자인</div><div class="check-item">그림</div>
                             <div class="check-item">영상</div><div class="check-item">스크린샷</div>
@@ -846,18 +944,19 @@
                         </div>
 
                         <div class="section-title">외부링크 사용 여부</div>
-                        <div class="grid-options" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 10px;">
-                            <div class="check-item" onclick="toggleExternal(false, this)">X</div>
-                            <div class="check-item" onclick="toggleExternal(true, this)">O</div>
+                        <div class="grid-options" style="grid-template-columns: repeat(2, 1fr); gap:8px; margin-bottom: 10px;">
+                            <div class="check-item" onclick="toggleExternal(false, this)">✕</div>
+                            <div class="check-item" onclick="toggleExternal(true, this)">○</div>
                         </div>
                         <div id="externalDetailArea" class="sub-input" style="display: none;">
                             <label class="input-label">포함 내용 (다중 선택)</label>
-                            <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 12px;">
+                            <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom: 12px;">
                                 <div class="check-item">R-18</div><div class="check-item">G-18</div>
                                 <div class="check-item">스토리</div><div class="check-item">스포일러</div>
                                 <div class="check-item">스크린샷</div><div class="check-item">연성</div>
                             </div>
-                            <input type="text" placeholder="추가 참고 및 적고 싶은 사항을 적어주세요">
+                            <textarea id="externalNote" placeholder="추가 참고 및 적고 싶은 사항을 적어주세요"
+                                style="width:100%;min-height:60px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;padding:8px;box-sizing:border-box;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
                         </div>
 
                         <div class="section-title">타장르 언급</div>
@@ -870,7 +969,8 @@
                         </div>
                         <div id="mentionDetailContainer" class="sub-input" style="display: none; margin-top: 10px;">
                             <label class="input-label">타장르 언급 상세</label>
-                            <input type="text" id="mentionDetail" placeholder="장르명이나 주의사항을 입력해주세요">
+                            <textarea id="mentionDetail" placeholder="장르명이나 주의사항을 입력해주세요"
+                                style="width:100%;min-height:60px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;padding:8px;box-sizing:border-box;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
                         </div>
                         <input type="hidden" id="genreMention" value="none">
                     </div>
@@ -896,7 +996,11 @@
                             </div>
                         </div>
 
-                        <div class="section-title">버디 (최대 3명)</div>
+                        <div class="section-title">버디</div>
+                        <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:8px;">
+                            <div class="mini-capsule" onclick="this.classList.toggle('active')">#찾아가는 중</div>
+                        </div>
+                        <p class="panel-desc" style="margin-top:0;">최대 3명</p>
                         <div class="buddy-grid">
                             <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/노아.png" alt="노아"><span>노아</span></div>
                             <div class="img-option" data-group="buddy" onclick="selectImage(this, 'limit', 3)"><img src="Icons/Buddy Icons/라비니아.png" alt="라비니아"><span>라비니아</span></div>
@@ -916,7 +1020,10 @@
                         </div>
 
                         <div class="section-title">제일</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; justify-items: center;">
+                        <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:8px;">
+                            <div class="mini-capsule" onclick="this.classList.toggle('active')">#찾아가는 중</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: stretch;">
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/오우거.png" alt="오우거" style="width:60px;height:60px;"><span>오우거</span></div>
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/하운즈.png" alt="하운즈" style="width:60px;height:60px;"><span>하운즈</span></div>
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/스팅어.png" alt="스팅어" style="width:60px;height:60px;"><span>스팅어</span></div>
@@ -925,8 +1032,11 @@
                             <div class="img-option jail-option" onclick="selectImage(this, 'single')"><img src="Icons/Jails/리퍼.png" alt="리퍼" style="width:60px;height:60px;"><span>리퍼</span></div>
                         </div>
 
-                        <div class="section-title">무기 (최대 2개)</div>
-                        <!-- 4+3 모두 동일한 grid로 통일 → 마지막 3개 중앙을 위해 flex 래퍼 사용 -->
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; margin-bottom:6px; padding-bottom:8px; border-bottom:1px solid #444;">
+                            <span style="font-size:14px; font-weight:700; color:var(--current-accent);">무기</span>
+                            <div class="mini-capsule" onclick="this.classList.toggle('active')">#찾아가는 중</div>
+                        </div>
+                        <p class="panel-desc" style="margin-top:0;">최대 2개</p>
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/한손검.png" alt="한손검" style="width:56px;height:56px;"><span>한손검</span></div>
                             <div class="img-option weapon-option" onclick="selectImage(this, 'limit', 2)"><img src="Icons/Weapons/양손검.png" alt="양손검" style="width:56px;height:56px;"><span>양손검</span></div>
@@ -978,37 +1088,89 @@
 
                         <div class="section-title">구매 인증 스크린샷</div>
                         <p class="panel-desc">CODE VEIN 1 &amp; 2 구매 인증 (PNG)</p>
-
-                        <!-- CV1 구매 인증 -->
-                        <div style="margin-bottom:12px;">
-                            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 1</label>
-                            <div style="display:flex;gap:6px;">
-                                <label class="add-btn" style="height:32px;font-size:12px;flex:1;">
-                                    <i class="fa-solid fa-upload"></i> 업로드
-                                    <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv1')">
-                                </label>
-                                <button onclick="deleteProof('cv1')" style="height:32px;padding:0 10px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:12px;white-space:nowrap;transition:0.2s;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'">
-                                    <i class="fa-solid fa-xmark"></i> 삭제
-                                </button>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <!-- CV1 -->
+                            <div>
+                                <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 1</label>
+                                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                                    <label class="add-btn" style="height:30px;font-size:11px;flex:1;min-width:0;">
+                                        <i class="fa-solid fa-upload"></i> 업로드
+                                        <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv1')">
+                                    </label>
+                                    <button onclick="deleteProof('cv1')" style="height:30px;padding:0 8px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:11px;white-space:nowrap;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div id="cv1-proof-info" style="margin-top:4px;font-size:10px;color:#666;display:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
                             </div>
-                            <div id="cv1-proof-info" style="margin-top:5px;font-size:11px;color:#666;display:none;"></div>
-                        </div>
-                        <!-- CV2 구매 인증 -->
-                        <div>
-                            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 2</label>
-                            <div style="display:flex;gap:6px;">
-                                <label class="add-btn" style="height:32px;font-size:12px;flex:1;">
-                                    <i class="fa-solid fa-upload"></i> 업로드
-                                    <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv2')">
-                                </label>
-                                <button onclick="deleteProof('cv2')" style="height:32px;padding:0 10px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:12px;white-space:nowrap;transition:0.2s;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'">
-                                    <i class="fa-solid fa-xmark"></i> 삭제
-                                </button>
+                            <!-- CV2 -->
+                            <div>
+                                <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">CODE VEIN 2</label>
+                                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                                    <label class="add-btn" style="height:30px;font-size:11px;flex:1;min-width:0;">
+                                        <i class="fa-solid fa-upload"></i> 업로드
+                                        <input type="file" accept=".png,image/png" style="display:none;" onchange="uploadProof(this,'cv2')">
+                                    </label>
+                                    <button onclick="deleteProof('cv2')" style="height:30px;padding:0 8px;background:transparent;border:1px solid #555;border-radius:6px;color:#666;cursor:pointer;font-size:11px;white-space:nowrap;" onmouseover="this.style.borderColor='#e81123';this.style.color='#e81123'" onmouseout="this.style.borderColor='#555';this.style.color='#666'"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div id="cv2-proof-info" style="margin-top:4px;font-size:10px;color:#666;display:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
                             </div>
-                            <div id="cv2-proof-info" style="margin-top:5px;font-size:11px;color:#666;display:none;"></div>
                         </div>
                     </div>
-                    <div id="panel-plus" class="editor-tab-content" style="display: none;"><div class="section-title">덕질 성향</div></div>
+                    <div id="panel-plus" class="editor-tab-content" style="display: none;">
+
+                        <!-- 자캐 설정 -->
+                        <div class="section-title">자캐 설정</div>
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <!-- 있음/없음 단독 선택 -->
+                            <div style="display:flex; gap:6px;">
+                                <div class="check-item" id="oc-yn-yes" onclick="toggleOcYn('yes')" style="padding:6px 14px; border-radius:99px; min-height:unset;">있음</div>
+                                <div class="check-item" id="oc-yn-no"  onclick="toggleOcYn('no')"  style="padding:6px 14px; border-radius:99px; min-height:unset;">없음</div>
+                            </div>
+                            <!-- 캐릭터 타입: 2x2 그리드 (우측) -->
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; flex:1; min-width:160px;">
+                                <div class="check-item multi-select" style="border-radius:99px; min-height:unset; padding:6px 4px;">Nameless</div>
+                                <div class="check-item multi-select" style="border-radius:99px; min-height:unset; padding:6px 4px;">기본 주인공</div>
+                                <div class="check-item multi-select" style="border-radius:99px; min-height:unset; padding:6px 4px;">자캐</div>
+                                <div class="check-item multi-select" style="border-radius:99px; min-height:unset; padding:6px 4px;">AU</div>
+                            </div>
+                        </div>
+
+                        <!-- 덕질 성향 -->
+                        <div class="section-title">덕질 성향</div>
+                        <div class="grid-options multi-select" style="grid-template-columns: repeat(3, 1fr); gap:8px;">
+                            <div class="check-item">HL</div>
+                            <div class="check-item">BL</div>
+                            <div class="check-item">GL</div>
+                            <div class="check-item">CP</div>
+                            <div class="check-item">NCP</div>
+                            <div class="check-item">드림</div>
+                            <div class="check-item">리버시블</div>
+                            <div class="check-item">리버스 불가</div>
+                            <div class="check-item">ALL</div>
+                        </div>
+
+                        <!-- 최애 및 차애 -->
+                        <div class="section-title">최애 및 차애</div>
+                        <input type="text" placeholder="최애 및 차애를 입력하세요" style="width:100%;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:13px;font-family:inherit;">
+
+                        <!-- 최애 CP / 조합 -->
+                        <div class="section-title">최애 CP / 조합</div>
+                        <input type="text" placeholder="최애 CP 혹은 조합을 입력하세요" style="width:100%;padding:8px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;box-sizing:border-box;font-size:13px;font-family:inherit;">
+
+                        <!-- 지뢰 -->
+                        <div class="section-title">지뢰</div>
+                        <div class="grid-options" style="grid-template-columns: repeat(3, 1fr); gap:8px;">
+                            <div class="check-item" onclick="this.classList.toggle('selected')">알아서 뮤트</div>
+                            <div class="check-item" onclick="this.classList.toggle('selected')">직멘 X 블락</div>
+                            <div class="check-item" onclick="this.classList.toggle('selected')">블언블</div>
+                        </div>
+
+                        <!-- 이외 적고 싶은 말 -->
+                        <div class="section-title">이외 적고 싶은 말</div>
+                        <textarea placeholder="자유롭게 적어주세요"
+                            style="width:100%;min-height:80px;background:#1a1a1a;border:1px solid #444;color:#fff;border-radius:4px;padding:8px;box-sizing:border-box;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+
+                    </div>
+
                     <!-- 패널 4: 이미지 추가 -->
                     <div id="panel-image" class="editor-tab-content" style="display: none;">
                         <div class="section-title">이미지 추가</div>
@@ -1019,26 +1181,73 @@
                             <input type="file" id="imgFileInput" accept=".png" multiple style="display:none;">
                         </label>
 
-                        <div id="imgLayerList" class="layer-list">
-                            <!-- 레이어 아이템이 여기에 동적으로 추가됨 (1=최상위) -->
-                        </div>
+                        <div id="imgLayerList" class="layer-list"></div>
                     </div>
 
                     <!-- 패널 5: 텍스트 추가 -->
                     <div id="panel-text" class="editor-tab-content" style="display: none;">
                         <div class="section-title">텍스트 추가</div>
                         <p class="panel-desc">최대 10개</p>
-
                         <button class="add-btn" onclick="addTextLayer()">
                             <i class="fa-solid fa-plus"></i> 텍스트 추가
                         </button>
+                        <div id="textLayerList" class="layer-list"></div>
+                    </div>
 
-                        <div id="textLayerList" class="layer-list">
-                            <!-- 텍스트 레이어 아이템이 여기에 동적으로 추가됨 -->
+                    <!-- 패널 7: 폰트 변경 -->
+                    <div id="panel-font" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">폰트 변경</div>
+                        <p class="panel-desc">오른쪽 프리뷰에 추가되는 텍스트의 폰트를 선택하세요</p>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+                            <div class="font-option-btn active" id="font-btn-pretendard" onclick="selectFont('pretendard')">
+                                <span class="font-preview" style="font-family:'Pretendard',sans-serif; font-weight:600;">Aa</span>
+                                <span class="font-label">Pretendard<br>Semi Bold</span>
+                            </div>
+                            <div class="font-option-btn" id="font-btn-noto" onclick="selectFont('noto')">
+                                <span class="font-preview" style="font-family:'Noto Sans KR',sans-serif; font-weight:400;">Aa</span>
+                                <span class="font-label">Noto Sans KR<br>Regular</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#1e1c1b; border:1px solid #333; border-radius:8px;">
+                            <span style="font-size:12px; color:#888;">현재 선택</span>
+                            <span id="current-font-label" style="font-size:13px; color:var(--current-accent); font-weight:600;">Pretendard SemiBold</span>
                         </div>
                     </div>
-                    <div id="panel-font" class="editor-tab-content" style="display: none;"><div class="section-title">폰트 설정</div></div>
-                    <div id="panel-theme" class="editor-tab-content" style="display: none;"><div class="section-title">테마 및 컬러</div></div>
+
+                    <!-- 패널 8: 테마 색상 변경 -->
+                    <div id="panel-theme" class="editor-tab-content" style="display: none;">
+                        <div class="section-title">테마 색상</div>
+
+                        <div class="theme-current-preview" id="themePreview">현재 색상</div>
+
+                        <!-- 프리셋 팔레트 -->
+                        <p class="panel-desc">프리셋</p>
+                        <div class="theme-swatch-grid" id="themeSwatchGrid">
+                            <div class="theme-swatch active" style="background:#D3AF37;" onclick="applyThemeColor('#D3AF37', this)" title="Gold"></div>
+                            <div class="theme-swatch" style="background:#C0A060;" onclick="applyThemeColor('#C0A060', this)" title="Warm Gold"></div>
+                            <div class="theme-swatch" style="background:#E8C87A;" onclick="applyThemeColor('#E8C87A', this)" title="Light Gold"></div>
+                            <div class="theme-swatch" style="background:#ea0000;" onclick="applyThemeColor('#ea0000', this)" title="Blood Red"></div>
+                            <div class="theme-swatch" style="background:#C0392B;" onclick="applyThemeColor('#C0392B', this)" title="Deep Red"></div>
+                            <div class="theme-swatch" style="background:#E74C3C;" onclick="applyThemeColor('#E74C3C', this)" title="Crimson"></div>
+                            <div class="theme-swatch" style="background:#8B6FE8;" onclick="applyThemeColor('#8B6FE8', this)" title="Purple"></div>
+                            <div class="theme-swatch" style="background:#5B8CDB;" onclick="applyThemeColor('#5B8CDB', this)" title="Blue"></div>
+                            <div class="theme-swatch" style="background:#48B878;" onclick="applyThemeColor('#48B878', this)" title="Green"></div>
+                            <div class="theme-swatch" style="background:#E87A5B;" onclick="applyThemeColor('#E87A5B', this)" title="Coral"></div>
+                            <div class="theme-swatch" style="background:#D4788C;" onclick="applyThemeColor('#D4788C', this)" title="Rose"></div>
+                            <div class="theme-swatch" style="background:#aaaaaa;" onclick="applyThemeColor('#aaaaaa', this)" title="Silver"></div>
+                        </div>
+
+                        <!-- 직접 입력 -->
+                        <p class="panel-desc">직접 입력</p>
+                        <div class="theme-hex-row">
+                            <span style="font-size:12px;color:#888;">#</span>
+                            <input class="theme-hex-input" id="themeHexInput" placeholder="D3AF37" maxlength="6"
+                                oninput="this.value=this.value.replace(/[^0-9a-fA-F]/g,'')">
+                            <button class="theme-apply-btn" onclick="applyThemeHex()">적용</button>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="sidebar-footer">
@@ -1133,7 +1342,7 @@
             if (++eggCount < 7) return;
             isAnimating = true; eggCount = 0;
             const setAccent = (c) => { document.documentElement.style.setProperty('--current-accent', c); if (addrLock) addrLock.style.color = c; this.style.color = c; };
-            setAccent('#ea0000'); this.innerText = "Bound";
+            setAccent('#ea0000'); this.innerText = "BOUND";
             setTimeout(() => { this.innerText = "BY"; }, 1000);
             setTimeout(() => { setAccent('#D3AF37'); this.innerText = "BLOOD"; }, 2000);
             setTimeout(() => { this.innerText = "TBA"; this.style.color = ''; isAnimating = false; }, 3000);
@@ -1588,7 +1797,81 @@
         }
         document.addEventListener('blur', e => {
             if (e.target.id === 'achieveCount' && e.target.value === '') e.target.value = 0;
+            if (e.target.id === 'ngPlusCount') {
+                let v = parseInt(e.target.value);
+                if (isNaN(v) || v < 0) e.target.value = 0;
+            }
         }, true);
+
+        /* ============================================================
+           자캐 설정: 있음/없음 단독 선택
+        ============================================================ */
+        function toggleOcYn(val) {
+            ['yes','no'].forEach(k => {
+                document.getElementById('oc-yn-' + k)?.classList.remove('selected');
+            });
+            document.getElementById('oc-yn-' + val)?.classList.add('selected');
+        }
+
+        /* ============================================================
+           폰트 변경
+        ============================================================ */
+        let currentBoardFont = 'pretendard'; // 기본값
+
+        function selectFont(key) {
+            currentBoardFont = key;
+            document.getElementById('font-btn-pretendard').classList.toggle('active', key === 'pretendard');
+            document.getElementById('font-btn-noto').classList.toggle('active', key === 'noto');
+            document.getElementById('current-font-label').textContent =
+                key === 'pretendard' ? 'Pretendard SemiBold' : 'Noto Sans KR Regular';
+
+            // 기존 텍스트 레이어에 폰트 즉시 반영
+            const fontFamily = key === 'pretendard'
+                ? "'Pretendard', sans-serif"
+                : "'Noto Sans KR', sans-serif";
+            const fontWeight = key === 'pretendard' ? '600' : '400';
+            textLayers.forEach(l => {
+                l.el.style.fontFamily = fontFamily;
+                l.el.style.fontWeight = fontWeight;
+            });
+        }
+
+        // 텍스트 레이어 생성 시 현재 선택 폰트 적용
+        const _origAddText = addTextLayer;
+        // addTextLayer 내에서 el 생성 직후 폰트 적용하도록 패치
+        // (addTextLayer 함수 자체를 override)
+        const _patchedAddText = function() {
+            _origAddText();
+            const l = textLayers[0]; // unshift했으므로 맨 앞이 최신
+            if (!l) return;
+            const fontFamily = currentBoardFont === 'pretendard'
+                ? "'Pretendard', sans-serif" : "'Noto Sans KR', sans-serif";
+            const fontWeight = currentBoardFont === 'pretendard' ? '600' : '400';
+            l.el.style.fontFamily = fontFamily;
+            l.el.style.fontWeight = fontWeight;
+        };
+
+        /* ============================================================
+           테마 색상 변경
+        ============================================================ */
+        function applyThemeColor(hex, swatchEl) {
+            document.documentElement.style.setProperty('--current-accent', hex);
+            const addrLock = document.getElementById('addrLock');
+            if (addrLock) addrLock.style.color = hex;
+            document.getElementById('themePreview').style.background = hex;
+            document.getElementById('themeHexInput').value = hex.replace('#','');
+            document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+            if (swatchEl) swatchEl.classList.add('active');
+        }
+
+        function applyThemeHex() {
+            const raw = document.getElementById('themeHexInput').value.trim();
+            if (!/^[0-9a-fA-F]{6}$/.test(raw)) {
+                alert('6자리 HEX 색상 코드를 입력하세요 (예: D3AF37)');
+                return;
+            }
+            applyThemeColor('#' + raw, null);
+        }
 
         /* ============================================================
            구매 인증 스크린샷 업로드 & 삭제
