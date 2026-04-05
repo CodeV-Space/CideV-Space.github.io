@@ -1133,9 +1133,9 @@
             if (++eggCount < 7) return;
             isAnimating = true; eggCount = 0;
             const setAccent = (c) => { document.documentElement.style.setProperty('--current-accent', c); if (addrLock) addrLock.style.color = c; this.style.color = c; };
-            setAccent('#ea0000'); this.innerText = "BLOOD";
-            setTimeout(() => { this.innerText = "TO"; }, 1000);
-            setTimeout(() => { setAccent('#D3AF37'); this.innerText = "GOLD"; }, 2000);
+            setAccent('#ea0000'); this.innerText = "Bound";
+            setTimeout(() => { this.innerText = "BY"; }, 1000);
+            setTimeout(() => { setAccent('#D3AF37'); this.innerText = "BLOOD"; }, 2000);
             setTimeout(() => { this.innerText = "TBA"; this.style.color = ''; isAnimating = false; }, 3000);
         });
 
